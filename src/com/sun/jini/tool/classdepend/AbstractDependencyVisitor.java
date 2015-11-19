@@ -2,7 +2,7 @@ package com.sun.jini.tool.classdepend;
 
 /***
  * ASM examples: examples showing how ASM can be used
- * Copyright (c) 2000-2005 INRIA, France Telecom
+ * Copyright (c) 2000-2011 INRIA, France Telecom
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,232 +30,388 @@ package com.sun.jini.tool.classdepend;
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
+import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+import org.objectweb.asm.TypePath;
 import org.objectweb.asm.signature.SignatureReader;
 import org.objectweb.asm.signature.SignatureVisitor;
 
 /**
- * 
- * 
+ * DependencyVisitor
+ *
+ * @author Eugene Kuleshov
  */
-abstract class AbstractDependencyVisitor extends AbstractVisitor {
+public abstract class AbstractDependencyVisitor extends ClassVisitor {
+    Set<String> packages = new HashSet<String>();
 
-    AbstractDependencyVisitor() { }
+    Map<String, Map<String, Integer>> groups = new HashMap<String, Map<String, Integer>>();
+
+    Map<String, Integer> current;
+
+    public Map<String, Map<String, Integer>> getGlobals() {
+        return groups;
+    }
+
+    public Set<String> getPackages() {
+        return packages;
+    }
+
+    public AbstractDependencyVisitor() {
+        super(Opcodes.ASM5);
+    }
 
     abstract protected void addName(String name);
 
-    /* -- ClassVisitor -- */
+    // ClassVisitor
 
-    public void visit(int version, int access, String name, String signature,
-		      String superName, String[] interfaces)
-    {
-	if (signature == null) {
-	    addNameInternal(superName);
-	    addNames(interfaces);
-	} else {
-	    addSignature(signature);
-	}
-    }
-    
-    public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-	addDesc(desc);
-	return this;
+    @Override
+    public void visit(final int version, final int access, final String name,
+            final String signature, final String superName,
+            final String[] interfaces) {
+        String p = getGroupKey(name);
+        current = groups.get(p);
+        if (current == null) {
+            current = new HashMap<String, Integer>();
+            groups.put(p, current);
+        }
+
+        if (signature == null) {
+            if (superName != null) {
+                addInternalName(superName);
+            }
+            addInternalNames(interfaces);
+        } else {
+            addSignature(signature);
+        }
     }
 
-    public FieldVisitor visitField(int access, String name, String desc,
-				   String signature, Object value)
+    @Override
+    public void visitInnerClass(String name, String outerName, String innerName,
+				int access)
     {
-	if (signature == null) {
-	    addDesc(desc);
-	} else {
-	    addTypeSignature(signature);
-	}
-	if (value instanceof Type) {
+	addInternalName(outerName);
+	addInternalName(name);
+    }
+
+    @Override
+    public AnnotationVisitor visitAnnotation(final String desc,
+            final boolean visible) {
+        addDesc(desc);
+        return new AnnotationDependencyVisitor();
+    }
+
+    @Override
+    public AnnotationVisitor visitTypeAnnotation(final int typeRef,
+            final TypePath typePath, final String desc, final boolean visible) {
+        addDesc(desc);
+        return new AnnotationDependencyVisitor();
+    }
+
+    @Override
+    public FieldVisitor visitField(final int access, final String name,
+            final String desc, final String signature, final Object value) {
+        if (signature == null) {
+            addDesc(desc);
+        } else {
+            addTypeSignature(signature);
+        }
+        if (value instanceof Type) {
             addType((Type) value);
         }
-	return this;
+        return new FieldDependencyVisitor();
     }
-    
-    public MethodVisitor visitMethod(int access, String name, String desc,
-				     String signature, String[] exceptions)
-    {
+
+    @Override
+    public MethodVisitor visitMethod(final int access, final String name,
+            final String desc, final String signature, final String[] exceptions) {
         if (signature == null) {
             addMethodDesc(desc);
         } else {
             addSignature(signature);
         }
-        addNames(exceptions);
-        return this;
+        addInternalNames(exceptions);
+        return new MethodDependencyVisitor();
     }
 
-    public void visitInnerClass(String name, String outerName,
-				String innerName, int access)
-    {
-	/* XXX: Do we need to consider inner classes?
-         * Yes the old ClassDep tool includes them */
-        addNameInternal(outerName);
-	addNameInternal(name);
-    }
+    class AnnotationDependencyVisitor extends AnnotationVisitor {
 
-    /* -- MethodVisitor -- */
+        public AnnotationDependencyVisitor() {
+            super(Opcodes.ASM5);
+        }
 
-    public AnnotationVisitor visitParameterAnnotation(int parameter,
-						      String desc,
-						      boolean visible)
-    {
-        addDesc(desc);
-        return this;
-    }
+        @Override
+        public void visit(final String name, final Object value) {
+            if (value instanceof Type) {
+                addType((Type) value);
+            }
+        }
 
-    public void visitTypeInsn(int opcode, String desc) {
-        if (desc.charAt(0) == '[') {
+        @Override
+        public void visitEnum(final String name, final String desc,
+                final String value) {
             addDesc(desc);
-        } else {
-            addNameInternal(desc);
-	}
-    }
+        }
 
-    public void visitFieldInsn(int opcode, String owner, String name,
-			       String desc)
-    {
-        addNameInternal(owner);
-        addDesc(desc);
-    }
-    
-    String pattern = "^\\[{0,2}L{0,1}(\\w+[/.]{1}[\\w$\\d/.]+);{0,1}$";
-    Pattern arrayOfObjects = Pattern.compile(pattern);
-    public void visitMethodInsn(int opcode, String owner, String name,
-				String desc)
-    {
-        /* This filters out Generic's and primitive owners.
-         *
-         * Also when the owner is an array, containing Objects and
-         * the method name is clone(), (I think it's got something to do
-         * with cloning array's, this must be a new java 5 language feature
-         * I tested 1.4 code without this ever occurring)      
-         * we can't get the Object's type
-         * using Type.getType(owner) due to the nature of 
-         * the ASM Core API requiring bytecode be read sequentially.
-         * This only occurs with clone() which returns java.lang.Object
-         */
-        Matcher match = arrayOfObjects.matcher(owner);
-        while (match.find()){
-            String object = match.group(1);
-            addNameInternal(object);
-        } 
-        addMethodDesc(desc);
-    }
+        @Override
+        public AnnotationVisitor visitAnnotation(final String name,
+                final String desc) {
+            addDesc(desc);
+            return this;
+        }
 
-    public void visitLdcInsn(Object cst) {
-        if (cst instanceof Type) {
-            addType((Type) cst);
-	}
-    }
-
-    public void visitMultiANewArrayInsn(String desc, int dims) {
-        addDesc(desc);
-    }
-
-    public void visitLocalVariable(String name, String desc, String signature,
-				   Label start, Label end, int index)
-    {
-	if (signature != null) {
-	    addTypeSignature(signature);
-	}
-    }
-
-    public void visitTryCatchBlock(Label start, Label end, Label handler,
-				   String type)
-    {
-        addNameInternal(type);
-    }
-
-    /* -- AnnotationVisitor -- */
-
-    public void visit(String name, Object value) {
-        if (value instanceof Type) {
-            addType((Type) value);
-	}
-    }
-
-    public void visitEnum(String name, String desc, String value) {
-        addDesc(desc);
-    }
-
-    public AnnotationVisitor visitAnnotation(String name, String desc) {
-        addDesc(desc);
-        return this;
-    }
-
-    /* -- SignatureVisitor -- */
-
-    public void visitTypeVariable(String name) {
-        /* XXX: Need to do something? */
-        //System.out.println(name);
-    }
-
-    public void visitClassType(String name) {
-        addNameInternal(name);
-    }
-
-    public void visitInnerClassType(String name) {
-        // This is not a fully qualified class name, ignore.
-    }
-
-    /* -- Utilities -- */
-
-    private void addNameInternal(String name) {
-        if (name != null) {
-	    addName(name.replace('/', '.'));
-	}
-    }
-
-    private void addNames(String[] names) {
-	if (names != null) {
-            int l = names.length;
-	    for (int i = 0; i < l; i++) {
-                String name = names[i];
-		addNameInternal(name);
-	    }
-	}
-    }
-
-    private void addDesc(String desc) {
-        addType(Type.getType(desc));
-    }
-
-    private void addMethodDesc(String desc) {
-        addType(Type.getReturnType(desc));
-        Type [] type = Type.getArgumentTypes(desc);
-        int l = type.length;
-	for (int i = 0; i < l; i++) {            
-            addType(type[i]);
-	}
-    }
-
-    private void addType(Type t) {
-        switch (t.getSort()) {
-            case Type.ARRAY:
-                addType(t.getElementType());
-                break;
-            case Type.OBJECT:
-                addNameInternal(t.getClassName());
-                break;
+        @Override
+        public AnnotationVisitor visitArray(final String name) {
+            return this;
         }
     }
 
-    private void addSignature(String signature) {
-	new SignatureReader(signature).accept(this);
+    class FieldDependencyVisitor extends FieldVisitor {
+
+        public FieldDependencyVisitor() {
+            super(Opcodes.ASM5);
+        }
+
+        @Override
+        public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+            addDesc(desc);
+            return new AnnotationDependencyVisitor();
+        }
+
+        @Override
+        public AnnotationVisitor visitTypeAnnotation(final int typeRef,
+                final TypePath typePath, final String desc,
+                final boolean visible) {
+            addDesc(desc);
+            return new AnnotationDependencyVisitor();
+        }
     }
 
-    private void addTypeSignature(String signature) {
-	new SignatureReader(signature).acceptType(this);
+    class MethodDependencyVisitor extends MethodVisitor {
+
+        public MethodDependencyVisitor() {
+            super(Opcodes.ASM5);
+        }
+
+        @Override
+        public AnnotationVisitor visitAnnotationDefault() {
+            return new AnnotationDependencyVisitor();
+        }
+
+        @Override
+        public AnnotationVisitor visitAnnotation(final String desc,
+                final boolean visible) {
+            addDesc(desc);
+            return new AnnotationDependencyVisitor();
+        }
+
+        @Override
+        public AnnotationVisitor visitTypeAnnotation(final int typeRef,
+                final TypePath typePath, final String desc,
+                final boolean visible) {
+            addDesc(desc);
+            return new AnnotationDependencyVisitor();
+        }
+
+        @Override
+        public AnnotationVisitor visitParameterAnnotation(final int parameter,
+                final String desc, final boolean visible) {
+            addDesc(desc);
+            return new AnnotationDependencyVisitor();
+        }
+
+        @Override
+        public void visitTypeInsn(final int opcode, final String type) {
+            addType(Type.getObjectType(type));
+        }
+
+        @Override
+        public void visitFieldInsn(final int opcode, final String owner,
+                final String name, final String desc) {
+            addInternalName(owner);
+            addDesc(desc);
+        }
+
+        @Override
+        public void visitMethodInsn(final int opcode, final String owner,
+                final String name, final String desc, final boolean itf) {
+            addInternalName(owner);
+            addMethodDesc(desc);
+        }
+
+        @Override
+        public void visitInvokeDynamicInsn(String name, String desc,
+                Handle bsm, Object... bsmArgs) {
+            addMethodDesc(desc);
+            addConstant(bsm);
+            for (int i = 0; i < bsmArgs.length; i++) {
+                addConstant(bsmArgs[i]);
+            }
+        }
+
+        @Override
+        public void visitLdcInsn(final Object cst) {
+            addConstant(cst);
+        }
+
+        @Override
+        public void visitMultiANewArrayInsn(final String desc, final int dims) {
+            addDesc(desc);
+        }
+
+        @Override
+        public AnnotationVisitor visitInsnAnnotation(int typeRef,
+                TypePath typePath, String desc, boolean visible) {
+            addDesc(desc);
+            return new AnnotationDependencyVisitor();
+        }
+
+        @Override
+        public void visitLocalVariable(final String name, final String desc,
+                final String signature, final Label start, final Label end,
+                final int index) {
+            addTypeSignature(signature);
+        }
+
+        @Override
+        public AnnotationVisitor visitLocalVariableAnnotation(int typeRef,
+                TypePath typePath, Label[] start, Label[] end, int[] index,
+                String desc, boolean visible) {
+            addDesc(desc);
+            return new AnnotationDependencyVisitor();
+        }
+
+        @Override
+        public void visitTryCatchBlock(final Label start, final Label end,
+                final Label handler, final String type) {
+            if (type != null) {
+                addInternalName(type);
+            }
+        }
+
+        @Override
+        public AnnotationVisitor visitTryCatchAnnotation(int typeRef,
+                TypePath typePath, String desc, boolean visible) {
+            addDesc(desc);
+            return new AnnotationDependencyVisitor();
+        }
+    }
+
+    class SignatureDependencyVisitor extends SignatureVisitor {
+
+        String signatureClassName;
+
+        public SignatureDependencyVisitor() {
+            super(Opcodes.ASM5);
+        }
+
+        @Override
+        public void visitClassType(final String name) {
+            signatureClassName = name;
+            addInternalName(name);
+        }
+
+        @Override
+        public void visitInnerClassType(final String name) {
+            signatureClassName = signatureClassName + "$" + name;
+            addInternalName(signatureClassName);
+        }
+    }
+
+    // ---------------------------------------------
+
+    private String getGroupKey(String name) {
+        int n = name.lastIndexOf('/');
+        if (n > -1) {
+            name = name.substring(0, n);
+        }
+        packages.add(name);
+        return name;
+    }
+
+    /*
+    private void addName(final String name) {
+        if (name == null) {
+            return;
+        }
+        String p = getGroupKey(name);
+        if (current.containsKey(p)) {
+            current.put(p, current.get(p) + 1);
+        } else {
+            current.put(p, 1);
+        }
+    }
+    */
+
+    void addInternalName(final String name) {
+	if (name != null) {
+	    addType(Type.getObjectType(name));
+	}
+    }
+
+    private void addInternalNames(final String[] names) {
+        for (int i = 0; names != null && i < names.length; i++) {
+            addInternalName(names[i]);
+        }
+    }
+
+    void addDesc(final String desc) {
+        addType(Type.getType(desc));
+    }
+
+    void addMethodDesc(final String desc) {
+        addType(Type.getReturnType(desc));
+        Type[] types = Type.getArgumentTypes(desc);
+        for (int i = 0; i < types.length; i++) {
+            addType(types[i]);
+        }
+    }
+
+    void addType(final Type t) {
+        switch (t.getSort()) {
+        case Type.ARRAY:
+            addType(t.getElementType());
+            break;
+        case Type.OBJECT:
+            addName(t.getInternalName());
+            break;
+        case Type.METHOD:
+            addMethodDesc(t.getDescriptor());
+            break;
+        }
+    }
+
+    private void addSignature(final String signature) {
+        if (signature != null) {
+            new SignatureReader(signature)
+                    .accept(new SignatureDependencyVisitor());
+        }
+    }
+
+    void addTypeSignature(final String signature) {
+        if (signature != null) {
+            new SignatureReader(signature)
+                    .acceptType(new SignatureDependencyVisitor());
+        }
+    }
+
+    void addConstant(final Object cst) {
+        if (cst instanceof Type) {
+            addType((Type) cst);
+        } else if (cst instanceof Handle) {
+            Handle h = (Handle) cst;
+            addInternalName(h.getOwner());
+            addMethodDesc(h.getDesc());
+        }
     }
 }

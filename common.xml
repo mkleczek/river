@@ -125,12 +125,13 @@
         <pathelement path="${river.classes.dir}"/>
     </path>
 
-    <fileset id="asm.jars" dir="${root}/asm">
-        <include name="asm-3.2.jar" />
-        <include name="asm-commons-3.2.jar" />
+    <fileset id="asm.jars" dir="${root}/lib">
+        <include name="asm-5.0.4.jar" />
+        <include name="asm-commons-5.0.4.jar" />
+        <include name="asm-tree-5.0.4.jar"/>
     </fileset>
 
-    <fileset id="velocity.jars" dir="${root}/velocity">
+    <fileset id="velocity.jars" dir="${root}/lib">
         <include name="velocity-1.7.jar" />
     </fileset>
 

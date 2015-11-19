@@ -27,7 +27,8 @@
 <!-- ##                                                                 -->
 <!-- ################################################################## -->
 <project name="river" basedir="." default="all.build"
-        xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+        xmlns:artifact="antlib:org.apache.maven.artifact.ant"
+        xmlns:ivy="antlib:org.apache.ivy.ant">
 
     <description>Apache River is a project furthering the development
         and advancement of Jini technology.</description>
@@ -90,20 +91,6 @@
         <exclude name="${doc}/release-notes/new.html"/>
     </fileset>
 
-    <fileset id="examples.bin.files" dir="${basedir}/examples">
-        <include name="**/${lib}/**"/>
-        <include name="**/config/**"/>
-        <exclude name="**/config/META-INF/"/>
-        <include name="**/prebuiltkeys/**"/>
-        <include name="**/scripts/*.bat"/>
-        <include name="**/${doc}/**"/>
-        <include name="**/*.html"/>
-    </fileset>
-    
-    <fileset id="examples.bin.exec.files" dir="${basedir}/examples">
-        <include name="**/scripts/*.sh"/>
-    </fileset>
-
     <!-- TODO create separate bin distribution for the qa tests? -->
     <!--<fileset id="qa.bin.files" dir="${basedir}/qa">
         <include name="${lib}/**"/>
@@ -120,15 +107,11 @@
         <delete file="${bin.zip.bundle}"/>
         <zip destfile="${bin.zip.bundle}" roundup="yes">
             <zipfileset prefix="${product.name}" refid="river.bin.files" />
-            <zipfileset prefix="${product.name}/examples" refid="examples.bin.files" />
-            <zipfileset prefix="${product.name}/examples" refid="examples.bin.exec.files" filemode="755"/>
             <!--<zipfileset prefix="${product.name}/qa" refid="qa.bin.files" />-->
         </zip>
         <delete file="${bin.tar.bundle}"/>
         <tar destfile="${bin.tar.bundle}" compression="gzip" longfile="gnu">
             <tarfileset prefix="${product.name}" refid="river.bin.files" />
-            <tarfileset prefix="${product.name}/examples" refid="examples.bin.files" />
-            <tarfileset prefix="${product.name}/examples" refid="examples.bin.exec.files" filemode="755"/>
             <!--<tarfileset prefix="${product.name}/qa" refid="qa.bin.files" />-->
         </tar>
     </target>
@@ -154,18 +137,6 @@
         <exclude name="${src}/**/*.sh"/>
         -->
 
-    </fileset>
-
-    <fileset id="examples.src.files" dir="${basedir}/examples">
-        <include name="**"/>
-        <exclude name="**/${lib}/"/>
-        <exclude name="**/${build}/"/>
-        <exclude name="**/prebuiltkeys/"/>
-        <exclude name="**/${doc}/"/>
-    </fileset>
-
-    <fileset id="examples.src.exec.files" dir="${basedir}/examples">
-        <include name="**/scripts/*.sh"/>
     </fileset>
 
     <fileset id="qa.src.files" dir="${basedir}/qa">
@@ -202,18 +173,11 @@
         <delete file="${src.zip.bundle}"/>
         <zip destfile="${src.zip.bundle}" roundup="yes">
             <zipfileset prefix="${product.name}" refid="river.src.files"/>
-            <zipfileset prefix="${product.name}/examples" refid="examples.src.files"/>
-            <zipfileset prefix="${product.name}/examples"
-                    refid="examples.src.exec.files" filemode="755"/>
             <zipfileset prefix="${product.name}/qa" refid="qa.src.files" />
         </zip>
         <delete file="${src.tar.bundle}"/>
         <tar destfile="${src.tar.bundle}" compression="gzip" longfile="gnu">
             <tarfileset prefix="${product.name}" refid="river.src.files" />
-            <tarfileset prefix="${product.name}/examples"
-                    refid="examples.src.files" />
-            <tarfileset prefix="${product.name}/examples"
-                    refid="examples.src.exec.files" filemode="755"/>
             <tarfileset prefix="${product.name}/qa" refid="qa.src.files" />
         </tar>
     </target>
@@ -515,10 +479,49 @@
         </javac-cmd>
     </target>
 
-    <target name="copy-extlibs" >
-        <copy todir="lib">
-            <fileset refid="asm.jars"/>
-        </copy>
+    <property name="ivy.install.version" value="2.4.0"/>
+    <property name="ivy.jar.dir" value="${build}/lib"/>
+    <property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar"/>
+    <condition property="skip.ivy.download">
+        <available file="${ivy.jar.file}"/>
+    </condition>
+    
+    <target name="download-ivy" unless="skip.ivy.download">
+        <mkdir dir="${ivy.jar.dir}"/>
+        <!-- download Ivy from web site so that it can be used even without any special installation -->
+        <echo message="installing ivy..."/>
+        <get src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar"
+             dest="${ivy.jar.file}" usetimestamp="true"/>
+    </target>
+    
+    <!-- ================================= 
+     target: install-ivy         
+       this target is not necessary if you put ivy.jar in your ant lib directory
+       if you already have ivy in your ant lib, you can simply remove this
+       target and the dependency the 'go' target has on it
+    ================================= -->
+    <target name="install-ivy" depends="download-ivy" description="--> install ivy">
+        <!-- try to load ivy here from local ivy dir, in case the user has not already dropped
+        it into ant's lib dir (note that the latter copy will always take precedence).
+        We will not fail as long as local lib dir exists (it may be empty) and
+        ivy is in at least one of ant's lib dir or the local lib dir. -->
+        <path id="ivy.lib.path">
+            <fileset dir="${ivy.jar.dir}" includes="*.jar"/>
+        </path>
+        <taskdef resource="org/apache/ivy/ant/antlib.xml"
+                 uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
+    </target>    
+	
+
+    <target name="copy-extlibs" depends="install-ivy">        
+        <!-- Let's use Ivy instead... -->
+        <ivy:resolve conf="*, tools"/>
+        <ivy:retrieve pattern="${lib}/[artifact]-[revision].[ext]" 
+            conf="tools"/>
+        <ivy:retrieve pattern="test/${lib}/[artifact]-[revision].[ext]" 
+            conf="tests"/>
+        
+
     </target>
 
     <target name="install-policy"
@@ -551,6 +554,7 @@
     <target name="clean-jars"
 		description="Deletes the lib, lib-dl, and lib-ext directories.">
         <delete dir="${lib.dir}" quiet="true" />
+        <delete dir="${test.lib.dir}" quiet="true" />
         <delete dir="${lib-dl.dir}"	quiet="true"/>
         <delete dir="${lib-ext.dir}" quiet="true"/>
     </target>
@@ -2159,7 +2163,7 @@
 			  com/sun/jini/tool/envcheck/plugins/resources/*.properties" />
         </jar>
         <preferredlistgen>
-            <arg line="-cp"	/>
+            <arg line="-cp"/>
             <arg path="${build.classes.dir}"/>
             <arg line="-jar"/>
             <arg path="${lib.dir}/tools.jar"/>
@@ -2192,40 +2196,30 @@
             description="Build all, including subcomponents">
             <!-- Call qa subcomponent build -->
         <ant dir="qa" target="build" inheritall="false" />
-        <!-- Call examples/hello subcomponent build -->
-        <ant dir="examples/hello" target="build" inheritall="false" />
     </target>
 
     <target name="all.clean" depends="clean,clean-tests"
             description="Clean all, including subcomponents">
         <!-- Call qa subcomponent build -->
         <ant dir="qa" target="clean" inheritall="false" />
-        <!-- Call examples/hello subcomponent build -->
-        <ant dir="examples/hello" target="clean" inheritall="false" />
     </target>
 
     <target name="all.compile" depends="jars"
             description="Compile all, including subcomponents">
         <!-- Call qa subcomponent build -->
         <ant dir="qa" target="compile" inheritall="false" />
-        <!-- Call examples/hello subcomponent build -->
-        <ant dir="examples/hello" target="compile" inheritall="false" />
     </target>
 
     <target name="all.doc" depends="jars,river-doc"
             description="Generate javadoc for all, including subcomponents">
         <!-- Call qa subcomponent build -->
         <ant dir="qa" target="doc" inheritall="false" />
-        <!-- Call examples/hello subcomponent build -->
-        <ant dir="examples/hello" target="doc" inheritall="false" />
     </target>
 
     <target name="all.jars" depends="jars"
             description="Generate JAR files for all, including subcomponents">
         <!-- Call qa subcomponent build -->
         <ant dir="qa" target="jars" inheritall="false" />
-        <!-- Call examples/hello subcomponent build -->
-        <ant dir="examples/hello" target="jars" inheritall="false" />
     </target>
 
     <!-- TODO: cleanup and find out where exactly to publish to -->

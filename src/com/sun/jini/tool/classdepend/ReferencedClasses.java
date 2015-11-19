@@ -21,7 +21,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * A utility class for computing the classes referred to by another class.
@@ -56,7 +60,8 @@ public class ReferencedClasses {
 	new ClassReader(in).accept(
 	    new AbstractDependencyVisitor() {
 		protected void addName(String name) {
-		    dependencies.add(name);
+		    String className = name.replace('/', '.');
+		    dependencies.add(className);
 		}
 	    },
 	    ClassReader.SKIP_DEBUG);
