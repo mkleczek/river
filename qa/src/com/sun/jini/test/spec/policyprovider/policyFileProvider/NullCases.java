@@ -112,12 +112,24 @@ public class NullCases extends PolicyFileProviderTestBase {
          */
         callGetPermissionsNPD();
 
+        /* (Greg Trasuk - 20151124)
+        The test below checks that if you call getPermissions(codesource) 
+        with a null codesource, a NullPointerException should be thrown.  The
+        implementation of it relies not with DynamicPolicyProvider but with the
+        underlying Policy object (java.security.Policy), which used to do just 
+        that.
+        
+        However, this behaviour was reported as a bug in JDK-7147830 
+        (2012-02-22), and resolved in in JDK8, as of 2012-07-17.
+        So it's no longer appropriate to do this test.  Commented out for now,
+        remove it completely if you happen to see this far in the future.
+        */
         /*
          * Call getPermissions() passing null as CodeSource
          * and verify that NullPointerException is thrown;
          */
-        msg = "policy.getPermissions((CodeSource) null)";
-        callGetPermissionsNPE((CodeSource) null, msg);
+        //msg = "policy.getPermissions((CodeSource) null)";
+        //callGetPermissionsNPE((CodeSource) null, msg);
 
         /*
          * Call policy.implies(null, null)
