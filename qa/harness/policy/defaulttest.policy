@@ -78,6 +78,23 @@ grant {
 
     permission java.util.PropertyPermission
         "*", "read";
+
+    // JDK8 seems to have made these necessary too...
+    permission java.lang.reflect.ReflectPermission 
+        "newProxyInPackage.com.sun.jini.norm";
+
+    permission java.lang.reflect.ReflectPermission 
+        "newProxyInPackage.com.sun.jini.fiddler";
+
+    permission java.lang.reflect.ReflectPermission 
+        "newProxyInPackage.com.sun.jini.reggie";
+
+    permission java.lang.reflect.ReflectPermission 
+        "newProxyInPackage.com.sun.jini.outrigger";
+
+    permission java.lang.reflect.ReflectPermission 
+        "newProxyInPackage.com.sun.jini.mercury";
+
 };
 
 // needed by some io tests
