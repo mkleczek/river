@@ -21,7 +21,6 @@ import java.util.logging.Level;
 
 // com.sun.jini
 import com.sun.jini.qa.harness.TestException;
-import com.sun.jini.qa.harness.ActivatableServiceStarterAdmin;
 import com.sun.jini.qa.harness.QAConfig;
 
 // java.rmi

@@ -20,7 +20,6 @@ package com.sun.jini.test.impl.norm;
 import java.util.logging.Level;
 
 import com.sun.jini.qa.harness.Admin;
-import com.sun.jini.qa.harness.ActivatableServiceStarterAdmin;
 import com.sun.jini.qa.harness.TestException;
 
 import java.io.IOException;
@@ -125,38 +124,8 @@ public class ExpiredLeaseTest extends TestBase {
 	if (!tryShutdown) 
 	    return;
 
-	logger.log(Level.INFO, "First half of test passed, ");
+	logger.log(Level.INFO, "Test passed, ");
 
-	Admin admin = manager.getAdmin(lrs);
-	if (admin instanceof ActivatableServiceStarterAdmin) {
-	    logger.log(Level.INFO, "trying second half");
-	    final Lease second = LocalLease.getDestructingLocalLease(Lease.FOREVER,
-							   60000, 1, 1, 2);
-	    listener.setExpectedLease(second);
-	    set.renewFor(second, Lease.FOREVER);
-
-	    if (listener.didReceiveExpected()) {
-		throw new TestException( 
-				     "Got 2nd event before "
-				   + "we killed the server");   
-	    }    
-	    shutdown(0);
-
-	    logger.log(Level.INFO, "Sleeping for " + eventWait + " ms");
-	    Thread.sleep(eventWait);
-
-	    listenerRslt = listener.didPass();
-	    if (listenerRslt != null) {
-		throw new TestException( listenerRslt);
-	    }			    	
-
-	    if (!listener.didReceiveExpected()) {
-		throw new TestException( 
-				     "Did not receive an 2nd event");
-	    }
-	} else {
-	    logger.log(Level.INFO, "service is not activable, skipping second half");
-	}
     }	
 
     /** Listener class that does some checking and dispaches to the owner */

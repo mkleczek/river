@@ -25,7 +25,6 @@ import com.sun.jini.tool.envcheck.Reporter.Message;
 import com.sun.jini.tool.envcheck.SubVMTask;
 import com.sun.jini.tool.envcheck.Util;
 import java.io.File;
-import com.sun.jini.start.SharedActivationGroupDescriptor;
 
 /**
  * Check that the Java platform is at least version 1.4. This check is applied
@@ -49,27 +48,6 @@ public class CheckJDK1_4 extends AbstractPlugin {
     public void run(EnvCheck envCheck) {
 	this.envCheck = envCheck;
 	checkMainVM();
-	checkGroupVM();
-    }
-
-    /**
-     * Check the activation group VM. If there is a
-     * <code>SharedActivationGroupDescriptor</code> available from the
-     * container, invoke a subtask which verifies that the VM used to run that
-     * group is at least version 1.4.
-     */
-    private void checkGroupVM() {
-	SharedActivationGroupDescriptor gd = envCheck.getGroupDescriptor();
-	if (gd != null) {
-	    String source;
-	    String serverCommand = gd.getServerCommand();
-	    if (serverCommand == null) {
-		source = getString("cmdlinejava", envCheck.getJavaCmd());
-	    } else {
-		source = getString("groupjava", serverCommand);
-	    }
-	    processReturn(envCheck.launch(null, gd, taskName), source);
-	}
     }
 
     /**

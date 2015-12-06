@@ -34,8 +34,6 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.StringTokenizer;
 
-import com.sun.jini.start.SharedActivationGroupDescriptor;
-
 /**
  * Check whether <code>jsk-platform.jar</code> is in the classpath
  * of the command-line being analyzed, and if the activation group
@@ -63,11 +61,6 @@ public class CheckJSKPlatform extends AbstractPlugin {
 	} else {
 	    classpath = envCheck.getClasspath();
 	    checkPlatform(classpath, getString("cmdline"));
-	}
-	SharedActivationGroupDescriptor gd = envCheck.getGroupDescriptor();
-	if (gd != null) {
-	    classpath = gd.getClasspath();
-	    checkPlatform(classpath, getString("grouppath"));
 	}
     }
 

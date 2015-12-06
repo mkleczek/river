@@ -36,16 +36,19 @@ import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.net.URLClassLoader;
 import java.rmi.MarshalledObject;
+import java.security.AccessController;
 import java.security.Permission;
 import java.security.Policy;
 import java.security.AllPermission;
+import java.security.PrivilegedAction;
+import java.security.Security;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Class used to launch shared, non-activatable, in-process 
+ * Class used to launch shared, in-process 
  * services. Clients construct this object with the details
  * of the service to be launched, then call 
  * {@link #create(net.jini.config.Configuration) create(Configuration config) }
@@ -596,7 +599,7 @@ public class NonActivatableServiceDescriptor
         URLClassLoader newClassLoader = null;
         try {
             newClassLoader = 
-	        new ActivateWrapper.ExportClassLoader(
+	        new ExportClassLoader(
 		    ClassLoaderUtil.getImportCodebaseURLs(getImportCodebase()),
 		    ClassLoaderUtil.getCodebaseURLs(getExportCodebase()),
 		    oldClassLoader);
@@ -624,10 +627,10 @@ public class NonActivatableServiceDescriptor
 	    }
 	    
 	    Policy service_policy =
-		ActivateWrapper.getServicePolicyProvider(
+		getServicePolicyProvider(
 		     new PolicyFileProvider(getPolicy()));
 	    Policy backstop_policy =
-		ActivateWrapper.getServicePolicyProvider(initialGlobalPolicy);
+		getServicePolicyProvider(initialGlobalPolicy);
 	    LoaderSplitPolicyProvider split_service_policy =
 		new LoaderSplitPolicyProvider(
 		    newClassLoader, service_policy, backstop_policy);
@@ -751,5 +754,52 @@ public class NonActivatableServiceDescriptor
     private void readObjectNoData() throws ObjectStreamException {
 	throw new InvalidObjectException("no data");
     }
+    
+    static Policy getServicePolicyProvider(Policy service_policy) throws Exception {
+        Policy servicePolicyWrapper = null;
+        if (servicePolicyProvider != null) {
+ 	    Class sp = Class.forName(servicePolicyProvider);
+	    logger.log(Level.FINEST, 
+	        "Obtained custom service policy implementation class: {0}", sp);
+	    Constructor constructor =
+	        sp.getConstructor(policyTypes);
+	    logger.log(Level.FINEST, 
+	        "Obtained custom service policy implementation constructor: {0}", 
+	        constructor);
+	    servicePolicyWrapper = (Policy)
+		constructor.newInstance(new Object[]{service_policy});
+	    logger.log(Level.FINEST, 
+		"Obtained custom service policy implementation instance: {0}", 
+		servicePolicyWrapper);
+	} else {
+	   servicePolicyWrapper = new DynamicPolicyProvider(service_policy);
+	   logger.log(Level.FINEST, 
+		"Using default service policy implementation instance: {0}", 
+		servicePolicyWrapper);
+	}
+	return servicePolicyWrapper;
+    }
+   
+    /** 
+     * Fully qualified name of custom, service policy provider 
+     */
+    private static String servicePolicyProvider =
+	((String) AccessController.doPrivileged(
+	    new PrivilegedAction() {
+		public Object run() {
+		    return Security.getProperty(
+			    "com.sun.jini.start." +
+			    "servicePolicyProvider");
+		}
+	    }));
+
+    /**
+     * The parameter types for the 
+     * "custom, service policy constructor".
+     */
+    private static final Class[] policyTypes = {
+        Policy.class
+    };
+    
 } 
 

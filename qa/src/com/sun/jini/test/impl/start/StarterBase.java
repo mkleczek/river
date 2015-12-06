@@ -39,11 +39,6 @@ public abstract class StarterBase extends QATest {
 	l.setLevel(Level.ALL);
 	handler = new MyHandler();
 	l.addHandler(handler);
-        if (getConfig().getBooleanConfigVal("com.sun.jini.qa.harness.shared",
-                                       true))
-        {
-            manager.startService("sharedGroup");
-        }
     }
 
     static class MyHandler extends Handler {

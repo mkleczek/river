@@ -21,8 +21,6 @@ import com.sun.jini.qa.harness.TestException;
 import com.sun.jini.start.LifeCycle;
 import com.sun.jini.start.NonActivatableServiceDescriptor;
 import com.sun.jini.start.ServiceDescriptor;
-import com.sun.jini.start.SharedActivatableServiceDescriptor;
-import com.sun.jini.start.SharedActivationGroupDescriptor;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -74,52 +72,12 @@ public class SerializedServiceDescriptors extends StarterBase {
         String[] sharedvm_props = new String[] {// server properties
 		    "com.sun.jini.start.activatewrapper.debug", "init",
 	        };
-        SharedActivationGroupDescriptor sharedvm =
-            new SharedActivationGroupDescriptor(
-	        "/view/resendes/vob/jive/policy/policy.sharedvm",
-	        "/view/resendes/vob/jive/lib/bogus_sharedvm.jar",
-	        sharedVmLog,
-    	        "/bin/java", //server command
-	        new String[] {// server options
-		    "-ea", 
-		},
-	        sharedvm_props);
-
-        SharedActivatableServiceDescriptor sasd = 
-            new SharedActivatableServiceDescriptor(
-	        "http://resendes:8080/mercury-dl.jar",
-	        "http://resendes:8086/policy.mercury",
-	        "http://resendes:8080/mercury.jar",
-	        "com.sun.jini.mercury.MailboxBogusImpl",
-	        sharedVmLog,
-	        new String[] { 
-		    "http://resendes:8089/mercury_service_act.config" 
-		},
-	        true);
-
-        SharedActivatableServiceDescriptor sasdWithExtras = 
-            new SharedActivatableServiceDescriptor(
-	        "http://resendes:8080/mercury-dl.jar",
-	        "http://resendes:8086/policy.mercury",
-	        "http://resendes:8080/mercury.jar",
-	        "com.sun.jini.mercury.MailboxBogusImpl",
-	        sharedVmLog,
-	        new String[] { 
-		    "http://resendes:8089/mercury_service_act.config" 
-		},
-                pp,
-                pp,
-	        true,
-                "localhost",
-                1234);
                 
         ServiceDescriptor[] serviceDescriptors = 
 	    new ServiceDescriptor[] {
 		// sasdWithExtras & nasdWithExtras not written because 
                 // default/recovered preparer and lifecycle objects won't match.
                 nasdWithoutExtras, 
-		sharedvm, 
-		sasd
 	    };
 
         // Serialize service descriptors to a file
@@ -127,17 +85,11 @@ public class SerializedServiceDescriptors extends StarterBase {
 	ObjectOutput oos = new ObjectOutputStream(f);    
 	oos.writeObject(nasdWithExtras);    
        	oos.writeObject(nasdWithoutExtras);    
-	oos.writeObject(sharedvm);    
-	oos.writeObject(sasd);    
-	oos.writeObject(sasdWithExtras);    
         oos.writeObject(serviceDescriptors);    
 	oos.flush(); 
 	oos.close();
         logger.log(Level.INFO, "Wrote: " + nasdWithExtras);
         logger.log(Level.INFO, "Wrote: " + nasdWithoutExtras);        
-        logger.log(Level.INFO, "Wrote: " + sharedvm);
-        logger.log(Level.INFO, "Wrote: " + sasd);
-        logger.log(Level.INFO, "Wrote: " + sasdWithExtras);
         logger.log(Level.INFO, "Wrote: " + Arrays.asList(serviceDescriptors));
 
         // Deserialize objects from a file.    
@@ -149,24 +101,12 @@ public class SerializedServiceDescriptors extends StarterBase {
         nasdWithExtras_r.setServicePreparer(pp);
 	NonActivatableServiceDescriptor nasdWithoutExtras_r = 
 	    (NonActivatableServiceDescriptor)ois.readObject();        
-	SharedActivationGroupDescriptor sharedvm_r = 
-	    (SharedActivationGroupDescriptor)ois.readObject();
-	SharedActivatableServiceDescriptor sasd_r =
-	    (SharedActivatableServiceDescriptor)ois.readObject();
-	SharedActivatableServiceDescriptor sasdWithExtras_r =
-	    (SharedActivatableServiceDescriptor)ois.readObject();
-	//sasdWithExtras_r.setLifeCycle(lc);
-        sasdWithExtras_r.setServicePreparer(pp);
-        sasdWithExtras_r.setInnerProxyPreparer(pp);
 	ServiceDescriptor[] recovered = 
             (ServiceDescriptor[])ois.readObject(); 
 	ois.close();
 	
         logger.log(Level.INFO, "Read: " + nasdWithExtras_r);
         logger.log(Level.INFO, "Read: " + nasdWithoutExtras_r);
-        logger.log(Level.INFO, "Read: " + sharedvm_r);
-        logger.log(Level.INFO, "Read: " + sasd_r);
-        logger.log(Level.INFO, "Read: " + sasdWithExtras_r);
         logger.log(Level.INFO, "Read: " + Arrays.asList(recovered));
 
 	if (!verifyNonActivatableServiceDescriptors(nasdWithExtras, nasdWithExtras_r)) {
@@ -176,18 +116,6 @@ public class SerializedServiceDescriptors extends StarterBase {
 	if (!verifyNonActivatableServiceDescriptors(nasdWithoutExtras, nasdWithoutExtras_r)) {
 	    throw new TestException(
 	        "Written and recovered NonActivatableServiceDescriptors don't match");
-	}
-        if (!verifySharedActivationGroupDescriptors(sharedvm, sharedvm_r)) {
-	    throw new TestException(
-	        "Written and recovered SharedActivationGroupDescriptors don't match");
-	}
-	if (!verifySharedActivatableServiceDescriptors(sasd, sasd_r)) {
-	    throw new TestException(
-	        "Written and recovered SharedActivatableServiceDescriptors don't match");
-	}
-	if (!verifySharedActivatableServiceDescriptors(sasdWithExtras, sasdWithExtras_r)) {
-	    throw new TestException(
-	        "Written and recovered SharedActivatableServiceDescriptors don't match");
 	}
 	if (!verifyServiceDescriptors(serviceDescriptors, recovered)) {
 	    throw new TestException(
@@ -235,59 +163,6 @@ public class SerializedServiceDescriptors extends StarterBase {
 	    throw new TestException("Unexpected exception: " + e);
 	}
 
-	//Do some negative tests - Ensure bad descriptor doesn't match
-        SharedActivatableServiceDescriptor bogus_sasd = 
-            new SharedActivatableServiceDescriptor(
-	        sasd.getExportCodebase(),
-	        sasd.getPolicy(),
-	        sasd.getImportCodebase(),
-	        sasd.getImplClassName(),
-	        sasd.getSharedGroupLog() + "_bogus",
-	        sasd.getServerConfigArgs(),
-	        sasd.getRestart());
-	if (verifySharedActivatableServiceDescriptors(bogus_sasd, sasd)) {
-	    throw new TestException("Bogus SASD passed verification");
-	}
-	
-	//Do some negative tests - Ensure setLifeCycle can't be called after creation
-	try {
-	    sasd.create(EmptyConfiguration.INSTANCE); //Original descriptor
-	} catch (Exception e) {
-            logger.log(Level.INFO, "exception creating SASD ... ignoring", e);
-	}
-	try {
-	    sasd.setLifeCycle(lc); 
-	} catch (IllegalStateException ie) {
-            logger.log(Level.INFO, "Expected exception setting SASD LifeCycle ... ignoring", ie);
-	} catch (Exception e) {
-	    e.printStackTrace();
-	    throw new TestException("Unexpected exception: " + e);
-	}
-	try {
-	    sasd_r.create(EmptyConfiguration.INSTANCE); //Recovered descriptor
-	} catch (Exception e) {
-            logger.log(Level.INFO, "exception creating recovered SASD ... ignoring", e);
-	}
-	try {
-	    sasd_r.setLifeCycle(lc); 
-	} catch (IllegalStateException ie) {
-            logger.log(Level.INFO, "Expected exception setting recovered SASD LifeCycle ... ignoring", ie);
-	} catch (Exception e) {
-	    e.printStackTrace();
-	    throw new TestException("Unexpected exception: " + e);
-	}
-		
-        SharedActivationGroupDescriptor bogus_sharedvm =
-            new SharedActivationGroupDescriptor(
-	        sharedvm.getPolicy(),
-	        sharedvm.getClasspath(),
-	        sharedvm.getLog() + "_bogus",
-	        sharedvm.getServerCommand(),
-	        sharedvm.getServerOptions(),
-	        sharedvm_props);
-	if (verifySharedActivationGroupDescriptors(bogus_sharedvm, sharedvm)) {
-	    throw new TestException("Bogus SAGD passed verification");
-	}
 		
     }
     
@@ -300,28 +175,12 @@ public class SerializedServiceDescriptors extends StarterBase {
             return false;
 	}
 	for (int i=0; i < wrote.length; i++) {
-	    if (wrote[i] instanceof SharedActivatableServiceDescriptor) {
-	        SharedActivatableServiceDescriptor sasdw = 
-		    (SharedActivatableServiceDescriptor)wrote[i];
-	        SharedActivatableServiceDescriptor sasdr = 
-		    (SharedActivatableServiceDescriptor)read[i];
-		if (!verifySharedActivatableServiceDescriptors(sasdw, sasdr)) {
-		    return false;
-		}
-	    } else if (wrote[i] instanceof NonActivatableServiceDescriptor) {
+            if (wrote[i] instanceof NonActivatableServiceDescriptor) {
 	        NonActivatableServiceDescriptor nasdw = 
 		    (NonActivatableServiceDescriptor)wrote[i];
 	        NonActivatableServiceDescriptor nasdr = 
 		    (NonActivatableServiceDescriptor)read[i];
 		if (!verifyNonActivatableServiceDescriptors(nasdw, nasdr)) {
-		    return false;
-		}
-	    } else if (wrote[i] instanceof SharedActivationGroupDescriptor) {
-	        SharedActivationGroupDescriptor sagdw = 
-		    (SharedActivationGroupDescriptor)wrote[i];
-	        SharedActivationGroupDescriptor sagdr = 
-		    (SharedActivationGroupDescriptor)read[i];
-		if (!verifySharedActivationGroupDescriptors(sagdw, sagdr)) {
 		    return false;
 		}
 	    } else {
@@ -331,24 +190,6 @@ public class SerializedServiceDescriptors extends StarterBase {
 	    }
 	}
 	return true;
-    }
-    
-    private static boolean verifySharedActivatableServiceDescriptors(
-        SharedActivatableServiceDescriptor wrote, SharedActivatableServiceDescriptor read) 
-    {
-        if (verifyNonActivatableServiceDescriptors(wrote, read) &&
-	    wrote.getSharedGroupLog().equals(read.getSharedGroupLog()) &&
-	    (wrote.getRestart() == read.getRestart()) &&
-	    wrote.getActivationSystemHost().equals(read.getActivationSystemHost()) &&
-	    (wrote.getActivationSystemPort() == read.getActivationSystemPort()))
-	{
-            logger.log(Level.FINE, "Written SASD [" + wrote + "] does match "
-	        + "recovered SASD [" + read + "]");	    
-	    return true;
-	}
-        logger.log(Level.INFO, "Written SASD [" + wrote + "] DOESN'T match "
-	    + "recovered SASD [" + read + "]");
-	return false;
     }
     
     private static boolean verifyNonActivatableServiceDescriptors(
@@ -373,24 +214,4 @@ public class SerializedServiceDescriptors extends StarterBase {
 	return false;
     }
     
-    private static boolean verifySharedActivationGroupDescriptors(
-        SharedActivationGroupDescriptor wrote, SharedActivationGroupDescriptor read) 
-    {
-        if (wrote.getPolicy().equals(read.getPolicy()) &&
-	    wrote.getClasspath().equals(read.getClasspath()) &&
-	    wrote.getLog().equals(read.getLog()) &&
-	    wrote.getServerCommand().equals(read.getServerCommand()) &&
-	    Arrays.equals(wrote.getServerOptions(), read.getServerOptions()) &&
-	    wrote.getServerProperties().equals(read.getServerProperties()) &&
-	    wrote.getActivationSystemHost().equals(read.getActivationSystemHost()) &&
-	    (wrote.getActivationSystemPort() == read.getActivationSystemPort()))
-	{
-            logger.log(Level.FINE, "Written SAGD [" + wrote + "] does match "
-	        + "recovered SAGD [" + read + "]");	    
-	    return true;
-	}
-        logger.log(Level.INFO, "Written SAGD [" + wrote + "] DOESN'T match "
-	    + "recovered SAGD [" + read + "]");
-	return false;
-    }
 }

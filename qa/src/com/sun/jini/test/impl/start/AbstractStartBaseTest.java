@@ -48,21 +48,12 @@ abstract public class AbstractStartBaseTest extends QATest {
      * <p>
      *   <ul>
      *     <li> retrieves configuration values needed by the current test
-     *     <li> starts the shared group (and thus the activation system)
-     *          if the shared parameter is true
      *   </ul>
-     * The shared group is explicitly started because the harness is designed
-     * to start it lazily.
      */
     public void setup(QAConfig config) throws Exception {
         super.setup(config);
         logger.log(Level.FINE, "AbstractBaseTest:setup()");
         getSetupInfo();
-	if (config.getBooleanConfigVal("com.sun.jini.qa.harness.shared",
-				       true)) 
-	{
-	    manager.startService("sharedGroup");
-	}
     }//end setup
 
     /* Retrieve (and display) configuration values for the current test */

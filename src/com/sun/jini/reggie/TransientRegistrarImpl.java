@@ -36,7 +36,7 @@ public class TransientRegistrarImpl extends RegistrarImpl {
     protected TransientRegistrarImpl(String[] configArgs, LifeCycle lifeCycle)
 	throws Exception
     {
-	super(configArgs, null, false, lifeCycle);
+	super(configArgs, false, lifeCycle);
     }
 
     /**
@@ -51,7 +51,7 @@ public class TransientRegistrarImpl extends RegistrarImpl {
     protected TransientRegistrarImpl(Configuration config, LifeCycle lifeCycle)
 	throws Exception
     {
-	super(config, null, false, lifeCycle);
+	super(config, false, lifeCycle);
     }
     
 }

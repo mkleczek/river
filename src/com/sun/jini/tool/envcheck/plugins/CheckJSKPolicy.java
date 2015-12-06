@@ -24,7 +24,6 @@ import com.sun.jini.tool.envcheck.Reporter;
 import com.sun.jini.tool.envcheck.Reporter.Message;
 import com.sun.jini.tool.envcheck.SubVMTask;
 import com.sun.jini.tool.envcheck.Util;
-import com.sun.jini.start.SharedActivationGroupDescriptor;
 
 /**
  * Check whether <code>jsk-policy.jar</code> is installed in the extensions
@@ -49,11 +48,7 @@ public class CheckJSKPolicy extends AbstractPlugin {
      */
     public void run(EnvCheck envCheck) {
 	this.envCheck = envCheck;
-	checkPolicy(null);
-	SharedActivationGroupDescriptor gd = envCheck.getGroupDescriptor();
-	if (gd != null) {
-	    checkPolicy(gd);
-	}
+	checkPolicy();
     }
 
     /**
@@ -63,11 +58,10 @@ public class CheckJSKPolicy extends AbstractPlugin {
      *
      * @param gd the group descriptor, or <code>null</code>
      */
-    private void checkPolicy(SharedActivationGroupDescriptor gd) {
+    private void checkPolicy() {
 	String source = 
-	    gd == null ? getString("vmsource")
-	               : getString("groupsource", gd.getServerCommand());
-	Object o = envCheck.launch(null, gd, taskName("JSKPolicyTask"));
+	    getString("vmsource");
+	Object o = envCheck.launch(null, taskName("JSKPolicyTask"));
 	if (o instanceof Boolean) {
 	    Message message;
 	    if (((Boolean) o).booleanValue()) {

@@ -73,7 +73,6 @@ import javax.security.auth.Subject;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 
-import net.jini.activation.ActivationExporter;
 import net.jini.security.BasicProxyPreparer;
 import net.jini.security.ProxyPreparer;
 import net.jini.security.TrustVerifier;
@@ -345,36 +344,11 @@ public class LookupSimulatorImpl implements LookupSimulator,
                                                    ConfigurationException,
 						   ActivationException
     {
-	if (activationID != null) {
-	    activationSystem = ActivationGroup.getSystem();
-	    // if not the none configuration, prepare proxies
-	    if (!noneConfiguration) {
-		ProxyPreparer activationIdPreparer =
-		    (ProxyPreparer) Config.getNonNullEntry(config,
-						       "lookupSimulator",
-						       "activationIdPreparer",
-						       ProxyPreparer.class);
-	
-		ProxyPreparer activationSystemPreparer = (ProxyPreparer)
-		    Config.getNonNullEntry(config, 
-				       "lookupSimulator",
-				       "activationSystemPreparer",
-				       ProxyPreparer.class);
 
-		activationID = (ActivationID)
-		    activationIdPreparer.prepareProxy(activationID);
-		activationSystem = (ActivationSystem)
-		    activationSystemPreparer.prepareProxy(activationSystem);
-	    }
-	}
 	if (noneConfiguration) {
 	    serverExporter =
 		new BasicJeriExporter(TcpServerEndpoint.getInstance(0),
 				      new BasicILFactory());
-	    if (activationID != null) {
-		serverExporter = new ActivationExporter(activationID,
-							serverExporter);
-	    }
 	} else {
 	    serverExporter = 
 		(Exporter) Config.getNonNullEntry(config,

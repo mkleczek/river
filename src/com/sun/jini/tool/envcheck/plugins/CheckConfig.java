@@ -46,8 +46,6 @@ import net.jini.config.ConfigurationProvider;
 import net.jini.config.NoSuchEntryException;
 
 import com.sun.jini.start.NonActivatableServiceDescriptor;
-import com.sun.jini.start.SharedActivatableServiceDescriptor;
-import com.sun.jini.start.SharedActivationGroupDescriptor;
 import com.sun.jini.start.ServiceDescriptor;
 import com.sun.jini.start.ClassLoaderUtil;
 
@@ -145,7 +143,7 @@ public class CheckConfig extends AbstractPlugin {
 	Message message;
 	String task = taskName("ConfigTask");
 	boolean ret = false;
-	Object o = envCheck.launch(d, envCheck.getGroupDescriptor(), task);
+	Object o = envCheck.launch(d, task);
 	if (o instanceof Boolean) {
 	    if (((Boolean) o).booleanValue()) {
 		message = new Message(Reporter.INFO,
@@ -180,7 +178,7 @@ public class CheckConfig extends AbstractPlugin {
 				   String source) 
     {
 	String task = taskName("GetGroupsTask");
-	Object o = envCheck.launch(d, envCheck.getGroupDescriptor(), task);
+	Object o = envCheck.launch(d, task);
 	if (o instanceof GroupInfo[]) {
 	    Message message;
 	    GroupInfo[] info = (GroupInfo[]) o;

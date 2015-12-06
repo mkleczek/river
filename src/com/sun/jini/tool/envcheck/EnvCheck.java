@@ -44,8 +44,6 @@ import net.jini.config.ConfigurationProvider;
 
 import com.sun.jini.start.ServiceDescriptor;
 import com.sun.jini.start.NonActivatableServiceDescriptor;
-import com.sun.jini.start.SharedActivatableServiceDescriptor;
-import com.sun.jini.start.SharedActivationGroupDescriptor;
 
 import com.sun.jini.tool.envcheck.Reporter.Message;
 
@@ -504,24 +502,6 @@ public class EnvCheck {
     }
 
     /**
-     * Return the <code>SharedActivationGroupDescriptor</code> contained in the
-     * service starter configuration. Returns <code>null</code> if there is no
-     * such descriptor, or if the command being analyzed does not invoke the
-     * service starter.
-     *
-     * @return the <code>SharedActivationGroupDescriptor</code> or 
-     *         <code>null</code>
-     */
-    public SharedActivationGroupDescriptor getGroupDescriptor() {
-	for (int i = 0; i < descriptors.length; i++) {
-	    if (descriptors[i] instanceof SharedActivationGroupDescriptor) {
-		return (SharedActivationGroupDescriptor) descriptors[i];
-	    }
-	}
-	return null;
-    }
-
-    /**
      * Perform the runtime checks. If any user plugins were supplied, construct
      * a class loader capable of loading them and modify
      * <code>combinedClasspath</code> to make the classes available to subtasks.
@@ -891,10 +871,9 @@ public class EnvCheck {
      *         <code>System.out</code> stream.
      */
     public Object launch(NonActivatableServiceDescriptor d, 
-			 SharedActivationGroupDescriptor gd,
 			 String taskName)
     {
-	return launch(d, gd, taskName, null);
+	return launch(d, taskName, null);
     }
 
     /**
@@ -906,51 +885,7 @@ public class EnvCheck {
      * <code>launch(taskName, args)</code>.
      * <p>
 
-     * If <code>d</code> is <code>null</code> and <code>gd</code> is
-     * non-<code>null</code> then the properties are taken from
-     * <code>gd.getServerProperties()</code> and the
-     * <code>java.security.policy</code> property is added or replaced with the
-     * value of <code>gd.getPolicy()</code>.  The options are taken from
-     * <code>gd.getServerOptions()</code>, but any <code>-cp/-classpath</code>
-     * option is discarded; a <code>-cp</code> option is added that is the value
-     * of <code>gd.getClasspath()</code> augmented with the classpath of the
-     * tool and plugins.  If <code>gd.getServerCommand()</code> is
-     * non-<code>null</code>, its value is used to invoke the child VM;
-     * otherwise the <code>java</code> command of the command line being
-     * analyzed is used. The arguments passed to the child VM consist of an
-     * array whose first element is <code>taskName</code> and whose remaining
-     * elements are taken from <code>args</code>.
-
-     * <p>
-
-     * If <code>d</code> is not <code>null</code>, but <code>gd</code> is
-     * <code>null</code>, then if <code>d</code> is an instance of
-     * <code>SharedActivatableServiceDescriptor</code> an
-     * <code>IllegalArgumentException</code> is thrown. Otherwise the properties
-     * and options are taken from the command line being analyzed. The
-     * <code>java.security.policy</code> property is added or replaced using the
-     * value of <code>d.getPolicy()</code>.  The <code>-cp/-classpath</code>
-     * option is replaced with the value of <code>d.getImportCodebase()</code>
-     * augmented with the classpath of the tool and plugins.  The arguments
-     * passed to the child VM consist of <code>taskName</code> followed by
-     * <code>args</code> if <code>args</code> is non-<code>null</code>, or
-     * followed by <code>d.getServerConfigArgs()</code> otherwise.  The VM is
-     * invoked using the <code>java</code> command of the command line being
-     * analyzed.
-
-     * <p>
-
-     * if <code>d</code> and <code>gd</code> are both non-<code>null</code> then
-     * if <code>d</code> is an instance of
-     * <code>SharedActivatableServiceDescriptor</code> then the properties,
-     * options, and <code>java</code> command are taken from
-     * <code>gd.getServerProperties()</code>,
-     * <code>gd.getServerOptions()</code>, and
-     * <code>gd.getServerCommand()</code>; however, if the value of
-     * <code>gd.getServerCommand()</code> is <code>null</code>, the
-     * <code>java</code> command is taken from the command line being
-     * analysed. If <code>d</code> is not an instance of
-     * <code>SharedActivatableServiceDescriptor</code> then the properties,
+     * The properties,
      * options, and <code>java</code> command are taken from the command line
      * being analyzed.  In all cases the <code>java.security.policy</code>
      * property is added or replaced using the value of
@@ -965,7 +900,6 @@ public class EnvCheck {
      * <p>
      *
      * @param d the service descriptor, which may be <code>null</code>
-     * @param gd the group descriptor, which may be <code>null</code
      * @param taskName the name of the subtask to run
      * @param args the arguments to pass to the child VM, which may be 
      *             <code>null</code>
@@ -974,11 +908,10 @@ public class EnvCheck {
      *         <code>System.out</code> stream.
      */
     public Object launch(NonActivatableServiceDescriptor d, 
-			 SharedActivationGroupDescriptor gd,
 			 String taskName,
 			 String[] args)
     {
-	if (d == null && gd == null) {
+	if (d == null ) {
 	    return launch(taskName, args);
 	}
 	//build taskArgs array
@@ -997,86 +930,24 @@ public class EnvCheck {
 	taskArgs[0] = taskName;
 	System.arraycopy(args, 0, taskArgs, 1, args.length);
 	
-	if (d == null && gd != null) {
-	    Properties props = gd.getServerProperties();
-	    props.put("java.security.policy", gd.getPolicy());
-	    ArrayList l = new ArrayList();
-	    String[] opts = gd.getServerOptions();
-	    if (opts != null) {
-		for (int i = 0; i < opts.length; i++ ) {
-		    if (opts[i].equals("-cp")) {
-			i++; // bump past value
-		    } else {
-			l.add(opts[i]);
-		    }
-		}
-	    }
-	    l.add("-cp");
-	    l.add(gd.getClasspath() + File.pathSeparator + combinedClasspath);
-	    opts = (String[]) l.toArray(new String[l.size()]);
-	    String cmd = gd.getServerCommand();
-	    if (cmd == null) {
-		cmd = javaCmd;
-	    }
-	    return launch(cmd, props, opts, taskArgs);
-	} else if (d != null && gd == null) {
-	    if (d instanceof SharedActivatableServiceDescriptor) {
-		throw new IllegalArgumentException("no group for service");
-	    }
-	    Properties props = getProperties();
-	    props.put("java.security.policy", d.getPolicy());
-	    ArrayList l = new ArrayList();
-	    for (int i = 0; i < options.length; i++ ) {
-		if (options[i].equals("-cp") 
-		    || options[i].equals("-classpath")) {
-		    i++; // bump past value
-		} else {
-		    l.add(options[i]);
-		}
-	    }
-	    l.add("-cp");
-	    l.add(d.getImportCodebase() 
-		    + File.pathSeparator 
-		    + combinedClasspath);
-	    String[] opts = (String[]) l.toArray(new String[l.size()]);
-	    return launch(javaCmd, props, opts, taskArgs);
-	} else if (d != null && gd != null) {
-	    Properties props = getProperties();
-	    String[] opts = options;
-	    String vm = null;
-	    if (d instanceof SharedActivatableServiceDescriptor) {
-		props = gd.getServerProperties();
-		if (props == null) {
-		    props = new Properties();
-		}
-		opts = gd.getServerOptions();
-		vm = gd.getServerCommand();
-	    }
-	    if (vm == null) {
-		vm = javaCmd;
-	    }
-	    props.put("java.security.policy", d.getPolicy());
-	    ArrayList l = new ArrayList();
-	    if (opts != null) {
-		for (int i = 0; i < opts.length; i++ ) {
-		    if (opts[i].equals("-cp")
-		     || opts[i].equals("-classpath")) {
-			i++; // bump past value
-		    } else {
-			l.add(opts[i]);
-		    }
-		}
-	    }
-	    l.add("-cp");
-	    l.add(d.getImportCodebase() 
-		  + File.pathSeparator 
-		  + combinedClasspath);
-	    opts = (String[]) l.toArray(new String[l.size()]);
-	    return launch(vm, props, opts, taskArgs);
-	} else {
-	    throw new IllegalStateException("Should never get here");
-	}
-    }
+        Properties props = getProperties();
+        props.put("java.security.policy", d.getPolicy());
+        ArrayList l = new ArrayList();
+        for (int i = 0; i < options.length; i++ ) {
+            if (options[i].equals("-cp") 
+                || options[i].equals("-classpath")) {
+                i++; // bump past value
+            } else {
+                l.add(options[i]);
+            }
+        }
+        l.add("-cp");
+        l.add(d.getImportCodebase() 
+                + File.pathSeparator 
+                + combinedClasspath);
+        String[] opts = (String[]) l.toArray(new String[l.size()]);
+        return launch(javaCmd, props, opts, taskArgs);
+}
 
     /** 
      * Return the <code>java</code> command for the command line being analyzed.

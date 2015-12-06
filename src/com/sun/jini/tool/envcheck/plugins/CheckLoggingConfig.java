@@ -17,7 +17,6 @@
  */
 package com.sun.jini.tool.envcheck.plugins;
 
-import com.sun.jini.start.SharedActivationGroupDescriptor;
 import com.sun.jini.tool.envcheck.AbstractPlugin;
 import com.sun.jini.tool.envcheck.Plugin;
 import com.sun.jini.tool.envcheck.EnvCheck;
@@ -42,11 +41,7 @@ public class CheckLoggingConfig extends AbstractPlugin {
 
     public void run(EnvCheck envCheck) {
 	this.envCheck = envCheck;
-	checkLoggingConfig(null);
-	SharedActivationGroupDescriptor gd = envCheck.getGroupDescriptor();
-	if (gd != null) {
-	    checkLoggingConfig(gd);
-	}
+	checkLoggingConfig();
     }
 
     /**
@@ -55,12 +50,10 @@ public class CheckLoggingConfig extends AbstractPlugin {
      * @param gd the group descriptor, or <code>null</code> to check
      *           the command line
      */
-    private void checkLoggingConfig(SharedActivationGroupDescriptor gd) {
+    private void checkLoggingConfig() {
 	Message message;
-	String source = gd == null ? getString("cmdline") 
-	                           : getString("groupVM");
-	Properties p = gd == null ? envCheck.getProperties()
-	                          : gd.getServerProperties();
+	String source = getString("cmdline");
+	Properties p = envCheck.getProperties();
 	String task = FileAccessCheckTask.class.getName();
 	String name = "java.util.logging.config.file";
 	String phrase = getString("loggingconfig");
@@ -71,7 +64,7 @@ public class CheckLoggingConfig extends AbstractPlugin {
 				  getString("loggingconfigExp"));
 	} else {
 	    String[] args = new String[]{name, phrase};
-	    Object lobj = envCheck.launch(null, gd, task, args);
+	    Object lobj = envCheck.launch(null, task, args);
 	    if (lobj == null) {
 		message = new Message(Reporter.INFO,
 				      getString("okconfig"),

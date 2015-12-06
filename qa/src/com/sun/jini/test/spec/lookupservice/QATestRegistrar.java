@@ -43,7 +43,6 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import com.sun.jini.qa.harness.QAConfig;
 import com.sun.jini.qa.harness.QATest;
-import com.sun.jini.qa.harness.ActivatableServiceStarterAdmin;
 
 import net.jini.config.Configuration;
 import net.jini.config.ConfigurationException;

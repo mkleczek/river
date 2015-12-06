@@ -44,7 +44,6 @@ import com.sun.jini.thread.ReadyState;
 import com.sun.jini.thread.RetryTask;
 import com.sun.jini.thread.TaskManager;
 import com.sun.jini.thread.WakeupManager;
-import net.jini.activation.ActivationExporter;
 import net.jini.config.Configuration;
 import net.jini.config.ConfigurationProvider;
 import net.jini.config.ConfigurationException;
@@ -70,12 +69,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.rmi.activation.Activatable;
-import java.rmi.activation.ActivationException;
-import java.rmi.activation.ActivationGroup;
-import java.rmi.activation.ActivationGroupID;
-import java.rmi.activation.ActivationID;
-import java.rmi.activation.ActivationSystem;
 import java.rmi.MarshalledObject;
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
@@ -343,15 +336,6 @@ class MailboxImpl implements MailboxBackEnd, TimeConstants,
    /** ServiceID returned from the lookup registration process */
     private Uuid serviceID = null;
 
-    /** Our activation ID */
-    private ActivationID activationID = null;
-
-    /** Whether the activation ID has been prepared */
-    private boolean activationPrepared;
-
-    /** The activation system, prepared */
-    private ActivationSystem activationSystem;
-    
     /** <code>EventLogIterator</code> generator */
     private final EventLogFactory eventLogFactory = new EventLogFactory();
 
@@ -504,37 +488,6 @@ class MailboxImpl implements MailboxBackEnd, TimeConstants,
         return mailboxAdminProxy;
     }
 
-    /**
-     * Activation constructor
-     *
-     * @param activationID activation ID passed in by the activation daemon.
-     * @param data state data needed to re-activate a Mercury server
-     */
-    MailboxImpl(ActivationID activationID, MarshalledObject data) 
-	throws Exception
-    {
-        if (operationsLogger.isLoggable(Level.FINER)) {
-	    operationsLogger.entering(mailboxSourceClass, 
-	        "MailboxImpl", 
-		new Object[] {activationID, data});
-	}
-	this.activationID = activationID;
-	try {
-	    // Initialize state
-	    init((String[])data.get());
-	} catch (Throwable e) {
-	    cleanup();
-	    initFailed(e);
-	}	  
-        if (operationsLogger.isLoggable(Level.FINER)) {
-	    operationsLogger.exiting(mailboxSourceClass, 
-	        "MailboxImpl");
-	}
-    }
-    
-    /////////////////////////
-    // Non-Activation Methods
-    /////////////////////////
     /** 
      * Constructor for creating transient (i.e. non-activatable) service 
      * instances. 
@@ -637,62 +590,17 @@ class MailboxImpl implements MailboxBackEnd, TimeConstants,
 	}
 //TODO - defer "big" default object to catch block around getNonNullEntry()
     
-        // Get activation specific configuration items, if activated
-	if (activationID != null) {
-            ProxyPreparer activationSystemPreparer =
-                (ProxyPreparer) Config.getNonNullEntry(config,
-	            MERCURY, "activationSystemPreparer", 
-		    ProxyPreparer.class, new BasicProxyPreparer());
-            if (initLogger.isLoggable(Level.CONFIG)) {
-                initLogger.log(Level.CONFIG, "activationSystemPreparer: {0}", 
-	        activationSystemPreparer);
-	    }		
-            activationSystem =
-                (ActivationSystem) activationSystemPreparer.prepareProxy(
-                    ActivationGroup.getSystem());
-            if (initLogger.isLoggable(Level.FINEST)) {
-                initLogger.log(Level.FINEST, "Prepared activation system is: {0}", 
-	        activationSystem);
-	    }		
-            ProxyPreparer activationIdPreparer = 
-	        (ProxyPreparer)  Config.getNonNullEntry(config,
-	            MERCURY, "activationIdPreparer", 
-		    ProxyPreparer.class, new BasicProxyPreparer());
-            if (initLogger.isLoggable(Level.CONFIG)) {
-                initLogger.log(Level.CONFIG, "activationIdPreparer: {0}", 
-	        activationIdPreparer);
-	    }		
-            activationID = (ActivationID) activationIdPreparer.prepareProxy(
-                activationID);
-            if (initLogger.isLoggable(Level.FINEST)) {
-                initLogger.log(Level.FINEST, "Prepared activationID is: {0}", 
-	        activationID);
-	    }		
-            activationPrepared = true;
+        //Get non-activatable configuration items
+        exporter = (Exporter) Config.getNonNullEntry(config,
+            MERCURY, "serverExporter", Exporter.class, 
+            new BasicJeriExporter(
+                TcpServerEndpoint.getInstance(0), 
+                new BasicILFactory(), false, true));
+        if (initLogger.isLoggable(Level.CONFIG)) {
+            initLogger.log(Level.CONFIG, 
+            "Non-activatable service exporter is: {0}", exporter);		
+        }
 	
-            exporter = (Exporter)Config.getNonNullEntry(config,
-	        MERCURY, "serverExporter", Exporter.class,
-		new ActivationExporter(
-		    activationID, 
-		    new BasicJeriExporter(
-		        TcpServerEndpoint.getInstance(0), 
-			new BasicILFactory(), false, true)),
-		activationID);
-            if (initLogger.isLoggable(Level.CONFIG)) {
-                initLogger.log(Level.CONFIG, "Activatable service exporter is: {0}", 
-	        exporter);
-	    }		
-	} else { //Get non-activatable configuration items
-            exporter = (Exporter) Config.getNonNullEntry(config,
-                MERCURY, "serverExporter", Exporter.class, 
-		new BasicJeriExporter(
-		    TcpServerEndpoint.getInstance(0), 
-		    new BasicILFactory(), false, true));
-            if (initLogger.isLoggable(Level.CONFIG)) {
-                initLogger.log(Level.CONFIG, 
-		"Non-activatable service exporter is: {0}", exporter);		
-	    }
-	}
 
         listenerPreparer = (ProxyPreparer) Config.getNonNullEntry(
 	    config, MERCURY, "listenerPreparer", ProxyPreparer.class,
@@ -3248,35 +3156,6 @@ class MailboxImpl implements MailboxBackEnd, TimeConstants,
 	            }
                     return;
                 }
-/**TODO 
-  * - move this block into the destroy() method and let the 
-  *   remote ex pass through
-  */
-   	        /* must unregister before unexport */
-   	        if (activationPrepared) {
-   		    try {
-   		        activationSystem.unregisterObject(activationID);
-   		    } catch (RemoteException e) {
-   		        if (adminLogger.isLoggable(Level.WARNING)) {
-                            adminLogger.log(Level.WARNING, 
-                                "aborting shutdown - could not unregister"
-                                + " activation ID", e);
-                        }
-                        /* give up until we can at least unregister */
-   		        return;
-   		    } catch (ActivationException e) {
-                        /*
-                         * Activation system is shutting down or this
-                         * object has already been unregistered --
-                         * ignore in either case.
-                         */
-   		        if (adminLogger.isLoggable(Levels.HANDLED)) {
-                            adminLogger.log(Levels.HANDLED, 
-                                "problem shutting down - could not unregister"
-                                + " activation ID", e);
-                        }
-   		    }
-   	        }
                 
                 long now = System.currentTimeMillis();
                 long endTime = now + maxUnexportDelay;
@@ -3461,15 +3340,7 @@ class MailboxImpl implements MailboxBackEnd, TimeConstants,
    	        // directory, so it has to be last.
      	        if (log != null) log.deletePersistentStore();
    
-   	        if (activationID != null) {
-   		    /* inactive will set current group ID to null */
-   		    ActivationGroupID gid = ActivationGroup.currentGroupID();
-   		    try {
-   		        Activatable.inactive(activationID);
-   		    } catch (RemoteException e) { // ignore
-   		    } catch (ActivationException e) { // ignore
-   		    }
-   	        } else if (lifeCycle != null) {
+                if (lifeCycle != null) {
 		    lifeCycle.unregister(MailboxImpl.this);
 		}
 

@@ -23,7 +23,6 @@ import com.sun.jini.qa.harness.QAConfig;
 import com.sun.jini.qa.harness.QATest;
 import net.jini.config.ConfigurationException;
 import com.sun.jini.start.ServiceStarter;
-import com.sun.jini.start.SharedGroup;
 import com.sun.jini.qa.harness.OverrideProvider;
 import com.sun.jini.qa.harness.TestException;
 import com.sun.jini.qa.harness.QAConfig;

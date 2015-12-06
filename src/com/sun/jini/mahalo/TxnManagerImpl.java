@@ -44,11 +44,6 @@ import java.io.File;
 import java.io.IOException;
 import java.rmi.MarshalledObject;
 import java.rmi.RemoteException;
-import java.rmi.activation.Activatable;
-import java.rmi.activation.ActivationException;
-import java.rmi.activation.ActivationGroup;
-import java.rmi.activation.ActivationID;
-import java.rmi.activation.ActivationSystem;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.security.SecureRandom;
@@ -65,7 +60,6 @@ import javax.security.auth.Subject;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 
-import net.jini.activation.ActivationExporter;
 import net.jini.config.Configuration;
 import net.jini.config.ConfigurationProvider;
 import net.jini.core.constraint.RemoteMethodControl;
@@ -188,17 +182,6 @@ class TxnManagerImpl /*extends RemoteServer*/
      */
     private String persistenceDirectory = null;
 
-    /**
-     * @serial
-     */
-    private ActivationID activationID;
-    
-    /** Whether the activation ID has been prepared */
-    private boolean activationPrepared;
-
-    /** The activation system, prepared */
-    private ActivationSystem activationSystem;
-
     /** Proxy preparer for listeners */
     private ProxyPreparer participantPreparer;
 
@@ -299,34 +282,6 @@ class TxnManagerImpl /*extends RemoteServer*/
 		TxnManagerImpl.class.getName(), "TxnManagerImpl");
 	}
     }
-    /**
-     * Constructs an activatable transaction manager.
-     *
-     * @param activationID activation ID passed in by the activation daemon.
-     *
-     * @param data state data needed to re-activate a transaction manager.
-     */
-    TxnManagerImpl(ActivationID activationID, MarshalledObject data)
-	throws Exception
-    {
-        if (operationsLogger.isLoggable(Level.FINER)) {
-            operationsLogger.entering(
-		TxnManagerImpl.class.getName(), "TxnManagerImpl",
-	        new Object[] {activationID, data} );
-	}
-	this.activationID = activationID;
-        try {
-            // Initialize state
-            init((String[])data.get());
-        } catch (Throwable e) {
-            cleanup();
-	    initFailed(e); 
-        }
-        if (operationsLogger.isLoggable(Level.FINER)) {
-            operationsLogger.exiting(
-		TxnManagerImpl.class.getName(), "TxnManagerImpl");
-	}
-    }
     
     /** Initialization common to both activatable and transient instances. */
     private void init(String[] configArgs)
@@ -394,61 +349,17 @@ class TxnManagerImpl /*extends RemoteServer*/
             operationsLogger.entering(
 		TxnManagerImpl.class.getName(), "doInit", config);
 	}
-        // Get activatable settings, if activated
-        if (activationID != null) {
-            ProxyPreparer activationSystemPreparer =
-                (ProxyPreparer) Config.getNonNullEntry(config,
-                    TxnManager.MAHALO, "activationSystemPreparer",
-                    ProxyPreparer.class, new BasicProxyPreparer());
-            if(initLogger.isLoggable(Level.CONFIG)) {
-		initLogger.log(Level.CONFIG, "activationSystemPreparer: {0}", 
-	            activationSystemPreparer);		
-	    }
-            activationSystem =
-                (ActivationSystem) activationSystemPreparer.prepareProxy(
-                    ActivationGroup.getSystem());
-            if(initLogger.isLoggable(Level.CONFIG)) {
-		initLogger.log(Level.CONFIG, "Prepared activation system is: {0}",
-                    activationSystem);
-            }
-            ProxyPreparer activationIdPreparer =
-                (ProxyPreparer) Config.getNonNullEntry(config,
-                    TxnManager.MAHALO, "activationIdPreparer",
-                    ProxyPreparer.class, new BasicProxyPreparer());
-            if(initLogger.isLoggable(Level.CONFIG)) {
-		initLogger.log(Level.CONFIG, "activationIdPreparer: {0}", 
-	            activationIdPreparer);		
-            }
-	    activationID = (ActivationID) activationIdPreparer.prepareProxy(
-                activationID);
-            if(initLogger.isLoggable(Level.CONFIG)) {
-		initLogger.log(Level.CONFIG, "Prepared activationID is: {0}",
-                    activationID);
-            }
-	    activationPrepared = true;
-            exporter = (Exporter)Config.getNonNullEntry(config,
-	        TxnManager.MAHALO, "serverExporter", Exporter.class,
-                new ActivationExporter(
-		    activationID,
-                    new BasicJeriExporter(
-			TcpServerEndpoint.getInstance(0), 
-			new BasicILFactory(), false, true)),
-		    activationID);
-            if(initLogger.isLoggable(Level.CONFIG)) {
-		initLogger.log(Level.CONFIG, 
-	            "Activatable service exporter is: {0}", exporter);
-	    }
-        } else {
-            exporter = (Exporter) Config.getNonNullEntry(config,
-                TxnManager.MAHALO, "serverExporter", Exporter.class,
-                new BasicJeriExporter( 
-		    TcpServerEndpoint.getInstance(0), 
-		    new BasicILFactory(), false, true));
-            if(initLogger.isLoggable(Level.CONFIG)) {
-		initLogger.log(Level.CONFIG, 
-	            "Non-activatable service exporter is: {0}", exporter);
-            }
-	}
+
+        exporter = (Exporter) Config.getNonNullEntry(config,
+            TxnManager.MAHALO, "serverExporter", Exporter.class,
+            new BasicJeriExporter( 
+                TcpServerEndpoint.getInstance(0), 
+                new BasicILFactory(), false, true));
+        if(initLogger.isLoggable(Level.CONFIG)) {
+            initLogger.log(Level.CONFIG, 
+                "Non-activatable service exporter is: {0}", exporter);
+        }
+	
 	
 	ProxyPreparer recoveredParticipantPreparer = 
 	    (ProxyPreparer)Config.getNonNullEntry(config,
@@ -1430,38 +1341,6 @@ class TxnManagerImpl /*extends RemoteServer*/
 
             Exception failed = null;
 
-/**TODO 
-  * - move this block into the destroy() method and let the 
-  *   remote ex pass through
-  */
-            if (activationPrepared) {	    
-	        try {
-                    if(destroyLogger.isLoggable(Level.FINEST)) {
-	                destroyLogger.log(Level.FINEST,
-			    "Unregistering object.");
-                    }
-		    if (activationID != null)
-                        activationSystem.unregisterObject(activationID);
-   		} catch (RemoteException e) {
-   		    /* give up until we can at least unregister */
-                    if(destroyLogger.isLoggable(Level.WARNING)) {
-	                destroyLogger.log(Level.WARNING,
-			    "Trouble unregistering object -- aborting.", e);
-                    }
-   		    return;
-   		} catch (ActivationException e) {
-                    /*
-                     * Activation system is shutting down or this
-                     * object has already been unregistered --
-                     * ignore in either case.
-                     */
-                    if(destroyLogger.isLoggable(Levels.HANDLED)) {
-	                destroyLogger.log(Levels.HANDLED,
-			    "Trouble unregistering object -- ignoring.", e);
-                    }
-   		}
-	    }
-
             // Attempt to unexport this object -- nicely first
             if(destroyLogger.isLoggable(Level.FINEST)) {
 	        destroyLogger.log(Level.FINEST,
@@ -1585,25 +1464,6 @@ class TxnManagerImpl /*extends RemoteServer*/
     	        }
 	    }
 	    
-            if(activationID != null) {
-	        if(destroyLogger.isLoggable(Level.FINEST)) {
-	            destroyLogger.log(Level.FINEST,"Calling Activatable.inactive.");
-                }
-	        try {
-                    Activatable.inactive(activationID);
-                } catch (RemoteException e) { // ignore
-                    if(destroyLogger.isLoggable(Levels.HANDLED)) {
-	                destroyLogger.log(Levels.HANDLED, 
-		            "Problem inactivating service", e);
-		    }
-                } catch (ActivationException e) { // ignore
-                    if(destroyLogger.isLoggable(Levels.HANDLED)) {
-	                destroyLogger.log(Levels.HANDLED, 
-		            "Problem inactivating service", e);
-		    }
-                }
-            }
-
 	    if (lifeCycle != null) {
 	        if(destroyLogger.isLoggable(Level.FINEST)) {
 	            destroyLogger.log(Level.FINEST,

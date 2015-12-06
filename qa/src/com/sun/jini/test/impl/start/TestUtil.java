@@ -20,35 +20,11 @@ package com.sun.jini.test.impl.start;
 import com.sun.jini.qa.harness.QAConfig;
 
 import com.sun.jini.start.ServiceStarter;
-import com.sun.jini.start.SharedGroup;
 
 import java.io.*;
 import java.rmi.*;
-import java.rmi.activation.*;
-
 
 public class TestUtil {
-
-    /**
-     * Restores the <code>SharedCreated</code> object from a well known file
-     * under the provided <code>log</code> path.
-     */
-
-    static ActivationGroupID loadSharedCreate(String log)
-        throws Exception
-    {
-
-        ActivationGroupID gid = null;
-        File dir = new File(log);
-        try {
-            gid = (ActivationGroupID)restoreGroupCookie(dir);
-        } catch (Exception e) {
-            e.printStackTrace();
-	    throw e;
-        }
-
-        return gid;
-    }
 
     /**
      * Utility method that restores the object stored in a well known file

@@ -20,8 +20,6 @@ package com.sun.jini.outrigger;
 import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.MarshalledObject;
-import java.rmi.activation.ActivationID;
-import java.rmi.activation.ActivationException;
 import javax.security.auth.login.LoginException;
 import net.jini.config.ConfigurationException;
 import com.sun.jini.start.LifeCycle;
@@ -34,37 +32,6 @@ import com.sun.jini.start.LifeCycle;
  * @since 2.0
  */
 class PersistentOutriggerImpl extends OutriggerServerWrapper {
-    /**
-     * Create a new incarnation of an activatable
-     * <code>OutriggerServerImpl</code> server.
-     * @param activationID of the server, may be <code>null</code>.
-     * @param data an array of <code>String</code>s (packaged in
-     *        a marshalled object) that will be used 
-     *        to obtain a <code>Configuration</code>.
-     * @throws IOException if there is problem recovering data
-     *         from disk, exporting the server, or unpacking
-     *         <code>data</code>.
-     * @throws ClassCastException if the value of <code>data.get()</code>
-     *         is not an array of <code>String</code>s.
-     * @throws ConfigurationException if the <code>Configuration</code> is 
-     *         malformed.  
-     * @throws ActivationException if activatable and there
-     *         is a problem getting a reference to the activation system.
-     * @throws LoginException if the <code>loginContext</code> specified
-     *         in the configuration is non-null and throws 
-     *         an exception when login is attempted.
-     * @throws ClassNotFoundException if the classes of the objects
-     *         encapsulated inside <code>data</code> can not be found.
-     */
-    PersistentOutriggerImpl(ActivationID activationID, 
-			    MarshalledObject data) 
-	throws IOException, ConfigurationException, LoginException,
-	       ActivationException, ClassNotFoundException
-    {
-	super(activationID, (String[])data.get());
-	allowCalls();
-    }
-
     /**
      * Create a new non-activatable, persistent space.
      * The space will be implemented by a new

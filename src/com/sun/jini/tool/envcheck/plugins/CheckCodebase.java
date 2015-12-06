@@ -19,7 +19,6 @@ package com.sun.jini.tool.envcheck.plugins;
 
 import com.sun.jini.start.NonActivatableServiceDescriptor;
 import com.sun.jini.start.ServiceDescriptor;
-import com.sun.jini.start.SharedActivationGroupDescriptor;
 
 import com.sun.jini.tool.envcheck.AbstractPlugin;
 import com.sun.jini.tool.envcheck.Plugin;
@@ -80,17 +79,16 @@ public class CheckCodebase extends AbstractPlugin {
 	if (envCheck.getDescriptors().length == 0) {
 	    source = getString("propsource");
 	    codebase = envCheck.getProperty("java.rmi.server.codebase");
-	    doChecks(null, null, source, codebase);
+	    doChecks(null, source, codebase);
 	} else {
 	    ServiceDescriptor[] sd = envCheck.getDescriptors();
-	    SharedActivationGroupDescriptor g = envCheck.getGroupDescriptor();
 	    for (int i = 0; i < sd.length; i++) {
 		if (sd[i] instanceof NonActivatableServiceDescriptor) {
 		    NonActivatableServiceDescriptor d = 
 			(NonActivatableServiceDescriptor) sd[i];
 		    source = getString("desc") + " " + d.getImplClassName();
 		    codebase = d.getExportCodebase();
-		    doChecks(d, g, source, codebase);
+		    doChecks(d, source, codebase);
 		}
 	    }
 	}
@@ -104,7 +102,6 @@ public class CheckCodebase extends AbstractPlugin {
      * @param codebase the codebase to check
      */
     private void doChecks(NonActivatableServiceDescriptor d,
-			  SharedActivationGroupDescriptor g,
 			  String source, 
 			  String codebase) 
     {
@@ -112,7 +109,7 @@ public class CheckCodebase extends AbstractPlugin {
 	    StringTokenizer tok = new StringTokenizer(codebase);
 	    while (tok.hasMoreTokens()) {
 		String urlToken = tok.nextToken();
-		URL url = checkURL(d, g, source, urlToken);
+		URL url = checkURL(d, source, urlToken);
 		if (url != null) {
 		    checkForFQDomain(url, source);
 		    checkForMD5(url, source);
@@ -164,14 +161,13 @@ public class CheckCodebase extends AbstractPlugin {
      *         otherwise
      */
     private URL checkURL(NonActivatableServiceDescriptor d,
-			 SharedActivationGroupDescriptor g,
 			 String source, 
 			 final String urlToken) 
     {
 	Message message;
 	URL url = null;
 	String[] args = new String[]{urlToken};
-	Object lobj = envCheck.launch(d, g, taskName("GetURLTask"), args);
+	Object lobj = envCheck.launch(d, taskName("GetURLTask"), args);
 	if (lobj instanceof URL) {
 	    url = (URL) lobj;
 	} else if (lobj instanceof String) {

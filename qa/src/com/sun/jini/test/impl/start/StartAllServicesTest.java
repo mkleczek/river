@@ -26,7 +26,6 @@ import java.rmi.activation.ActivationGroupDesc.*;
 import java.util.Arrays;
 
 import com.sun.jini.start.*;
-import com.sun.jini.start.ActivateWrapper.*;
 import com.sun.jini.qa.harness.TestException;
 
 /**

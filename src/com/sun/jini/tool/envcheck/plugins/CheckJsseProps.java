@@ -17,9 +17,6 @@
  */
 package com.sun.jini.tool.envcheck.plugins;
 
-import com.sun.jini.start.SharedActivationGroupDescriptor;
-import com.sun.jini.start.SharedActivatableServiceDescriptor;
-
 import com.sun.jini.tool.envcheck.AbstractPlugin;
 import com.sun.jini.tool.envcheck.EnvCheck;
 import com.sun.jini.tool.envcheck.Plugin;
@@ -106,19 +103,11 @@ public class CheckJsseProps extends AbstractPlugin {
 	    return;
 	}
 	this.envCheck = envCheck;
-	checkProvider(null);
-	checkTrustStore(null);
-	checkDiscoveryStore(null);
-	checkKeyStore(null);
-	checkLoginConfigs(null);
-	SharedActivationGroupDescriptor gd = envCheck.getGroupDescriptor();
-	if (gd != null) {
-	    checkProvider(gd);
-	    checkTrustStore(gd);
-	    checkDiscoveryStore(gd);
-	    checkKeyStore(gd);
-	    checkLoginConfigs(gd);
-	}
+	checkProvider();
+	checkTrustStore();
+	checkDiscoveryStore();
+	checkKeyStore();
+	checkLoginConfigs();
     }
 
     /**
@@ -129,8 +118,8 @@ public class CheckJsseProps extends AbstractPlugin {
      * @param gd the group descriptor
      * @return the source text
      */
-    private String getSource(SharedActivationGroupDescriptor gd) {
-	return gd == null ? getString("cmdlineVM") : getString("groupVM");
+    private String getSource() {
+	return getString("cmdlineVM");
     }
 
     /**
@@ -151,11 +140,11 @@ public class CheckJsseProps extends AbstractPlugin {
      * @param gd the group descriptor, or <code>null</code> to test the 
      *        command line
      */
-    private void checkTrustStore(SharedActivationGroupDescriptor gd) {
-	String source = getSource(gd);
+    private void checkTrustStore() {
+	String source = getSource();
 	String name = "javax.net.ssl.trustStore"; // the property name
 	String phrase =  getString("truststore"); // brief description
-	if (checkExistance(gd, name, phrase, source)) {
+	if (checkExistance(name, phrase, source)) {
 	    Message message;
 	    Object lobj = 
 		envCheck.launch(fileAccessTask, args(name, phrase));
@@ -186,14 +175,14 @@ public class CheckJsseProps extends AbstractPlugin {
      * @param gd the group descriptor, or <code>null</code> to test the 
      *        command line
      */
-    private void checkDiscoveryStore(SharedActivationGroupDescriptor gd) {
-	String source = getSource(gd);
+    private void checkDiscoveryStore() {
+	String source = getSource();
 	String name = "com.sun.jini.discovery.x500.trustStore";
 	String phrase = getString("discoverystore");
-	if (checkExistance(gd, name, phrase, source)) {
+	if (checkExistance(name, phrase, source)) {
 	    Message message;
 	    Object lobj = 
-		envCheck.launch(null, gd, fileAccessTask, args(name, phrase));
+		envCheck.launch(null, fileAccessTask, args(name, phrase));
 	    if (lobj == null) {
 		message = new Message(Reporter.INFO,
 				      getString("discoverystoreOK"),
@@ -221,14 +210,14 @@ public class CheckJsseProps extends AbstractPlugin {
      * @param gd the group descriptor, or <code>null</code> to test the 
      *        command line
      */
-    private void checkKeyStore(SharedActivationGroupDescriptor gd) {
-	String source = getSource(gd);
+    private void checkKeyStore() {
+	String source = getSource();
 	String name = "javax.net.ssl.keyStore";
 	String phrase = getString("keystore");
-	if (checkExistance(gd, name, phrase, source)) {
+	if (checkExistance(name, phrase, source)) {
 	    Message message;
 	    Object lobj = 
-		envCheck.launch(null, gd, fileAccessTask, args(name, phrase));
+		envCheck.launch(null, fileAccessTask, args(name, phrase));
 	    if (lobj == null) {
 		message = new Message(Reporter.INFO,
 				      getString("keystoreOK"),
@@ -256,10 +245,10 @@ public class CheckJsseProps extends AbstractPlugin {
      * @param gd the group descriptor, or <code>null</code> to test the 
      *        command line
      */
-    private void checkLoginConfigs(SharedActivationGroupDescriptor gd) {
-	String source = getSource(gd);
+    private void checkLoginConfigs() {
+	String source = getSource();
 	Object lobj = 
-	    envCheck.launch(null, gd, taskName("GetGroupLoginConfigs"));
+	    envCheck.launch(null, taskName("GetGroupLoginConfigs"));
 	if (lobj instanceof Throwable) {
 	    handleUnexpectedSubtaskReturn(lobj, source);
 	    return;
@@ -292,7 +281,7 @@ public class CheckJsseProps extends AbstractPlugin {
 	    }
 	    Reporter.print(message, source + " " + desc);
 	}
-	lobj = envCheck.launch(null, gd, taskName("CheckLoginConfigInit"));
+	lobj = envCheck.launch(null, taskName("CheckLoginConfigInit"));
 	if (lobj == null) {
 	    message = new Message(Reporter.INFO,
 				  getString("loginInitOK"),
@@ -391,13 +380,11 @@ public class CheckJsseProps extends AbstractPlugin {
      * @param source the source descriptive text
      * @return <code>true</code> if the property is defined
      */
-    private boolean checkExistance(SharedActivationGroupDescriptor gd,
-				   String propName, 
+    private boolean checkExistance(String propName, 
 				   String desc, 
 				   String source) {
 	
-	Properties p = (gd == null ? System.getProperties()
-			           : gd.getServerProperties());
+	Properties p = System.getProperties();
 	if (p == null || p.getProperty(propName) == null) {
 	    Message message = 
 		new Message(Reporter.WARNING,
@@ -414,9 +401,9 @@ public class CheckJsseProps extends AbstractPlugin {
      * <code>DynamicPolicyProvider</code>. Done for the tool VM and for the
      * group VM if a <code>SharedActivationGroupDescriptor</code> exists.
      */
-    private void checkProvider(SharedActivationGroupDescriptor gd) {
-	String source = getSource(gd);
-	Object lobj = envCheck.launch(null, gd, taskName("CheckProviderTask"));
+    private void checkProvider() {
+	String source = getSource();
+	Object lobj = envCheck.launch(null, taskName("CheckProviderTask"));
 	if (lobj instanceof Boolean) {
 	    Message message;
 	    if (((Boolean) lobj).booleanValue()) {

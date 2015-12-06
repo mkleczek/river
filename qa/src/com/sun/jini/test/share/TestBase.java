@@ -46,7 +46,6 @@ import com.sun.jini.outrigger.AdminIterator;
 import com.sun.jini.admin.DestroyAdmin;
 
 import com.sun.jini.qa.harness.Admin;
-import com.sun.jini.qa.harness.ActivatableServiceStarterAdmin;
 
 // com.sun.jini.qa
 import com.sun.jini.qa.harness.QATest;

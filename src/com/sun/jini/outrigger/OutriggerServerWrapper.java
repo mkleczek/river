@@ -19,11 +19,8 @@ package com.sun.jini.outrigger;
 
 import java.util.Map;
 import java.io.IOException;
-import java.rmi.Remote;
 import java.rmi.MarshalledObject;
 import java.rmi.RemoteException;
-import java.rmi.activation.ActivationID;
-import java.rmi.activation.ActivationException;
 import javax.security.auth.login.LoginException;
 
 import net.jini.core.discovery.LookupLocator;
@@ -34,7 +31,6 @@ import net.jini.core.transaction.Transaction;
 import net.jini.core.transaction.TransactionException;
 import net.jini.core.transaction.UnknownTransactionException;
 import net.jini.core.transaction.server.TransactionManager;
-import net.jini.core.lease.Lease;
 import net.jini.core.lease.LeaseDeniedException;
 import net.jini.core.lease.UnknownLeaseException;
 import net.jini.export.ProxyAccessor;
@@ -73,7 +69,7 @@ class OutriggerServerWrapper
 
     /** 
      * If non-null cause incoming calls to immediately throw this
-     * exception. Takes presidents over <code>holdCalls</code>. This
+     * exception. Takes precedence over <code>holdCalls</code>. This
      * field is only set to an <code>Error</code>,
      * <code>RemoteException</code>, or <code>RuntimeException</code>
      * and thus can be thrown by an of <code>OutriggerServer</code>'s
@@ -105,42 +101,9 @@ class OutriggerServerWrapper
 			   boolean persistent) 
 	throws IOException, ConfigurationException, LoginException
     {
-	try {
-	    delegate = new OutriggerServerImpl(null, lifeCycle, configArgs,
+	
+	delegate = new OutriggerServerImpl(lifeCycle, configArgs,
 					       persistent, this);
-	} catch (ActivationException e) {
-	    throw new AssertionError(e);
-	}
-    }
-
-    /**
-     * Create an <code>OutriggerServerWrapper</code> that
-     * will delegate to an <code>OutriggerServerImpl</code>
-     * created with the specified argument and wrapped by <code>this</code>.
-     * @param activationID of the server, must not be <code>null</code>.
-     * @param configArgs set of strings to be used to obtain a
-     *                   <code>Configuration</code>.
-     * @throws IOException if there is problem recovering data
-     *         from disk, exporting the server, or unpacking 
-     *         <code>data</code>.
-     * @throws ConfigurationException if the <code>Configuration</code> is 
-     *         malformed.
-     * @throws ActivationException if activatable and there
-     *         is a problem getting a reference to the activation system.
-     * @throws LoginException if the <code>loginContext</code> specified
-     *         in the configuration is non-null and throws 
-     *         an exception when login is attempted.
-     * @throws NullPointerException if <code>activationID</code>
-     *         is <code>null</code>.
-     */
-    OutriggerServerWrapper(ActivationID activationID, String[] configArgs) 
-	throws IOException, ConfigurationException, LoginException,
-	       ActivationException
-    {
-	if (activationID == null)
-	    throw new NullPointerException("activationID must be non-null");
-	delegate = new OutriggerServerImpl(activationID, null, configArgs,
-					   true, this);
     }
 
     /**

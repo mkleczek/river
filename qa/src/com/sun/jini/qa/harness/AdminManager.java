@@ -21,7 +21,6 @@ package com.sun.jini.qa.harness;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.rmi.RemoteException;
-import java.rmi.activation.ActivationException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -61,17 +60,10 @@ import net.jini.core.lookup.ServiceRegistrar;
  * on the value of the service property named <code>type</code>. 
  * Specifically: 
  * <ul> 
- * <li>if <code>type</code> has the value <code>"group"</code>, then
- *     a <code>SharedGroupAdmin</code> is returned. A reference to the
- *     groups admin is maintained and passed to the constructor of any
- *     subsequently created <code>ActivatableServiceStarterAdmin</code>s.
  * <li>if <code>type</code> has the value <code>"nonactivatablegroup"</code>
  *     a <code>NonActivatableGroupAdmin</code> is returned. A reference to
  *     the groups admin is maintained and passed to the constructor of any
  *     subsequently created <code>NonActivatableServiceStarterAdmin</code>s.
- * <li>if <code>type</code> has the value <code>"rmid"</code> or
- *     <code>"phoenix"</code>, then  an <code>ActivationSystemAdmin</code>
- *     is returned
  * <li>if <code>type</code> has the value <code>"classServer"</code>
  *     then a <code>ClassServerAdmin</code> is returned.
  * <li>if <code>type</code> has the value <code>"running"</code>
@@ -125,9 +117,6 @@ public class AdminManager {
     
     /** The <code>QAConfig</code> object */
     private QAConfig config;
-
-    /** the admin for the shared group managed by this class. */
-    private SharedGroupAdmin sharedGroupAdmin;
 
     /** The admin for the shared non-activatable group */
     private NonActivatableGroupAdmin nonActivatableGroupAdmin;
@@ -255,19 +244,7 @@ public class AdminManager {
 		admin = getServiceSuppliedAdmin(serviceName, counter);
 	    }
 	} else if (isSharedGroup(serviceName)) {
-	    /*
-	     * a shared group is just a specific activatable service, so
-	     * this case must be handled before the general activatable service case
-	     */
-	    if (sharedGroupAdmin != null) {
-		logger.log(Level.FINE, 
-			   "Warning: replacing default shared group");
-	    }
-	    sharedGroupAdmin = new SharedGroupAdmin(config, 
-						    serviceName,
-						    0,
-						    this);
-	    admin = sharedGroupAdmin;
+	    throw new UnsupportedOperationException("Activation is no longer supported");
 	} else if (isNonActivatableGroup(serviceName)) {
 	    if (nonActivatableGroupAdmin != null) {
 		logger.log(Level.FINE, 
@@ -278,26 +255,11 @@ public class AdminManager {
 						    0);
 	    admin = nonActivatableGroupAdmin;
 	} else if (isActivationSystem(serviceName)) {
-	    admin = new ActivationSystemAdmin(config,
-					      serviceName,
-					      counter);
+	    throw new UnsupportedOperationException("Activation is no longer supported");
 	} else if (isClassServer(serviceName)) {
 	    admin = new ClassServerAdmin(config, serviceName, counter);
 	} else if (isActivatable(serviceName)) {
-	    String serviceHost = config.getServiceHost(serviceName,
-						       counter, 
-						       host);
-	    if (serviceHost != null) {
-		admin = new RemoteServiceAdmin(serviceHost, 
-					       config,
-					       serviceName,
-					       counter);
-	    } else {
-		admin = new ActivatableServiceStarterAdmin(config, 
-							   serviceName, 
-							   counter,
-							   this);
-	    }
+	    throw new UnsupportedOperationException("Activation is no longer supported");
         } else if (isNonActivatable(serviceName)) { 
 	    // always returns null on slave systems
 	    String serviceHost = config.getServiceHost(serviceName, 
@@ -368,8 +330,7 @@ public class AdminManager {
 	}
 	try {
 	    Class c = Class.forName(adminName, true, config.getTestLoader());
-	    if (! (ActivatableServiceStarterAdmin.class.isAssignableFrom(c)
-		         || NonActivatableServiceStarterAdmin.class.isAssignableFrom(c))) {
+	    if (! (NonActivatableServiceStarterAdmin.class.isAssignableFrom(c)) ) {
 		throw new TestException("User supplied admin must extend (Non)ActivatableServiceAdmin");
 	    }
 	    Constructor constructor = c.getConstructor(new Class[]{QAConfig.class,
@@ -440,7 +401,7 @@ public class AdminManager {
      * activatable service. A service is assumed to be activatable
      * if a value for <code>prefix.running</code> does not exist and
      * a value for <code>prefix.type</code> has the value 
-     * "<code>activatable</code>" or does not exist.
+     * "<code>activatable</code>".
      *
      * @param prefix the service prefix
      *
@@ -456,11 +417,11 @@ public class AdminManager {
 	if (config.getServiceStringProperty(prefix, "running", index) != null) {
 	    return false;
 	}
-	// if type is undefined or "activatable", it's activatable
+	// if type is undefined it's 'transient'
 	String type =  config.getServiceStringProperty(prefix, 
 						       "type",
 						       index, 
-						       "activatable");
+						       "transient");
 	return type.equals("activatable");
     }
 
@@ -843,12 +804,8 @@ public class AdminManager {
 	    }
 	    if (admin.getProxy() instanceof ServiceRegistrar) {
 		lusList.add(admin);
-	    } else if (admin instanceof SharedGroupAdmin) {
-		sharedList.add(admin);
 	    } else if (admin instanceof NonActivatableGroupAdmin) {
 		nonActList.add(admin);
-	    } else if (admin instanceof ActivationSystemAdmin) {
-		actSystemList.add(admin);
 	    } else if (admin instanceof ClassServerAdmin) {
 		classServerList.add(admin);
 	    } else {
@@ -919,30 +876,16 @@ public class AdminManager {
 	    try {
 		logger.log(Level.FINE, 
 			   "destroying service: " + proxy.getClass());
-		if (admin instanceof ActivatableServiceStarterAdmin) {
-		    ActivatableServiceStarterAdmin 
-			    ssa = (ActivatableServiceStarterAdmin) admin;
-		    int destroyCode = ssa.stopAndWait(nSecsWait);
-		    if(nSecsWait <= 0) {//doesn't care if act group still there
-			destroyCode = ServiceDestroyer.DESTROY_SUCCESS;
-		    }
-		    handleDestroyCode(destroyCode);
-		    return destroyCode == ServiceDestroyer.DESTROY_SUCCESS ;
-		} else {
-		    admin.stop();
-		}
-		if (admin == sharedGroupAdmin) {
-		    sharedGroupAdmin = null;
-		}
+
+		admin.stop();
+		
 		if (admin == nonActivatableGroupAdmin) {
 		    nonActivatableGroupAdmin = null;
 		}
 		return true;
 	    } catch(RemoteException e) { 
                 logger.log(Level.FINE, "RemoteException stopping service", e);
-	    } catch(ActivationException e) {
-                logger.log(Level.FINE, "ActivationException stopping service:", e);
-            }
+	    } 
 	    finally {
 		it.remove(); // must use iterator's remove
 	    }
@@ -959,10 +902,6 @@ public class AdminManager {
      */
     public String getSharedVMLog() {
 	String sharedLogDir = null;
-	if (sharedGroupAdmin != null) {
-	    sharedLogDir = 
-		sharedGroupAdmin.getSharedGroupLog().getAbsolutePath();
-	}
 	return sharedLogDir;
     }
 
@@ -980,15 +919,6 @@ public class AdminManager {
 	Admin admin = getAdmin(proxy);
 	if (admin == null) {
 	    return false;
-	}
-	if (admin instanceof ActivatableServiceStarterAdmin) {
-	    // assume it works, even if a RemoteException is thrown
-	    try {
-		((ActivatableServiceStarterAdmin) admin).killVM();
-	    } catch (RemoteException e) {
-		logger.log(Level.INFO, "Exception killing VM", e);
-	    }
-	    return true;
 	}
 	if (admin instanceof RemoteServiceAdmin) {
 	    try {
@@ -1045,15 +975,6 @@ public class AdminManager {
 	if (config.getStringConfigVal(impl, null) != null) {
 	    config.setDynamicParameter(serviceName + ".type", mode);
 	}
-    }
-
-    /**
-     * Return the <code>SharedGroupAdmin</code> being managed.
-     * 
-     * @return the admin
-     */
-    public SharedGroupAdmin getSharedGroupAdmin() {
-	return sharedGroupAdmin;
     }
 
     /**

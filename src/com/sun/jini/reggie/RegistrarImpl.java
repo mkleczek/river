@@ -63,9 +63,6 @@ import java.nio.ByteBuffer;
 import java.rmi.MarshalledObject;
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
-import java.rmi.activation.ActivationException;
-import java.rmi.activation.ActivationID;
-import java.rmi.activation.ActivationSystem;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -86,8 +83,6 @@ import javax.net.SocketFactory;
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
-import net.jini.activation.ActivationExporter;
-import net.jini.activation.ActivationGroup;
 import net.jini.config.Configuration;
 import net.jini.config.ConfigurationException;
 import net.jini.config.ConfigurationProvider;
@@ -179,10 +174,6 @@ class RegistrarImpl implements Registrar, ProxyAccessor, ServerProxyTrust {
     private Registrar myRef;
     /** Our service ID */
     private ServiceID myServiceID;
-    /** Our activation id, or null if not activatable */
-    private ActivationID activationID;
-    /** Associated activation system, or null if not activatable */
-    private ActivationSystem activationSystem;
     /** Our LookupLocator */
     private volatile LookupLocator myLocator;
     /** Our login context, for logging out */
@@ -377,14 +368,11 @@ class RegistrarImpl implements Registrar, ProxyAccessor, ServerProxyTrust {
 
     /**
      * Constructs RegistrarImpl based on a configuration obtained using the
-     * provided string arguments.  If activationID is non-null, the created
-     * RegistrarImpl runs as activatable; if persistent is true, it
-     * persists/recovers its state to/from disk.  A RegistrarImpl instance
-     * cannot be constructed as both activatable and non-persistent.  If
+     * provided string arguments.  If persistent is true, it
+     * persists/recovers its state to/from disk.  If
      * lifeCycle is non-null, its unregister method is invoked during shutdown.
      */
     RegistrarImpl(String[] configArgs,
-		  final ActivationID activationID,
 		  final boolean persistent,
 		  final LifeCycle lifeCycle)
 	throws Exception
@@ -393,7 +381,7 @@ class RegistrarImpl implements Registrar, ProxyAccessor, ServerProxyTrust {
 	    final Configuration config = ConfigurationProvider.getInstance(
 		configArgs, getClass().getClassLoader());
 
-            loginAndRun(config,activationID,persistent,lifeCycle);
+            loginAndRun(config,persistent,lifeCycle);
 	} catch (Throwable t) {
 	    logger.log(Level.SEVERE, "Reggie initialization failed", t);
 	    if (t instanceof Exception) {
@@ -406,20 +394,17 @@ class RegistrarImpl implements Registrar, ProxyAccessor, ServerProxyTrust {
 
     /**
      * Constructs RegistrarImpl based on the
-     * Configuration argument.  If activationID is non-null, the created
-     * RegistrarImpl runs as activatable; if persistent is true, it
-     * persists/recovers its state to/from disk.  A RegistrarImpl instance
-     * cannot be constructed as both activatable and non-persistent.  If
+     * Configuration argument.  If persistent is true, it
+     * persists/recovers its state to/from disk.  If
      * lifeCycle is non-null, its unregister method is invoked during shutdown.
      */
     RegistrarImpl(final Configuration config,
-		  final ActivationID activationID,
 		  final boolean persistent,
 		  final LifeCycle lifeCycle)
 	throws Exception
     {
 	try {
-            loginAndRun(config,activationID,persistent,lifeCycle);
+            loginAndRun(config,persistent,lifeCycle);
 	} catch (Throwable t) {
 	    logger.log(Level.SEVERE, "Reggie initialization failed", t);
 	    if (t instanceof Exception) {
@@ -431,21 +416,17 @@ class RegistrarImpl implements Registrar, ProxyAccessor, ServerProxyTrust {
     }
 
     private void loginAndRun( final Configuration config,
-                        final ActivationID activationID,
                         final boolean persistent,
                         final LifeCycle lifeCycle)
 	throws Throwable
     {
-	if (activationID != null && !persistent) {
-	    throw new IllegalArgumentException();
-	}
 
         loginContext = (LoginContext) config.getEntry(
            COMPONENT, "loginContext", LoginContext.class, null);
 
         PrivilegedExceptionAction init = new PrivilegedExceptionAction() {
             public Object run() throws Exception {
-                init(config, activationID, persistent, lifeCycle);
+                init(config, persistent, lifeCycle);
                 return null;
             }
         };
@@ -2232,8 +2213,7 @@ class RegistrarImpl implements Registrar, ProxyAccessor, ServerProxyTrust {
 
     /**
      * Termination thread code.  We do this in a separate thread to
-     * avoid deadlock, because ActivationGroup.inactive will block until
-     * in-progress RMI calls are finished.
+     * avoid deadlock.
      */
     private class DestroyThread extends InterruptedStatusThread {
 
@@ -2293,13 +2273,6 @@ class RegistrarImpl implements Registrar, ProxyAccessor, ServerProxyTrust {
 	    if (log != null) {
 		log.deletePersistentStore();
 		logger.finer("deleted persistence directory");
-	    }
-	    if (activationID != null) {
-		try {
-		    ActivationGroup.inactive(activationID, serverExporter);
-		} catch (Exception e) {
-		    logger.log(Level.INFO, "exception going inactive", e);
-		}
 	    }
 	    if (lifeCycle != null) {
 		lifeCycle.unregister(RegistrarImpl.this);
@@ -3496,19 +3469,6 @@ class RegistrarImpl implements Registrar, ProxyAccessor, ServerProxyTrust {
 	try {
 	    ready.check();
 	    logger.info("starting Reggie shutdown");
-	    /* unregister with activation system if activatable */
-	    if (activationID != null) {
-		try {
-		    activationSystem.unregisterObject(activationID);
-		} catch (ActivationException e) {
-		    logger.log(Levels.HANDLED,
-			       "exception unregistering activation ID", e);
-		} catch (RemoteException e) {
-		    logger.log(Level.WARNING,
-			       "aborting Reggie shutdown", e);
-		    throw e;
-		}
-	    }
 	    ready.shutdown();	    
 	    new DestroyThread().start();
 	} finally {
@@ -4427,10 +4387,9 @@ class RegistrarImpl implements Registrar, ProxyAccessor, ServerProxyTrust {
 
     /** Post-login (if login configured) initialization. */
     private void init(Configuration config,
-		      ActivationID activationID,
 		      boolean persistent,
 		      LifeCycle lifeCycle)
-	throws IOException, ConfigurationException, ActivationException
+	throws IOException, ConfigurationException
     {
 	this.lifeCycle = lifeCycle;
 
@@ -4471,42 +4430,12 @@ class RegistrarImpl implements Registrar, ProxyAccessor, ServerProxyTrust {
 	    log = null;
 	}
 
-	/* activation-specific initialization */
-	if (activationID != null) {
-	    ProxyPreparer activationIdPreparer = (ProxyPreparer)
-		Config.getNonNullEntry(
-		    config, COMPONENT, "activationIdPreparer",
-		    ProxyPreparer.class, new BasicProxyPreparer());
-	    ProxyPreparer activationSystemPreparer = (ProxyPreparer)
-		Config.getNonNullEntry(
-		    config, COMPONENT, "activationSystemPreparer",
-		    ProxyPreparer.class, new BasicProxyPreparer());
-
-	    this.activationID = (ActivationID)
-		activationIdPreparer.prepareProxy(activationID);
-	    activationSystem = (ActivationSystem)
-		activationSystemPreparer.prepareProxy(
-		    ActivationGroup.getSystem());
-
-	    serverExporter = (Exporter) Config.getNonNullEntry(
-		config, COMPONENT, "serverExporter", Exporter.class,
-		new ActivationExporter(
-		    this.activationID,
-		    new BasicJeriExporter(
-			TcpServerEndpoint.getInstance(0),
-			new BasicILFactory())),
-		this.activationID);
-	} else {
-	    this.activationID = null;
-	    activationSystem = null;
-
-	    serverExporter = (Exporter) Config.getNonNullEntry(
-		config, COMPONENT, "serverExporter", Exporter.class,
-		new BasicJeriExporter(
-		    TcpServerEndpoint.getInstance(0),
-		    new BasicILFactory()));
-	}
-
+        serverExporter = (Exporter) Config.getNonNullEntry(
+            config, COMPONENT, "serverExporter", Exporter.class,
+            new BasicJeriExporter(
+                TcpServerEndpoint.getInstance(0),
+                new BasicILFactory()));
+	
 	/* fetch "initial*" config entries, if first time starting up */
 	if (!recoveredSnapshot) {
 	    Entry[] initialLookupAttributes = (Entry[]) config.getEntry(

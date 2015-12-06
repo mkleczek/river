@@ -18,8 +18,6 @@
 package com.sun.jini.tool.envcheck;
 
 import com.sun.jini.start.NonActivatableServiceDescriptor;
-import com.sun.jini.start.SharedActivatableServiceDescriptor;
-import com.sun.jini.start.SharedActivationGroupDescriptor;
 
 import java.io.File;
 import java.io.IOException;

@@ -28,13 +28,13 @@ import java.rmi.RemoteException;
 import java.rmi.server.ExportException;
 import java.util.ArrayList;
 import java.util.logging.Logger;
-import java.util.logging.Level;
-
 import net.jini.config.Configuration;
 import net.jini.config.ConfigurationException;
 import net.jini.config.ConfigurationProvider;
 import net.jini.export.Exporter;
-import net.jini.jrmp.JrmpExporter;
+import net.jini.jeri.BasicILFactory;
+import net.jini.jeri.BasicJeriExporter;
+import net.jini.jeri.tcp.TcpServerEndpoint;
 
 /**
  * A container for nonactivatable services. This class is the
@@ -103,7 +103,7 @@ class NonActivatableGroupImpl {
 	 * at construction time using a <code>JrmpExporter</code>.
 	 */
 	public GroupImpl() {
-	    exporter = new JrmpExporter();
+	    exporter = new BasicJeriExporter(TcpServerEndpoint.getInstance(0), new BasicILFactory());
 	    try {
 		proxy = exporter.export(this);
 	    } catch (ExportException e) {

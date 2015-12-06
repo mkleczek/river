@@ -31,7 +31,6 @@ import com.sun.jini.start.LifeCycle;
 
 import net.jini.id.Uuid;
 import net.jini.id.UuidFactory;
-import net.jini.activation.ActivationGroup;
 
 import net.jini.config.Configuration;
 import net.jini.config.ConfigurationProvider;
@@ -46,8 +45,6 @@ import net.jini.core.constraint.RemoteMethodControl;
 import net.jini.security.TrustVerifier;
 import net.jini.security.ProxyPreparer;
 import net.jini.security.proxytrust.ServerProxyTrust;
-
-import net.jini.activation.ActivationExporter;
 
 import net.jini.core.discovery.LookupLocator;
 import net.jini.core.lookup.ServiceID;
@@ -73,9 +70,6 @@ import java.rmi.MarshalledObject;
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.rmi.UnmarshalException;
-import java.rmi.activation.ActivationID;
-import java.rmi.activation.ActivationSystem;
-import java.rmi.activation.ActivationException;
 import java.security.SecureRandom;
 import java.security.PrivilegedExceptionAction;
 import java.security.PrivilegedActionException;
@@ -412,16 +406,6 @@ public class OutriggerServerImpl
      */
     private static final SecureRandom idGen = new SecureRandom();
 
-    /** Our activation ID, <code>null</code> if we are not activatable */
-    private ActivationID activationID;
-
-    /** 
-     * A prepared reference to the activation system, <code>null</code> if
-     * we are not activatable.
-     */
-    private ActivationSystem activationSystem;
-
-      
     /**
      * Store - The reference to the persistent store, if any.
      */
@@ -507,14 +491,12 @@ public class OutriggerServerImpl
      *         in the configuration is non-null and throws 
      *         an exception when login is attempted.  
      */
-    OutriggerServerImpl(ActivationID activationID, LifeCycle lifeCycle,
+    OutriggerServerImpl(LifeCycle lifeCycle,
 			String[] configArgs, final boolean persistent,
 			OutriggerServerWrapper wrapper) 
-	throws IOException, ConfigurationException, LoginException,
-	       ActivationException
+	throws IOException, ConfigurationException, LoginException
     {	
 	this.lifeCycle = lifeCycle;
-	this.activationID = activationID;
 	this.serverGate = wrapper;
 
 	try {
@@ -581,34 +563,13 @@ public class OutriggerServerImpl
      * @throws ConfigurationException if the <code>Configuration</code> is 
      * malformed.  */
     private void init(Configuration config, boolean persistent) 
-    	throws IOException, ConfigurationException, ActivationException
+    	throws IOException, ConfigurationException
     {
 	txnMonitor = new TxnMonitor(this, config);
-
-	/* Get the activation related preparers we need */
 
 	// Default do nothing preparer
 	final ProxyPreparer defaultPreparer = 
 	    new net.jini.security.BasicProxyPreparer();
-
-	if (activationID != null) {
-	    final ProxyPreparer aidPreparer = 
-		(ProxyPreparer)Config.getNonNullEntry(config,
-		    COMPONENT_NAME, "activationIdPreparer",
-		    ProxyPreparer.class, defaultPreparer);
-                
-	    final ProxyPreparer aSysPreparer =
-		(ProxyPreparer)Config.getNonNullEntry(config,
-		     COMPONENT_NAME, "activationSystemPreparer",
-		     ProxyPreparer.class, defaultPreparer);
-
-	    activationID = 
-		(ActivationID)aidPreparer.prepareProxy(activationID);
-	    activationSystem =
-		(ActivationSystem)aSysPreparer.prepareProxy(
-		    ActivationGroup.getSystem());
-	}
-
 
 	// The preparers that all outrigger's need
 	transactionManagerPreparer = 
@@ -631,16 +592,11 @@ public class OutriggerServerImpl
 	final Exporter basicExporter = 
 	    new BasicJeriExporter(TcpServerEndpoint.getInstance(0),
 				  new BasicILFactory(), false, true);
-	if (activationID == null) {
-	    exporter = (Exporter)Config.getNonNullEntry(config,
-		COMPONENT_NAME,	"serverExporter", Exporter.class,
-		basicExporter);
-	} else {
-	    exporter = (Exporter)Config.getNonNullEntry(config, 
-		COMPONENT_NAME,	"serverExporter", Exporter.class,
-		new ActivationExporter(activationID, basicExporter),
-		activationID);
-	}
+
+	exporter = (Exporter)Config.getNonNullEntry(config, 
+            COMPONENT_NAME,"serverExporter", Exporter.class,
+            basicExporter);
+	
 
 	ourRemoteRef = (OutriggerServer)exporter.export(serverGate);
 
@@ -707,7 +663,7 @@ public class OutriggerServerImpl
 	    //
 	    log.bootOp(System.currentTimeMillis(), getSessionId());
 	    recoverTxns();
-	} else if (activationID != null || persistent) {
+	} else if (persistent) {
 	    /* else we don't have a store, if we need one complain
 	     * will be logged by constructor
 	     */
@@ -2794,18 +2750,6 @@ public class OutriggerServerImpl
 		logDestroyProblem("destroying JoinManager", t);
 	    }	
 
-	    // Want to unregister before unexporting so a call can't
-	    // sneak in and re-activate us
-	    if (activationID != null) {  // In an activation group
-		try {
-		    //shared VM -- just unregister this object
-		    logDestroyPhase("unregistering object");
-		    activationSystem.unregisterObject(activationID);
-		} catch (Exception t) {
-		    logDestroyProblem("unregistering server", t);
-		}
-	    }
-	
 	    // Attempt to unexport this object -- nicely first
 	    logDestroyPhase("unexporting force = false");
 	    long now = System.currentTimeMillis();
@@ -2919,17 +2863,6 @@ public class OutriggerServerImpl
 		} catch (Exception t) {
 		    logDestroyProblem("destroying store", t);
 		}
-	    }
-
-            if (activationID != null) {         
-		logDestroyPhase("calling ActivationGroup.inactive");
-                try {
-                    ActivationGroup.inactive(activationID, exporter);
-                } catch (RemoteException e) {
-		    logDestroyProblem("calling ActivationGroup.inactive", e);
-                } catch (ActivationException e) {
-		    logDestroyProblem("calling ActivationGroup.inactive", e);
-                }	
 	    }
 
 	    if (lifeCycle != null) {

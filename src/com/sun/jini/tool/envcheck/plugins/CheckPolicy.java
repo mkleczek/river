@@ -38,8 +38,6 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Enumeration;
 import com.sun.jini.start.ServiceDescriptor;
-import com.sun.jini.start.SharedActivatableServiceDescriptor;
-import com.sun.jini.start.SharedActivationGroupDescriptor;
 import com.sun.jini.start.NonActivatableServiceDescriptor;
 
 /**
@@ -153,26 +151,18 @@ public class CheckPolicy extends AbstractPlugin {
     private void checkDescriptor(ServiceDescriptor d) {
 	String policy;
 	NonActivatableServiceDescriptor nad = null;
-	SharedActivationGroupDescriptor gd = null;
 	String source = null;
-	if (d instanceof SharedActivationGroupDescriptor) {
-	    gd = (SharedActivationGroupDescriptor) d;
-	    policy = gd.getPolicy();
-	    source = getString("for", 
-			      policy,
-			      "SharedActivationGroupDescriptor");
-	} else {
-	    nad = (NonActivatableServiceDescriptor) d;
-            gd = envCheck.getGroupDescriptor();
-	    policy = nad.getPolicy();
-	    source = getString("for", 
-			       policy,
-			       nad.getImplClassName());
-	}
+
+        nad = (NonActivatableServiceDescriptor) d;
+        policy = nad.getPolicy();
+        source = getString("for", 
+                           policy,
+                           nad.getImplClassName());
+	
 	if (!policyAccessible(policy, source)) {
 	    return; 
 	}
-	Object o = envCheck.launch(nad, gd, taskName("AllPermissionsTask"));
+	Object o = envCheck.launch(nad, taskName("AllPermissionsTask"));
 	if (o instanceof String) {
 	    Message message = new Message(Reporter.ERROR,
 					  getString("parseerror", o),

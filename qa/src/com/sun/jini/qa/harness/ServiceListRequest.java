@@ -37,18 +37,6 @@ public class ServiceListRequest implements InboundAutotRequest {
 	ArrayList list = new ArrayList();
 	for (int i = 0; i < admins.length; i++) {
 	    AbstractServiceAdmin admin = admins[i];
-	    if (admin instanceof ActivatableServiceStarterAdmin
-		|| admin instanceof NonActivatableServiceStarterAdmin) 
-	    {
-		String impl = admin.getImpl();
-		if (impl == null) {
-		    impl = admin.getName();
-		}
-		if (impl.indexOf(".") > 0) {
-		    impl = impl.substring(impl.lastIndexOf(".") + 1);
-		}
-		list.add(impl);
-	    }
 	    if (admin instanceof RemoteServiceAdmin) {
 		String host = ((RemoteServiceAdmin) admin).getHost();
 		int index = host.indexOf("."); // strip domain name
