@@ -108,9 +108,9 @@ function confirm_continue {
 	[[ 'n' = $CONTINUE || 'N' = $CONTINUE ]] && echo $QUIT_MSG
 }
 
-VERSION=2.2.2
+VERSION=2.2.3
 SRC_DIR=$(pwd)
-RAT_HOME=$HOME/java_libs/apache-rat-0.8
+RAT_HOME=$HOME/java_libs/apache-rat-0.11
 
 echo "Rolling River Release $VERSION from source dir $SRC_DIR"
 
@@ -135,5 +135,7 @@ cd $SRC_DIR
 rat_report
 
 cd $SRC_DIR
-upload_all gtrasuk@people.apache.org:~/public_html/river/$VERSION
+# The new guideline is to upload release candidates to the dev tree of 
+# dist.apache.org - we'll do this manually for now.
+#upload_all gtrasuk@people.apache.org:~/public_html/river/$VERSION
 
