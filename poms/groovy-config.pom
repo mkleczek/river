@@ -20,7 +20,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.jini</groupId>
     <artifactId>groovy-config</artifactId>
-    <version>3.0</version>
+    <version>3.0.0</version>
     <url>http://river.apache.org</url>
     <description>Provides support for using Groovy as a configuration provider
     </description>
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>net.jini</groupId>
             <artifactId>jsk-platform</artifactId>
-            <version>3.0</version>
+            <version>3.0.0</version>
         </dependency>
 
         <dependency>

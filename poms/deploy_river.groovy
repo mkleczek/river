@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-String version = "2.2.1"
+String version = "3.0.0"
 String rootDir = ".."
         
 ["net.jini:jsk-platform":"lib",
