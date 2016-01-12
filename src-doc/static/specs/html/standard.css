@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /* Document Defaults */
 body { font-size: 10pt; font-style: normal; font-weight: normal; color: #000000; background-color: #FFFFFF; letter-spacing: normal; text-align: left; text-indent: 15pt; word-spacing: normal}
 a:active { color: #0000CC}
@@ -10,7 +28,8 @@ a:visited { color: #9999CC}
 .BodyRelative { }
 .CellBody { }
 .CellHeading { text-align: center; font-weight: bold; color: #003366}
-.ChapNumber color:{ #ffffff} 
+.ChapNumber color:{ #ffffff}
+ 
 .GroupTitlesIX { font-size: 16pt; color: #003366}
 .Heading1 { text-align: center; font-size: 20pt; color: #003366 ; font-weight: bold; margin-top: 20px}
 .Heading1A { font-size: 20pt; font-weight: bold; color: #003366 ; margin-top: 20px}
