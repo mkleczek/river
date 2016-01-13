@@ -17,6 +17,7 @@
 # limitations under the License.
 #
 
+RAT_VERSION=0.11
 if [ "${RAT_HOME+x}" = "x" ]; then
 	echo "Using RAT_HOME=${RAT_HOME}"
 else
@@ -24,6 +25,7 @@ else
 	exit 1
 fi
 
-java -jar $RAT_HOME/apache-rat-0.8.jar -d src > RAT_REPORT_src.txt
-java -jar $RAT_HOME/apache-rat-0.8.jar -d examples -e *.mf > RAT_REPORT_examples.txt
-java -jar $RAT_HOME/apache-rat-0.8.jar -d qa/jtreg -e *.mf > RAT_REPORT_qa_jtreg.txt
+java -jar $RAT_HOME/apache-rat-$RAT_VERSION.jar -d src -e *.mf > RAT_REPORT_src.txt
+java -jar $RAT_HOME/apache-rat-$RAT_VERSION.jar -d examples -e *.mf > RAT_REPORT_examples.txt
+java -jar $RAT_HOME/apache-rat-$RAT_VERSION.jar -d qa/jtreg -e *.mf > RAT_REPORT_qa_jtreg.txt
+java -jar $RAT_HOME/apache-rat-$RAT_VERSION.jar -d qa/src -e *.mf > RAT_REPORT_qa.txt

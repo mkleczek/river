@@ -14,12 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-String version = "2.2.3"
-String rootDir = ".."
-String repositoryId="apache.releases.https"
-String repositoryURL="https://repository.apache.org/service/local/staging/deploy/maven2"
+
+def cli = new CliBuilder(usage:'deploy_river.groovy',
+                          header:'Options:')
+cli.help('print this message')
+cli.install('install locally, don\'t deploy to repository')
+cli.dryrun('dryrun - just show the actions, but don\'t do them')
+    
+println("Args are $args")
+
+def options = cli.parse(args)
+
+if (options.hasOption("help")) {
+    println(cli.usage())
+    return ""
+}
+
+def rootDir = ".."
+def repositoryId="apache.releases.https"
+def repositoryURL="https://repository.apache.org/service/local/staging/deploy/maven2"
+// To test locally, you can use a file url, as below...
 //String repositoryURL="file:///Users/trasukg/mvn-repo"
-String passphrase="Insert passphrase here..."
+
+def passphrase
+if (!options.hasOption("install")) {
+    passphrase=System.console().readLine "Enter your GPG passphrase: "
+}
         
 ["net.jini:jsk-platform":"lib",
  "net.jini:jsk-lib":"lib",
@@ -39,58 +59,53 @@ String passphrase="Insert passphrase here..."
  "org.apache.river:outrigger-dl":"lib-dl",
  "org.apache.river:reggie":"lib",
  "org.apache.river:reggie-dl":"lib-dl",
- "org.apache.river:start":"lib"
+ "org.apache.river:start":"lib",
  "org.apache.river:tools":"lib"
 ].each {artifact, subDir ->
     
-    String[] parts = artifact.split(":")
-    String gId = parts[0]
-    String aId = parts[1]
-    String dir = rootDir+"/"+subDir
-    /*String deployCommand = "mvn deploy:deploy-file "+
-                           "-DrepositoryId=apache.releases.https "+
-                           "-Dversion=${version} "+
-                           "-DgeneratePom=false -Dpackaging=jar "+
-                           "-DgroupId=${gId} "+
-                           "-DartifactId=${aId} "+
-                           "-Dfile=${dir}/${aId}.jar "+
-                           "-DpomFile=./${aId}.pom "+
-                           "-Durl=https://repository.apache.org/service/local/staging/deploy/maven2"
-    */
-    def deployCommand = [\
-        "mvn",
-        "gpg:sign-and-deploy-file",
-        "-DpomFile=${aId}.pom",
-        "-Dfile=${dir}/${aId}.jar",
-        "-DrepositoryId=${repositoryId}",
-	"-Durl=${repositoryURL}",
-        "-Dgpg.useAgent=false",
-	"-Dgpg.keyname=gtrasuk@apache.org",
-        "-Dgpg.passphrase=${passphrase}"
-    ]
-    /*
-	
-        /*"-Drepository=${repository} " +
-	
-	
-    */
-/*
-"mvn gpg:sign-and-deploy-file " +
-	"-Dpassphrase='insert passphrase here' " +
-	"-DpomFile=./${aId}.pom " +
-	"-Dfile=${dir}/${aId}.jar " + 
-	"-DrepositoryId=${repository} " +
-	"-Durl=${repositoryURL}"
-*/
-    /* First make sure the jar file contains the LICENSE file */
-    def p="jar uvf ${dir}/${aId}.jar -C .. LICENSE".execute()
-    p.consumeProcessOutputStream(System.out)
-    p.consumeProcessErrorStream(System.err)
-    p.waitFor()
+    def parts = artifact.split(":")
+    def gId = parts[0]
+    def aId = parts[1]
+    def dir = rootDir+"/"+subDir
+
+    def deployCommand
     
-    println deployCommand
-    Process process = deployCommand.execute()
-    process.consumeProcessOutputStream(System.out)
-    process.consumeProcessErrorStream(System.err)
-    process.waitFor()
+    if (options.hasOption("install")) {
+        /*    mvn install:install-file -Dfile=<path-to-file> -DgroupId=<group-id> \
+            -DartifactId=<artifact-id> -Dversion=<version> -Dpackaging=<packaging>
+        */
+        deployCommand = [\
+            "mvn",
+            "install:install-file",
+            "-DpomFile=${aId}.pom",
+            "-Dfile=${dir}/${aId}.jar"
+        ]
+    } else {
+        deployCommand = [\
+            "mvn",
+            "gpg:sign-and-deploy-file",
+            "-DpomFile=${aId}.pom",
+            "-Dfile=${dir}/${aId}.jar",
+            "-DrepositoryId=${repositoryId}",
+            "-Durl=${repositoryURL}",
+            "-Dgpg.useAgent=false",
+            "-Dgpg.keyname=gtrasuk@apache.org",
+            "-Dgpg.passphrase=${passphrase}"
+        ]
+
+    }
+    /* First make sure the jar file contains the LICENSE file */
+    if (!options.hasOption('dryrun')) {
+        def p="jar uvf ${dir}/${aId}.jar -C .. LICENSE".execute()
+        p.consumeProcessOutputStream(System.out)
+        p.consumeProcessErrorStream(System.err)
+        p.waitFor()
+        
+        Process process = deployCommand.execute()
+        process.consumeProcessOutputStream(System.out)
+        process.consumeProcessErrorStream(System.err)
+        process.waitFor()
+    } else {
+        println deployCommand
+    }
 }
