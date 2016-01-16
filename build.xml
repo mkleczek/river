@@ -2161,40 +2161,30 @@
             description="Build all, including subcomponents">
             <!-- Call qa subcomponent build -->
         <ant dir="qa" target="build" inheritall="false" />
-        <!-- Call examples/hello subcomponent build -->
-        <ant dir="examples/hello" target="build" inheritall="false" />
     </target>
 
     <target name="all.clean" depends="clean,clean-tests"
             description="Clean all, including subcomponents">
         <!-- Call qa subcomponent build -->
         <ant dir="qa" target="clean" inheritall="false" />
-        <!-- Call examples/hello subcomponent build -->
-        <ant dir="examples/hello" target="clean" inheritall="false" />
     </target>
 
     <target name="all.compile" depends="jars"
             description="Compile all, including subcomponents">
         <!-- Call qa subcomponent build -->
         <ant dir="qa" target="compile" inheritall="false" />
-        <!-- Call examples/hello subcomponent build -->
-        <ant dir="examples/hello" target="compile" inheritall="false" />
     </target>
 
     <target name="all.doc" depends="river-doc"
             description="Generate javadoc for all, including subcomponents">
         <!-- Call qa subcomponent build -->
         <ant dir="qa" target="doc" inheritall="false" />
-        <!-- Call examples/hello subcomponent build -->
-        <ant dir="examples/hello" target="doc" inheritall="false" />
     </target>
 
     <target name="all.jars" depends="jars"
             description="Generate JAR files for all, including subcomponents">
         <!-- Call qa subcomponent build -->
         <ant dir="qa" target="jars" inheritall="false" />
-        <!-- Call examples/hello subcomponent build -->
-        <ant dir="examples/hello" target="jars" inheritall="false" />
     </target>
 
     <!-- TODO: cleanup and find out where exactly to publish to -->
