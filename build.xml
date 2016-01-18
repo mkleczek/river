@@ -27,7 +27,8 @@
 <!-- ##                                                                 -->
 <!-- ################################################################## -->
 <project name="river" basedir="." default="all.build"
-        xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+    xmlns:artifact="antlib:org.apache.maven.artifact.ant"
+    xmlns:ivy="antlib:org.apache.ivy.ant">
 
     <description>Apache River is a project furthering the development and advancement of Jini technology.</description>
         
@@ -553,8 +554,75 @@
             <classpath refid="compile.classpath" />
         </javac-cmd>
     </target>	
+
+    <property name="ivy.install.version" value="2.4.0"/>
+    <property name="ivy.jar.dir" value="${build}/lib"/>
+    <property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar"/>
+    <condition property="skip.ivy.download">
+        <available file="${ivy.jar.file}"/>
+    </condition>
+    
+    <target name="download-ivy" unless="skip.ivy.download">
+        <mkdir dir="${ivy.jar.dir}"/>
+        <!-- download Ivy from web site so that it can be used even without any special installation -->
+        <echo message="installing ivy..."/>
+        <get src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar"
+             dest="${ivy.jar.file}" usetimestamp="true"/>
+    </target>
+    
+    <!-- ================================= 
+     target: install-ivy         
+       this target is not necessary if you put ivy.jar in your ant lib directory
+       if you already have ivy in your ant lib, you can simply remove this
+       target and the dependency the 'go' target has on it
+    ================================= -->
+    <target name="install-ivy" depends="download-ivy" description="--> install ivy">
+        <!-- try to load ivy here from local ivy dir, in case the user has not already dropped
+        it into ant's lib dir (note that the latter copy will always take precedence).
+        We will not fail as long as local lib dir exists (it may be empty) and
+        ivy is in at least one of ant's lib dir or the local lib dir. -->
+        <path id="ivy.lib.path">
+            <fileset dir="${ivy.jar.dir}" includes="*.jar"/>
+        </path>
+        <taskdef resource="org/apache/ivy/ant/antlib.xml"
+                 uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
+    </target>    
 	
-    <target name="copy-extlibs" >
+
+    <target name="get-dep-libs" depends="install-ivy">        
+        <!-- Let's use Ivy instead... -->
+        <mkdir dir="dep-libs"/>
+        <mkdir dir="dep-libs/animal-sniffer"/>
+        <mkdir dir="dep-libs/asm"/>
+        <mkdir dir="dep-libs/bouncy-castle"/>
+        <mkdir dir="dep-libs/dnsjava"/>
+        <mkdir dir="dep-libs/groovy"/>
+        <mkdir dir="dep-libs/high-scale-lib"/>
+        <mkdir dir="dep-libs/velocity"/>
+ 
+        <ivy:resolve conf="*, tools, asm, animal, bouncy, dnsjava, groovy, hslib, velocity"/>
+        <ivy:retrieve pattern="dep-libs/animal-sniffer/[artifact]-[revision].[ext]" 
+            conf="animal"/>
+        <ivy:retrieve pattern="dep-libs/asm/[artifact]-[revision].[ext]" 
+            conf="asm"/>
+        <ivy:retrieve pattern="dep-libs/bouncy-castle/[artifact]-[revision].[ext]" 
+            conf="bouncy"/>
+        <ivy:retrieve pattern="dep-libs/dnsjava/[artifact]-[revision].[ext]" 
+            conf="dnsjava"/>
+        <ivy:retrieve pattern="dep-libs/groovy/[artifact]-[revision].[ext]" 
+            conf="groovy"/>
+        <ivy:retrieve pattern="dep-libs/high-scale-lib/[artifact]-[revision].[ext]" 
+            conf="hslib"/>
+        <ivy:retrieve pattern="dep-libs/velocity/[artifact]-[revision].[ext]" 
+            conf="velocity"/>
+        <ivy:retrieve pattern="test/${lib}/[artifact]-[revision].[ext]" 
+            conf="tests"/>
+        
+
+    </target>
+
+        	
+    <target name="copy-extlibs" depends="get-dep-libs">
         <copy todir="lib">
             <fileset refid="asm.jars"/>
             <fileset refid="high-scale-lib.jars"/>
@@ -582,10 +650,12 @@
             reggie.stubs, sdm.stubs, start.stubs">-->
     </target>
 
-    <target name="clean" depends="clean-dist, clean-jars, doc-clean"
+    <target name="clean" depends="clean-dist, clean-jars, doc-clean, qa.clean"
 		description="Removes all files and dirs created by the build">
         <delete dir="${build.dir}" quiet="true"/>
         <delete dir="${configentry.dir}" quiet="true"/>
+        <delete dir="dep-libs" quiet="true"/>
+        <delete dir="test/lib" quiet="true"/>
     </target>
 
     <target name="clean-dist"
@@ -720,7 +790,11 @@
         </jar>
     </target>
 
-    <target name="groovy-config.jar">  
+    <target name="groovy-config.jar" depends="get-dep-libs">  
+	<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc">
+	    <classpath refid="groovy.jars"/>
+	</taskdef>
+	
 		 <delete file="${lib.dir}/groovy-config.jar" quiet="true"/>      
 		<groovyc srcdir="src" destdir="${build.classes.dir}" listfiles="yes"> 
 		    <classpath refid="river.classes"/>
@@ -2149,6 +2223,11 @@
             <property name="harness.generateHtml" value="${harness.generateHtml}" />
         </ant>
     </target>
+    <target name="qa.clean"  description="Clean QA tests">
+        <!-- Call qa subcomponent build -->
+        <ant dir="qa" target="clean" inheritall="false">
+        </ant>
+    </target>
     
     <target name="qa.run-tests" depends="" description="Run Specific QA tests">
         <!-- Call qa subcomponent build -->
@@ -2187,60 +2266,16 @@
         <ant dir="qa" target="jars" inheritall="false" />
     </target>
 
-    <!-- TODO: cleanup and find out where exactly to publish to -->
-    <!-- Note that you need the Maven Ant tasks (http://maven.apache.org/ant-tasks/)
-        installed to use this task -->
-    <target name="deploy-artifacts" depends="jars">
-        <!--<artifact:install-provider artifactId="wagon-file" version="1.0-beta-2"/>
-        <artifact:install-provider artifactId="wagon-http" version="1.0-beta-2"/>
-        <artifact:install-provider artifactId="wagon-ssh" version="1.0-beta-2"/>-->
-        <!-- Override this in <river src distr. home>/build.properties to try out -->
-        <property name="m2.repository" value="file:///home/jonathan/maven" />
-        <macrodef name="deploy">
-            <attribute name="file" />
-            <attribute name="pom" />
-            <sequential>
-                <artifact:deploy file="@{file}" >
-                    <remoteRepository url="${m2.repository}"/>
-                    <pom refid="@{pom}"/>
-                </artifact:deploy>
-            </sequential>
-        </macrodef>
-        <artifact:pom id="parent" file="${poms.dir}/pom.xml" />
-        <artifact:pom id="jini-core" file="${poms.dir}/jini-core/pom.xml" />
-        <artifact:pom id="jini-ext" file="${poms.dir}/jini-ext/pom.xml" />
-        <artifact:pom id="jsk-lib" file="${poms.dir}/jsk-lib/pom.xml" />
-        <artifact:pom id="jsk-dl" file="${poms.dir}/jsk-dl/pom.xml" />
-        <artifact:pom id="jsk-resources" file="${poms.dir}/jsk-resources/pom.xml" />
-        <artifact:pom id="jsk-platform" file="${poms.dir}/jsk-platform/pom.xml" />
-        <artifact:pom id="jsk-policy" file="${poms.dir}/jsk-policy/pom.xml" />
-        <artifact:pom id="serviceui" file="${poms.dir}/serviceui/pom.xml" />
-        <artifact:pom id="sun-util" file="${poms.dir}/sun-util/pom.xml" />
-        <artifact:pom id="start" file="${poms.dir}/start/pom.xml" />
-        <artifact:pom id="tools" file="${poms.dir}/tools/pom.xml" />
-        <deploy file="${lib.dir}/jini-core.jar" pom="jini-core" />
-        <deploy file="${lib.dir}/jini-ext.jar" pom="jini-ext" />
-        <deploy file="${lib.dir}/jsk-lib.jar" pom="jsk-lib" />
-        <deploy file="${lib-dl.dir}/jsk-dl.jar" pom="jsk-dl" />
-        <deploy file="${lib.dir}/jsk-resources.jar" pom="jsk-resources" />
-        <deploy file="${lib.dir}/jsk-platform.jar" pom="jsk-platform" />
-        <deploy file="${lib-ext.dir}/jsk-policy.jar" pom="jsk-policy" />
-        <deploy file="${lib.dir}/serviceui.jar" pom="serviceui" />
-        <deploy file="${lib.dir}/sun-util.jar" pom="sun-util" />
-        <deploy file="${lib.dir}/start.jar" pom="start" />
-        <deploy file="${lib.dir}/tools.jar" pom="tools" />
-    </target>
-
     <target name="prep-tests" depends="">
         <mkdir dir="${test.classes.dir}"/>
         <mkdir dir="${test.results.dir}"/>
-        <copy file="dep-libs/high-scale-lib/high-scale-lib.jar" todir="test/lib"/>
+        <copy file="dep-libs/high-scale-lib/*.jar" todir="test/lib"/>
     </target>
 
     <target name="clean-tests" depends="">
         <delete dir="${test.classes.dir}" quiet="true"/>
         <delete dir="${test.results.dir}" quiet="true"/>
-        <delete file="test/lib/high-scale-lib.jar" quiet="true"/>
+        <delete file="test/lib/*.jar" quiet="true"/>
     </target> 
     
     <target name="compile-tests" depends="compile,prep-tests">

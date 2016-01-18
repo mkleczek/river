@@ -138,28 +138,23 @@
     </path>
 
     <fileset id="asm.jars" dir="${root}/dep-libs/asm">
-        <include name="asm-5.0.1.jar" />
-        <include name="asm-commons-5.0.1.jar" />
+        <include name="*.jar" />
     </fileset>
 
     <path id="groovy.jars">
 		<fileset dir="${root}/dep-libs/groovy" includes="**/*.jar" />
     </path>
 	
-	<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc">
-	    <classpath refid="groovy.jars"/>
-	</taskdef>
-	
     <fileset id="velocity.jars" dir="${root}/dep-libs/velocity">
-        <include name="velocity-1.7.jar" />
+        <include name="*.jar" />
     </fileset>
     
     <fileset id="high-scale-lib.jars" dir="${root}/dep-libs/high-scale-lib">
-        <include name="high-scale-lib.jar" />
+        <include name="*.jar" />
     </fileset>
     
     <fileset id="dnsjava.jar" dir="${root}/dep-libs/dnsjava">
-        <include name="dnsjava-2.1.3.jar" />
+        <include name="*.jar" />
     </fileset>
     
 
