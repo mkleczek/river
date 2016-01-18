@@ -19,6 +19,10 @@
 <project name="hudson" basedir="."
     xmlns:as="antlib:org.codehaus.mojo.animal_sniffer" >
 
+    <ant>
+        <target name="get-dep-libs"/>
+    </ant>
+    
     <target name="verify" depends="river-runtime,verify-15-sun"
                                 description="River-verify entry">
     </target>
@@ -43,6 +47,8 @@
     <target name="river-runtime" >
         <ant>
             <target name="clean" />
+        </ant>
+        <ant>
             <target name="river-runtime" />
         </ant>
     </target>
