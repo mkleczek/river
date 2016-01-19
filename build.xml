@@ -600,7 +600,8 @@
         <mkdir dir="dep-libs/groovy"/>
         <mkdir dir="dep-libs/high-scale-lib"/>
         <mkdir dir="dep-libs/velocity"/>
- 
+        <mkdir dir="dep-libs/test"/>
+        
         <ivy:resolve conf="*, tools, asm, animal, bouncy, dnsjava, groovy, hslib, velocity"/>
         <ivy:retrieve pattern="dep-libs/animal-sniffer/[artifact]-[revision].[ext]" 
             conf="animal"/>
@@ -616,7 +617,7 @@
             conf="hslib"/>
         <ivy:retrieve pattern="dep-libs/velocity/[artifact]-[revision].[ext]" 
             conf="velocity"/>
-        <ivy:retrieve pattern="test/${lib}/[artifact]-[revision].[ext]" 
+        <ivy:retrieve pattern="dep-libs/test/[artifact]-[revision].[ext]" 
             conf="tests"/>
         
 
@@ -659,7 +660,6 @@
 
     <target name="clean-deps">
         <delete dir="dep-libs" quiet="true"/>
-        <delete dir="test/lib" quiet="true"/>
     </target>
     
     <target name="clean-dist"

@@ -45,7 +45,7 @@
     <property name="dist" value="dist"/>
     <property name="test" value="test"/>
     <property name="test.src" value="${test}/src"/>
-    <property name="test.lib" value="${test}/lib"/>
+    <property name="test.lib" value="dep-libs/test"/>
     <property name="test.classes" value="${test}/classes"/>
     <property name="test.results" value="${test}/results"/>
 
