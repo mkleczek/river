@@ -197,6 +197,7 @@
 
     <path id="test.compile.classpath">
         <path location="${build.classes.dir}"/>
+        <path refid="compile.classpath"/>
         <fileset dir="${test.lib.dir}">
             <include name="*.jar"/>
         </fileset>

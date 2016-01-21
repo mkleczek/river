@@ -87,7 +87,7 @@
     </target>
 
     <target name="release" description="Create source and binary release packages"
-		depends="release-src, release-bin, release-doc">
+		depends="clean, all.build, release-src, release-bin, release-doc">
     </target>
 
     <fileset id="river.bin.files" dir="${basedir}">
@@ -108,20 +108,6 @@
         <exclude name="${doc}/release-notes/new.html"/>
     </fileset>
 
-    <fileset id="examples.bin.files" dir="${basedir}/examples">
-        <include name="**/${lib}/**"/>
-        <include name="**/config/**"/>
-        <exclude name="**/config/META-INF/"/>
-        <include name="**/prebuiltkeys/**"/>
-        <include name="**/scripts/*.bat"/>
-        <include name="**/${doc}/**"/>
-        <include name="**/*.html"/>
-    </fileset>
-    
-    <fileset id="examples.bin.exec.files" dir="${basedir}/examples">
-        <include name="**/scripts/*.sh"/>
-    </fileset>
-
     <!-- TODO create separate bin distribution for the qa tests? -->
     <!--<fileset id="qa.bin.files" dir="${basedir}/qa">
         <include name="${lib}/**"/>
@@ -138,16 +124,10 @@
         <delete file="${bin.zip.bundle}"/>
         <zip destfile="${bin.zip.bundle}" roundup="yes">
             <zipfileset prefix="${product.name}" refid="river.bin.files" />
-            <zipfileset prefix="${product.name}/examples" refid="examples.bin.files" />
-            <zipfileset prefix="${product.name}/examples" refid="examples.bin.exec.files" filemode="755"/>
-            <!--<zipfileset prefix="${product.name}/qa" refid="qa.bin.files" />-->
         </zip>
         <delete file="${bin.tar.bundle}"/>
         <tar destfile="${bin.tar.bundle}" compression="gzip" longfile="gnu">
             <tarfileset prefix="${product.name}" refid="river.bin.files" />
-            <tarfileset prefix="${product.name}/examples" refid="examples.bin.files" />
-            <tarfileset prefix="${product.name}/examples" refid="examples.bin.exec.files" filemode="755"/>
-            <!--<tarfileset prefix="${product.name}/qa" refid="qa.bin.files" />-->
         </tar>
     </target>
 
@@ -162,10 +142,13 @@
         <exclude name="${lib-ext}/**"/>
         <!-- TODO: remove when archive building is pure river.src.files based -->
         <exclude name="qa/**"/>
-
+        <exclude name="dep-libs/**"/>
         <exclude name="${test}/classes/**" />
         <exclude name="${test}/results/**" />
-
+        <exclude name="${test}/lib/**"/>
+        <exclude name="nbproject/**"/>
+        <exclude name="build.properties"/>
+        <exclude name="tar_release_test/**"/>
         <!--
         TODO: why were these excluded from the source archive?
         <exclude name="${doc}/release-notes/new.html"/>
@@ -220,18 +203,11 @@
         <delete file="${src.zip.bundle}"/>
         <zip destfile="${src.zip.bundle}" roundup="yes">
             <zipfileset prefix="${product.name}" refid="river.src.files"/>
-            <zipfileset prefix="${product.name}/examples" refid="examples.src.files"/>
-            <zipfileset prefix="${product.name}/examples"
-                    refid="examples.src.exec.files" filemode="755"/>
             <zipfileset prefix="${product.name}/qa" refid="qa.src.files" />
         </zip>
         <delete file="${src.tar.bundle}"/>
         <tar destfile="${src.tar.bundle}" compression="gzip" longfile="gnu">
             <tarfileset prefix="${product.name}" refid="river.src.files" />
-            <tarfileset prefix="${product.name}/examples"
-                    refid="examples.src.files" />
-            <tarfileset prefix="${product.name}/examples"
-                    refid="examples.src.exec.files" filemode="755"/>
             <tarfileset prefix="${product.name}/qa" refid="qa.src.files" />
         </tar>
     </target>
