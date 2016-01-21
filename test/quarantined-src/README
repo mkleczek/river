@@ -1,0 +1,9 @@
+This is source code from the tests that is currently unused, but will be
+reinstated soon.
+
+Background:  The tests in this folder use the 'imunit' test library, which
+is not currently available through Maven Central, and we can't ship the 
+dependency jar with the source distribution (Apache produces source code only).
+
+When imunit is available through Maven Central, these tests will be 
+added back in.
