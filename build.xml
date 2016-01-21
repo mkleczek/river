@@ -117,7 +117,7 @@
         <include name="README*"/>
     </fileset>-->
 
-    <target name="release-bin" description="Create a binary release" depends="duplicate-text-files, all.build">
+    <target name="release-bin" description="Create a binary release" depends="all.build">
         <!-- TODO: add depends: javadoc-internals and remove from ci-build -->
 
         <mkdir dir="${dist.dir}"/>
@@ -180,12 +180,7 @@
         <include name="README*"/>
     </fileset>
 
-	<target name="duplicate-text-files" description="Creates friendly txt versions of common files">
-		<copy file="LICENSE" toFile="LICENSE.txt"/>
-		<copy file="NOTICE" toFile="NOTICE.txt"/>
-	</target>
-
-    <target name="release-doc" description="Create release doc archives" depends="duplicate-text-files, river-doc">
+    <target name="release-doc" description="Create release doc archives" depends="river-doc">
                 
         <mkdir dir="${dist.dir}"/>
         <delete file="${doc.zip.bundle}"/>
@@ -198,7 +193,7 @@
         </tar>
     </target>
 
-    <target name="release-src" description="Create a source release" depends="duplicate-text-files">
+    <target name="release-src" description="Create a source release">
         <mkdir dir="${dist.dir}"/>
         <delete file="${src.zip.bundle}"/>
         <zip destfile="${src.zip.bundle}" roundup="yes">
