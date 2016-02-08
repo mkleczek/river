@@ -52,9 +52,14 @@
 
     <target name="hudson-qa" description="hudson QA build target" depends="diagnostics,hudson-qa-settings,all.clean,qa.run" />
 
+    <!-- This property tells the qa package to generate an html report.
+    If for whatever reason that's not what you want, override it on the ant
+    command line with '-Dharness.generateHtml=false'
+    -->
+
+    <property name="harness.generateHtml" value="true" />
 
     <target name="hudson-qa-settings" description="provide default settings" >
-        <property name="harness.generateHtml" value="true" />
         <echoproperties />
     </target>
 
@@ -70,7 +75,7 @@
     </target>
 
     <target name="release" description="Create source and binary release packages"
-		depends="release-src, release-bin, release-doc">
+		depends="release-src, release-doc">
     </target>
 
     <fileset id="river.bin.files" dir="${basedir}">
@@ -100,7 +105,11 @@
         <include name="README*"/>
     </fileset>-->
 
-    <target name="release-bin" description="Create a binary release" depends="duplicate-text-files, all.build">
+    <!-- This target is here, but unused as of 2.2.3 release.  Since the created
+    jar files are on Maven Central, and the binary release doesn't actually do
+    anything on its own, there's little point in having a binary release.
+    -->
+    <target name="release-bin" description="Create a binary release" depends="all.build">
         <!-- TODO: add depends: javadoc-internals and remove from ci-build -->
 
         <mkdir dir="${dist.dir}"/>
@@ -127,16 +136,12 @@
         <exclude name="${lib-ext}/**"/>
         <!-- TODO: remove when archive building is pure river.src.files based -->
         <exclude name="qa/**"/>
-
+        <exclude name="roll_release.sh"/>
+        <exclude name="release.xml"/>
         <exclude name="${test}/classes/**" />
         <exclude name="${test}/results/**" />
-
-        <!--
-        TODO: why were these excluded from the source archive?
-        <exclude name="${doc}/release-notes/new.html"/>
-        <exclude name="${src}/**/*.sh"/>
-        -->
-
+        <exclude name="${test}/lib/**" />
+        <exclude name="nbproject/**"/>
     </fileset>
 
     <fileset id="qa.src.files" dir="${basedir}/qa">
@@ -150,12 +155,7 @@
         <include name="README*"/>
     </fileset>
 
-	<target name="duplicate-text-files" description="Creates friendly txt versions of common files">
-		<copy file="LICENSE" toFile="LICENSE.txt"/>
-		<copy file="NOTICE" toFile="NOTICE.txt"/>
-	</target>
-
-    <target name="release-doc" description="Create release doc archives" depends="duplicate-text-files, river-doc">
+    <target name="release-doc" description="Create release doc archives" depends="release-src, all.build, river-doc">
                 
         <mkdir dir="${dist.dir}"/>
         <delete file="${doc.zip.bundle}"/>
@@ -168,7 +168,7 @@
         </tar>
     </target>
 
-    <target name="release-src" description="Create a source release" depends="duplicate-text-files">
+    <target name="release-src" description="Create a source release" depends="clean">
         <mkdir dir="${dist.dir}"/>
         <delete file="${src.zip.bundle}"/>
         <zip destfile="${src.zip.bundle}" roundup="yes">
