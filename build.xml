@@ -87,7 +87,7 @@
     </target>
 
     <target name="release" description="Create source and binary release packages"
-		depends="clean, all.build, release-src, release-bin, release-doc">
+		depends="clean, all.build, release-src, release-doc">
     </target>
 
     <fileset id="river.bin.files" dir="${basedir}">
@@ -117,7 +117,13 @@
         <include name="README*"/>
     </fileset>-->
 
-    <target name="release-bin" description="Create a binary release" depends="all.build">
+    <!-- This target is unused - the distribution doesn't have functionality on its
+    own, so there's no point in having a binary distribution.  If someone wants to
+    reactivate the binary distribution, they will also need to create the appropriate 
+    license and notice files that cover the binaries (no other products are 
+    distributed with the source distribution).
+    -->
+    <target name="unused-release-bin" description="Create a binary release" depends="all.build">
         <!-- TODO: add depends: javadoc-internals and remove from ci-build -->
 
         <mkdir dir="${dist.dir}"/>
@@ -149,6 +155,8 @@
         <exclude name="nbproject/**"/>
         <exclude name="build.properties"/>
         <exclude name="tar_release_test/**"/>
+        <exclude name="roll_release.sh"/>
+        <exclude name="release.xml"/>
         <!--
         TODO: why were these excluded from the source archive?
         <exclude name="${doc}/release-notes/new.html"/>
