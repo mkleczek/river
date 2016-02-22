@@ -95,6 +95,7 @@ extends SecurityManager implements CachingSecurityManager {
     private final ProtectionDomain privilegedDomain;
     private final ThreadLocal<SecurityContext> threadContext;
     private final ThreadLocal<Boolean> inTrustedCodeRecursiveCall;
+    private final boolean constructed;
     
     private static boolean check(){
         SecurityManager sm = System.getSecurityManager();
@@ -167,6 +168,10 @@ extends SecurityManager implements CachingSecurityManager {
          * since the lock used is a static class lock.  This bug has been fixed
          * in jdk8(b15).
          */
+	/* The following ensures the classes we need are loaded early to avoid
+	 * class loading deadlock */
+	checkPermission(createAccPerm, SMPrivilegedContext);
+	constructed = true;
     }
     
     @Override
@@ -217,6 +222,7 @@ extends SecurityManager implements CachingSecurityManager {
     @Override
     public void checkPermission(Permission perm, Object context) throws SecurityException {
         if (perm == null ) throw new NullPointerException("Permission Collection null");
+	perm.getActions(); // Ensure any lazy state has been instantiated before publication.
         AccessControlContext executionContext = null;
         SecurityContext securityContext = null;
 	if (context instanceof AccessControlContext){
@@ -229,7 +235,7 @@ extends SecurityManager implements CachingSecurityManager {
         }
         threadContext.set(securityContext); // may be null.
         /* The next line speeds up permission checks related to this SecurityManager. */
-        if ( SMPrivilegedContext.equals(executionContext) || 
+        if ( constructed && SMPrivilegedContext.equals(executionContext) || 
                 SMConstructorContext.equals(executionContext)) return; // prevents endless loop in debug.
         // Checks if Permission has already been checked for this context.
         NavigableSet<Permission> checkedPerms = checked.get(context);
