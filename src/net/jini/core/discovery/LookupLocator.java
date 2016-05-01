@@ -17,16 +17,13 @@
  */
 package net.jini.core.discovery;
 
-import org.apache.river.discovery.Discovery;
-import org.apache.river.discovery.DiscoveryConstraints;
-import org.apache.river.discovery.DiscoveryProtocolVersion;
-import org.apache.river.discovery.UnicastResponse;
-import org.apache.river.discovery.UnicastSocketTimeout;
-import org.apache.river.discovery.internal.MultiIPDiscovery;
 import java.io.IOException;
+import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
+import java.io.ObjectInputStream.GetField;
+import java.io.ObjectOutputStream;
+import java.io.ObjectOutputStream.PutField;
 import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URI;
@@ -37,6 +34,12 @@ import net.jini.core.constraint.InvocationConstraints;
 import net.jini.core.lookup.ServiceRegistrar;
 import net.jini.discovery.ConstrainableLookupLocator;
 import org.apache.river.api.net.Uri;
+import org.apache.river.discovery.Discovery;
+import org.apache.river.discovery.DiscoveryConstraints;
+import org.apache.river.discovery.DiscoveryProtocolVersion;
+import org.apache.river.discovery.UnicastResponse;
+import org.apache.river.discovery.UnicastSocketTimeout;
+import org.apache.river.discovery.internal.MultiIPDiscovery;
 
 /**
  * LookupLocator supports unicast discovery, using either Discovery V1 or V2.
@@ -71,13 +74,13 @@ public class LookupLocator implements Serializable {
      *
      * @serial
      */
-    protected final String host;
+    protected String host;
     /**
      * The port number on the host at which to perform discovery.
      *
      * @serial
      */
-    protected final int port;
+    protected int port;
     
     /**
      * The timeout after which we give up waiting for a response from
@@ -344,7 +347,7 @@ public class LookupLocator implements Serializable {
                 return disco.doUnicastDiscovery(
                         s, dc.getUnfulfilledConstraints(), null, null, null);
             }
-        }.getResponse(host, port, constraints);
+        }.getResponse(getHost(), getPort(), constraints);
         return resp.getRegistrar();
     }
     
@@ -354,7 +357,7 @@ public class LookupLocator implements Serializable {
      */
     public String toString() {
 //	if (port != discoveryPort)
-	    return "jini://" + getHost0(host) + ":" + port + "/";
+	    return "jini://" + getHost0(getHost()) + ":" + getPort() + "/";
 //	return "jini://" + getHost0(host) + "/";
     }
 
@@ -370,7 +373,7 @@ public class LookupLocator implements Serializable {
 	}
 	if (o instanceof LookupLocator) {
 	    LookupLocator oo = (LookupLocator) o;
-	    return port == oo.port && host.equalsIgnoreCase(oo.host);
+	    return getPort() == oo.getPort() && getHost().equalsIgnoreCase(oo.getHost());
 	}
 	return false;
     }
@@ -380,7 +383,7 @@ public class LookupLocator implements Serializable {
      * <code>port</code> field values.
      */
     public int hashCode() {
-	return host.toLowerCase().hashCode() ^ port;
+	return getHost().toLowerCase().hashCode() ^ getPort();
     }
     
     // Checks if the host is an RFC 3513 IPv6 literal and converts it into
@@ -402,6 +405,22 @@ public class LookupLocator implements Serializable {
      * @throws ClassNotFoundException 
      */
     private void readObject(ObjectInputStream oin) throws IOException, ClassNotFoundException{
-        oin.defaultReadObject();
+        GetField fields = oin.readFields();
+	host = (String) fields.get("host", null);
+	if (host == null) throw new InvalidObjectException("host cannot be null");
+	port = fields.get("port", discoveryPort);
+    }
+    
+    /**
+     * Added to allow subclass implementations to be responsible for state, should
+     * they require immutability.
+     * @param out
+     * @throws IOException 
+     */
+    private void writeObject(ObjectOutputStream out) throws IOException {
+	PutField fields = out.putFields();
+	fields.put("host", getHost());
+	fields.put("port", getPort());
+	out.writeFields();
     }
 }

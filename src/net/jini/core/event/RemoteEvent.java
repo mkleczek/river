@@ -73,8 +73,6 @@ import java.rmi.MarshalledObject;
  * the transaction. This is true even if the event that triggered the
  * RemoteEvent object being sent occurs outside of the scope of the
  * transaction (but is visible within the transaction).
- *
- * Immutable since 3.0.0
  * 
  * @author Sun Microsystems, Inc.
  *
@@ -97,28 +95,28 @@ public class RemoteEvent extends java.util.EventObject {
      *
      * @serial
      */
-    private final Object source;
+    protected Object source;
 
     /**
      * The event identifier.
      *
      * @serial
      */
-    private final long eventID;
+    protected long eventID;
 
     /**
      * The event sequence number.
      *
      * @serial
      */
-    private final long seqNum;
+    protected long seqNum;
 
     /**
      * The handback object.
      *
      * @serial
      */
-    private final MarshalledObject handback;
+    protected MarshalledObject handback;
 
     /**
      * Constructs a RemoteEvent object.
@@ -200,27 +198,8 @@ public class RemoteEvent extends java.util.EventObject {
     }
     
     /**
-     * In River 3.0.0, RemoteEvent became immutable and all state made private,
-     * previously all fields were protected and non final.
-     * <p>
-     * This change breaks compatibility for subclasses that access these fields
-     * directly.  For other classes, all fields were accessible
-     * via public API getter methods.
-     * <p>
-     * To allow an upgrade path for subclasses that extend RemoteEvent and
-     * provide public setter methods for these fields, it is recommended to
-     * override all public methods and maintain state independently using 
-     * transient fields.  The subclass should also use RemoteEvent getter 
-     * methods to set these transient fields during de-serialization.
-     * <p>
-     * writeObject, instead of writing RemoteEvent fields, writes the 
-     * result of all getter methods to the ObjectOutputStream, during serialization,
-     * preserving serial form compatibility wither earlier versions, while 
-     * also allowing mutable subclasses to maintain full serial compatibility.
-     * <p>
-     * Mutable subclasses honoring this contract will be compatible with all 
-     * versions since Jini 1.0.
-     * 
+     * All state is retrieved using getter methods and is written to the stream.
+     * @serialData
      * @param stream
      * @throws java.io.IOException 
      */

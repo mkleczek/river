@@ -255,7 +255,7 @@ public final class ConstrainableLookupLocator
     
     // documentation inherited from RemoteMethodControl.setConstraints
     public RemoteMethodControl setConstraints(MethodConstraints constraints) {
-	return new ConstrainableLookupLocator(host, port, constraints);
+	return new ConstrainableLookupLocator(getHost(), getPort(), constraints);
     }
 
     // documentation inherited from RemoteMethodControl.getConstraints

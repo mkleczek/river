@@ -110,7 +110,7 @@ public class RemoteDiscoveryEvent extends RemoteEvent {
      *
      * @serial
      */
-    protected final boolean discarded;
+    protected boolean discarded;
 
     /**
      * List consisting of marshalled proxy objects where each proxy implements
@@ -138,7 +138,7 @@ public class RemoteDiscoveryEvent extends RemoteEvent {
      *
      * @serial
      */
-    private final List<MarshalledObject> marshalledRegs;
+    protected List<MarshalledObject> marshalledRegs;
 
     /**
      * Array containing a subset of the set of proxies to the lookup
@@ -153,7 +153,7 @@ public class RemoteDiscoveryEvent extends RemoteEvent {
      *
      * @serial
      */
-    private final ServiceRegistrar[] regs;
+    protected ServiceRegistrar[] regs;
 
     /**
      * <code>Map</code> from the service IDs of the registrars of this event
@@ -161,7 +161,7 @@ public class RemoteDiscoveryEvent extends RemoteEvent {
      *
      * @serial
      */
-    private final Map<ServiceID,String> groups;
+    protected Map<ServiceID,String> groups;
 
     /**
      * Flag related to the verification of codebase integrity. A value of
