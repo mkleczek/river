@@ -408,7 +408,7 @@ public class LookupLocator implements Serializable {
         GetField fields = oin.readFields();
 	host = (String) fields.get("host", null);
 	if (host == null) throw new InvalidObjectException("host cannot be null");
-	port = fields.get("port", discoveryPort);
+	port = fields.get("port", (int) discoveryPort);
     }
     
     /**
