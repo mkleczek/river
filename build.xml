@@ -474,6 +474,23 @@
     </target>
 
     <!-- =========== ... ============ -->
+    
+    <!--<target name="sign-jars" description="Signs jar files with X509 Cert"
+        depends="jars">
+        <signjar
+            alias="apache-river" keystore="testkeystore"
+            storepass="apacheant"
+            sigalg="SHA256withRSA"
+            digestalg="SHA256">
+          <path>
+            <fileset id="jar.files" dir="${basedir}">
+                <include name="${lib}/*.jar"/>
+                <include name="${lib-dl}/*.jar"/>
+                <include name="${lib-ext}/*.jar"/>
+            </fileset>
+          </path>
+        </signjar>
+    </target>-->
 
     <target name="jars"	description="Generates JAR files"
 		depends="river.jars,
