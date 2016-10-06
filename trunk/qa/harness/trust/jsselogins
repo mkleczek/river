@@ -1,0 +1,65 @@
+
+/* JAAS login configurations for JSSE */
+
+org.apache.river.Reggie {
+    com.sun.security.auth.module.KeyStoreLoginModule required
+	keyStoreAlias="reggie"
+	keyStoreURL="jar:file:${org.apache.river.qa.harness.harnessJar}!/harness/trust/reggie.keystore"
+	keyStorePasswordURL="jar:file:${org.apache.river.qa.harness.harnessJar}!/harness/trust/reggie.password";
+};
+
+org.apache.river.Mahalo {
+    com.sun.security.auth.module.KeyStoreLoginModule required
+	keyStoreAlias="mahalo"
+	keyStoreURL="jar:file:${org.apache.river.qa.harness.harnessJar}!/harness/trust/mahalo.keystore"
+	keyStorePasswordURL="jar:file:${org.apache.river.qa.harness.harnessJar}!/harness/trust/mahalo.password";
+};
+
+org.apache.river.Outrigger {
+    com.sun.security.auth.module.KeyStoreLoginModule required
+	keyStoreAlias="outrigger"
+	keyStoreURL="jar:file:${org.apache.river.qa.harness.harnessJar}!/harness/trust/outrigger.keystore"
+	keyStorePasswordURL="jar:file:${org.apache.river.qa.harness.harnessJar}!/harness/trust/outrigger.password";
+};
+
+org.apache.river.Mercury {
+    com.sun.security.auth.module.KeyStoreLoginModule required
+	keyStoreAlias="mercury"
+	keyStoreURL="jar:file:${org.apache.river.qa.harness.harnessJar}!/harness/trust/mercury.keystore"
+	keyStorePasswordURL="jar:file:${org.apache.river.qa.harness.harnessJar}!/harness/trust/mercury.password";
+};
+
+org.apache.river.Norm {
+    com.sun.security.auth.module.KeyStoreLoginModule required
+	keyStoreAlias="norm"
+	keyStoreURL="jar:file:${org.apache.river.qa.harness.harnessJar}!/harness/trust/norm.keystore"
+	keyStorePasswordURL="jar:file:${org.apache.river.qa.harness.harnessJar}!/harness/trust/norm.password";
+};
+
+org.apache.river.Phoenix {
+    com.sun.security.auth.module.KeyStoreLoginModule required
+	keyStoreAlias="phoenix"
+	keyStoreURL="jar:file:${org.apache.river.qa.harness.harnessJar}!/harness/trust/phoenix.keystore"
+	keyStorePasswordURL="jar:file:${org.apache.river.qa.harness.harnessJar}!/harness/trust/phoenix.password";
+};
+
+org.apache.river.Test {
+    com.sun.security.auth.module.KeyStoreLoginModule required
+	keyStoreAlias="tester"
+	keyStoreURL="jar:file:${org.apache.river.qa.harness.harnessJar}!/harness/trust/tester.keystore"
+	keyStorePasswordURL="jar:file:${org.apache.river.qa.harness.harnessJar}!/harness/trust/tester.password";
+};
+
+org.apache.river.Fiddler {
+    com.sun.security.auth.module.KeyStoreLoginModule required
+	keyStoreAlias="fiddler"
+	keyStoreURL="jar:file:${org.apache.river.qa.harness.harnessJar}!/harness/trust/fiddler.keystore"
+	keyStorePasswordURL="jar:file:${org.apache.river.qa.harness.harnessJar}!/harness/trust/fiddler.password";
+};
+
+org.apache.river.Group {
+    com.sun.security.auth.module.KeyStoreLoginModule required
+	keyStoreAlias="group"
+	keyStoreURL="jar:file:${org.apache.river.qa.harness.harnessJar}!/harness/trust/group.keystore"
+	keyStorePasswordURL="jar:file:${org.apache.river.qa.harness.harnessJar}!/harness/trust/group.password";
+};

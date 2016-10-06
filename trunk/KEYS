@@ -1,0 +1,132 @@
+
+=========================================================================
+
+This file contains the PGP keys of various developers.
+
+Users: pgp < KEYS
+       gpg --import KEYS
+Developers: 
+        pgp -kxa <your name> and append it to this file.
+        (pgpk -ll <your name> && pgpk -xa <your name>) >> this file.
+        (gpg --list-sigs <your name>
+             && gpg --armor --export <your name>) >> this file.
+
+=========================================================================
+
+pub   4096R/0CE8390F 2010-10-13
+uid                  Tom Hobbs (CODE SIGNING KEY) <thobbs@apache.org>
+sig 3        0CE8390F 2010-10-13  Tom Hobbs (CODE SIGNING KEY) <thobbs@apache.org>
+sub   4096R/12A1AFA1 2010-10-13
+sig          0CE8390F 2010-10-13  Tom Hobbs (CODE SIGNING KEY) <thobbs@apache.org>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+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
+sRyuTmICGuvcMAY2TYw=
+=hDxb
+-----END PGP PUBLIC KEY BLOCK-----
+pub   4096R/E0FB8A91 2015-12-20 [expires: 2018-12-19]
+uid                  Peter Grahame Firmstone (CODE SIGNING KEY) <peter.firmstone@zeus.net.au>
+sig 3        E0FB8A91 2015-12-20  Peter Grahame Firmstone (CODE SIGNING KEY) <peter.firmstone@zeus.net.au>
+sub   4096R/C322F7DB 2015-12-20 [expires: 2018-12-19]
+sig          E0FB8A91 2015-12-20  Peter Grahame Firmstone (CODE SIGNING KEY) <peter.firmstone@zeus.net.au>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v2.0.17 (MingW32)
+
+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
+liU=
+=AsoE
+-----END PGP PUBLIC KEY BLOCK-----

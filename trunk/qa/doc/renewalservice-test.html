@@ -1,0 +1,2205 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+	<TITLE>Lease Renewal Service Tests</TITLE>
+	<META NAME="GENERATOR" CONTENT="StarOffice 8  (Solaris Sparc)">
+	<META NAME="AUTHOR" CONTENT="Steven F. Harris">
+	<META NAME="CREATED" CONTENT="20000104;2060000">
+	<META NAME="CHANGEDBY" CONTENT="Peter Firmstone">
+	<META NAME="CHANGED" CONTENT="20130101;9351800">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { size: 27.94cm 21.59cm; margin-right: 2.54cm; margin-top: 3.18cm; margin-bottom: 3.18cm }
+		P { margin-bottom: 0cm; direction: ltr; color: #000000; widows: 2; orphans: 2 }
+		P.western { font-family: "Times New Roman", serif; font-size: 10pt; so-language: en-US; font-style: italic }
+		P.cjk { font-family: "Times New Roman", serif; font-size: 10pt; font-style: italic }
+		P.ctl { font-family: "Times New Roman", serif; font-size: 10pt }
+		H1 { margin-top: 0cm; margin-bottom: 0cm; direction: ltr; color: #000000; widows: 2; orphans: 2 }
+		H1.western { font-family: "Times New Roman", serif; font-size: 10pt; so-language: en-US; font-style: italic; font-weight: medium }
+		H1.cjk { font-family: "Times New Roman", serif; font-size: 10pt; font-style: italic; font-weight: medium }
+		H1.ctl { font-family: "Times New Roman", serif; font-size: 10pt; font-weight: medium }
+		H2 { margin-top: 0cm; margin-bottom: 0cm; direction: ltr; color: #000000; widows: 2; orphans: 2 }
+		H2.western { font-size: 12pt; so-language: en-US; font-style: italic; font-weight: medium }
+		H2.cjk { font-family: "Times New Roman", serif; font-size: 12pt; font-style: italic; font-weight: medium }
+		H2.ctl { font-family: "Times New Roman", serif; font-size: 10pt; font-weight: medium }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-AU" TEXT="#000000" DIR="LTR">
+<P LANG="en-US" ALIGN=CENTER STYLE="margin-left: -1.11cm; margin-right: -3.18cm; font-style: normal">
+<FONT SIZE=4 STYLE="font-size: 16pt">Lease Renewal Service Tests</FONT></P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=7 CELLSPACING=0>
+	<COL WIDTH=72*>
+	<COL WIDTH=82*>
+	<COL WIDTH=18*>
+	<COL WIDTH=84*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Test
+				Name &amp; Motivation</P>
+			</TD>
+			<TD WIDTH=32%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Description</P>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Categorization</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Specification
+				Requirements</P>
+			</TD>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">EqualsTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Tests
+				the LRS equals method.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 1.</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Register
+					two LRS services with a lookup (service #1 and service #2)</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Obtain
+					two proxies for service #1 and one proxy for service #2.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the two proxies from service #1 return true from the
+					&ldquo;<I>equals&rdquo;</I> method.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the proxy from service #1 and the proxy from service #2
+					return false from the &ldquo;<I>equals&rdquo; </I>method.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					an Integer object new Integer(99).</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that service #1 equals the integer returns false.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3  pg. 107</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">AddRemoveTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Tests
+				that the addLease and removeLease methods work as expected.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 26.</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a valid lease or obtain one from a service with a duration value
+					of forever. 
+					</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					the lease to the set using the addLease method with a membership
+					duration of  forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Remove
+					the lease using the removeLease method.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the lease returned by removeLease is equal to the lease
+					that was added to the set.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Attempt
+					to remove the lease from the set again.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that removeLease returns a null value.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 109-110</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">ExpireRemoveTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that a lease whose membership expiration has expired is removed
+				from the set and that no further attempts to renew the lease are
+				made for at least half the lease duration time, after the lease
+				has expired.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">
+				Matrix ID 2, 3, 13</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a special lease that maintains a count of renewal attempts with
+					a duration value of 60000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					the lease to the set using the addLease method with a membership
+					duration of  30000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					for 40000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Attempt
+					to remove the lease from the set.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the call to removeLease returns a null value.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that no lease renewal attempts have been made on the lease.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 108</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">ExpireSetSleepTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that a lease renewal set is nullified when its lease expires or
+				is cancelled but the leases it holds remain unaffected.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 4, 10, 19</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of 30000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					3 valid leases with durations of 50000, 100000, and 150000
+					milliseconds respectively.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					leases to the lease renewal set with membership duration of
+					forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					for 35000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Use
+					the getLease method to assert that the lease has expired.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the three original leases are still active and that their
+					expiration times have not changed.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that attempts to remove one of the three original leases fails
+					with a NoSuchObjectException.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that an attempt to add a lease fails with a
+					NoSuchObjectException.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 108</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">ExpireSetCancelTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that a lease renewal set is nullified when its lease expires or
+				is cancelled but the leases it holds remain unaffected.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 4, 10, 19</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of 30000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					3 valid leases with durations of 50000, 100000, and 150000
+					milliseconds respectively.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					leases to the lease renewal set with membership duration of
+					forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Call
+					cancel on the renewal set&rsquo;s lease.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Use
+					the getLease method to assert that the lease has expired.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the three original leases are still active and that their
+					expiration times have not changed.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that attempts to remove one of the three original leases fails
+					with a NoSuchObjectException.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that an attempt to add a lease fails with a
+					NoSuchObjectException.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Perform
+					the above 8 steps again except in step #4 cancel the set&rsquo;s
+					lease instead of sleeping.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 108</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">ExpirationListenerTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				the following:</P>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">An
+					event gets delivered to a RemoteEventListener before a lease in
+					the lease renewal set expires. 
+					</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">The
+					handback in the ExpirationWarningEvent is rational</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">The
+					listener must be non-null.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">The
+					minWarning must be 0 or greater.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">A
+					minWarning value that exceeds the current duration of the set&rsquo;s
+					lease causes immediate delivery of the ExpirationWarningEvent.</P>
+				</OL>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 5, 30, 31, 32, 33, 34, 35, 36</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a special RemoteEventListener which will log the times when it
+					receives notify callbacks.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with lease of 120000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a MarshalledObject from &ldquo;new Integer(99)&rdquo; to serve
+					as the handback arg.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Pass
+					the listener to the set&rsquo;s setExpirationWarningListener
+					method with a minWarning of 60000 milliseconds. Use the
+					MarshalledObject created in step 3 as the handback. 
+					</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Wait
+					until the renewal set lease has expired.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the event notification was logged  and the current time is
+					approximately lease expiration time minus 60000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the MarshalledObject handed back in the
+					ExpirationWarningEvent is equal to the original object handed
+					in. Use the MarshalledObject equals method to make this
+					determination.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with lease of  120000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that an attempt to call the setExpirationWarningListener  method
+					with a null listener throws a NullPointerException.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that an attempt to call the setExpirationWarningListener method
+					with a minWarning value of less than 0 throws an
+					IllegalArgumentException.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that an attempt to call the setExpirationWarningListener method
+					with a minWarning value of 0 does not throw an
+					IllegalArgumentException.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that an attempt to call the setExpirationWarningListener method
+					with a minWarning of 120000 milliseconds the event is logged
+					immediately (minus some slop for propagation time).</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 108</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28% HEIGHT=436>
+				<P LANG="en-US" CLASS="western">RenewalFailureListenerTest</P>
+				<P LANG="en-US" CLASS="western"><BR>
+				</P>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that an event gets delivered to a RemoteEventListener when a
+					lease expires before its expiration time runs out. 
+					</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">The
+					handback in the RnewalFailureEvent is rational</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">
+					Assert that the lease for the EventRegistration is the same as
+					the set&rsquo;s lease.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">The
+					listener must be non-null.</P>
+				</OL>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 7, 44, 45, 46, 47, 49</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a special lease (duration of 20000 milliseconds) that will throw
+					a definite exception when any attempt is made to renew it.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a special RemoteEventListener which will log the times when it
+					receives notify callbacks.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a MarshalledObject from &ldquo;new Integer(99)&rdquo; to serve
+					as the handback arg.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Establish
+					the listener using the set&rsquo;s setRenewalFailureListener
+					method and the handback arg. Save the EventRegistration object
+					(eventReg).</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					lease to the set with membership duration of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that eventReg getLease() equals set getLease().</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Wait
+					30000 milliseconds for the listener to send notification.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the event notification was logged before lease expiration
+					time.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the MarshalledObject handed back in the RenewalFailureEvent
+					is equal to the original object handed in. Use the
+					MarshalledObject equals method to make this determination.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that an attempt to call the setRenewalFailureListener  method
+					with a null listener throws a NullPointerException.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 108</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">RenewalFailureIndefiniteTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that an event gets delivered for an indefinite exception only
+				after the expiration time of the lease.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Not in
+				matrix.</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a special lease (duration of 30000 milliseconds) that will throw
+					an indefinite exception when any attempt is made to renew it and
+					will count the number of times it has been renewed.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a special RemoteEventListener which will log the times when it
+					receives notify callbacks.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Establish
+					the listener using the set&rsquo;s setRenewalFailureListener
+					method.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					lease to the set with membership duration of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Wait
+					40000 milliseconds for the listener to send notification.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the event notification was logged at some time at or after
+					the lease expiration time.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 113-114</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<P LANG="en-US" CLASS="western"><I>RemovalTest</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that that removal of a lease actually results in it being removed
+				(according to the remove method) and no further action is taken
+				on the lease for a period up to and including its expiration time
+				plus one half.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 11.</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a special lease (duration of 30000 milliseconds) that will count
+					the number of times it has been renewed.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of 50000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					the lease to the set with membership duration of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Remove
+					the lease from the set.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					for 35000 milliseconds to allow the set to expire.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that there have been no renewals made on the lease.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that a call to remove the lease again returns a null value.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					for 25000 milliseconds to allow the managed lease to expire.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that attempts to renew the lease result in an
+					UnknownLeaseException and that no other renewal attempts have
+					been made.</P>
+				</OL>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 108</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<P LANG="en-US" CLASS="western"><I>LeaseExpirationTest</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that that expiration of a lease actually results in it being
+				removed (according to the remove method) and no further action is
+				taken on the lease for a period up to and including its
+				expiration time. The only way that a lease can expire while being
+				managed by the LRS is for the grantor of the lease to throw an
+				Exception.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 12, 14</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a special lease (duration of 30000 milliseconds) that will count
+					the number of times it has been renewed and throw a definite
+					exception every time it&rsquo;s renew method is called.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					the lease to the set with membership duration of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					for 35000 milliseconds to allow the managed lease to expire.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that there have been no renewals made on the lease.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that a call to remove the lease returns a null value .</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a special lease (duration of 30000 milliseconds) that will throw
+					an indefinite exception every time it&rsquo;s renew method is
+					called.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					the lease to the set with membership duration of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					for 35000 milliseconds to allow the managed lease to expire.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that there have been no renewals made on the lease.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that a call to remove the lease returns a null value.</P>
+				</OL>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 108</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">LeaseDurationTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that for a range of lease duration values given to the
+				createLeaseRenewalSet method, the LRS will only grant times less
+				than or equal to the amount requested.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 16.</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					lease renewal sets with the following lease duration values: 1,
+					10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000,
+					1000000000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the duration times for the leases returned are less than or
+					equal to the amount requested or a LeaseDeniedException is
+					thrown. 
+					</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a duration time of Lease.ANY.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the expiration time of the lease returned is in the future.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a duration time of Lease.FOREVER.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the expiration time of the lease returned is in the future.</P>
+				</OL>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 
+				</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">ValidLeaseDurationTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that a lease duration time of 0 or less will cause the
+				createLeaseRenewalSet method  to throw an
+				IllegalArgumentException. Also assert that a positive number,
+				Lease.FOREVER, and Lease.ANY do not generate
+				IllegalArgumentExceptions.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 17</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					lease renewal sets with the following lease duration values: 0,
+					-99 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that in each case an IllegalArgumentException is thrown.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					lease renewal sets with the following lease duration values: 
+					Lease.FOREVER, Lease.ANY.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that IllegalArgumentException is not thrown.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a value of 1024 milliseconds. 
+					</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that IllegalArgumentException is not thrown. 
+					</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 109</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">SetEqualsTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that two lease renewal set proxies  are equal only if they are
+				proxies for the same set created by the same LeaseRenewalService.
+								</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 18.</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Obtain
+					two LRS services proxies (service #1 and service #2)</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Using
+					service #1 create one lease renewal set (set #1).</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Using
+					service #2 create one lease renewal set (set #2).</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Using
+					service #1 create one lease renewal set (set #3).</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that set #1.equals(set #2) returns a value of false.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that set #1.equals(set #3) returns a value of true.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a MarshalledObject from set #1.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Unmarshall
+					the MarshalledObject into set #4.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that set #1 == set #4 returns a value of false.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that set #1.equals(set #4) returns a value of true.</P>
+				</OL>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 109</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">IlegalLeaseTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that attempts to add a set&rsquo;s lease to itself or a lease
+				that is currently a member of another set throws an
+				IllegalArgumentException.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID #21, 22</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set  #1 with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Use
+					the getLease method to obtain a reference to the set&rsquo;s
+					lease.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that an attempt to pass the lease to the set #1&rsquo;s addLease
+					method generates an IllegalArgumentException.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that an attempt to pass the lease to the set #2&rsquo;s addLease
+					method generates an IllegalArgumentException.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set #2 with a lease of  forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Obtain
+					or create a valid lease with duration of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					the lease to set #1.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that an attempt to pass the lease to set #2&rsquo;s addLease
+					method generates an IllegalArgumentException.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 110</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">MembershipDurationTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that the membership duration argument to the addLease method is
+				interpreted correctly.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 23, 24</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Obtain
+					or create a lease with duration of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that when the lease is added to the set with a membership
+					duration of 0 an IllegalArgumentException is thrown.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that an attempt to remove the lease from the set returns a null
+					value.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that when the lease is added to the set with a membership
+					duration of 1 millisecond, no IllegalArgumentException is
+					thrown.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that when the lease is added to the set with a membership
+					duration of  Long.MAX_VALUE, no IllegalArgumentException is
+					thrown.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that an attempt to remove the lease from the set returns a
+					reference to the lease itself.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that when the lease is added to the set with a membership
+					duration of 30000 milliseconds., no IllegalArgumentException is
+					thrown.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 111</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">ReAddLeaseTest</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that when a lease is added to a set in which it already resides
+				that the membership duration is updated appropriately.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 25</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Obtain
+					or create a lease with duration of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					lease to the set with membership duration value of 20000
+					milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					for 10000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					the lease to the set again with a membership duration of  30000
+					milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					25000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that an attempt to remove the lease from the set results in a
+					non-null return value.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					10000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that an attempt to remove the lease from the set results in a
+					null value being returned. 
+					</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					lease to the set with membership duration value of 60000
+					milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					10000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					lease to the set again with membership duration of 20000
+					milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					25000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that an attempt to remove the lease from the set results in a
+					null value being returned.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 111</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">RemoveCancelTest</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that removal of a lease from a set will not cancel the lease.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 26</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a special lease that counts the number of times cancel has been
+					called.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					lease to the set with membership duration of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Remove
+					lease from the set.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the cancel method has not been called. 
+					</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 111</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">RenewalTimeTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that the expiration time of a returned lease reflects either the
+				original time or the time set as a result of the last successful
+				renewal.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 27.</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease with a duration value of 60000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					lease to the set with membership duration of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					for 20000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the lease obtained from the remove method still has the
+					original expiration time.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease with a duration value of 60000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					the lease to the set with membership duration of 90000
+					milliseconds. 
+					</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					75000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the lease obtained from the remove method  has an
+					expiration time equal to approximately the original expiration
+					time + 30000 millisecond.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">LeaseNotInSetTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that the remove method returns null when the lease is not in the
+				set.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 28.</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease with a duration value of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the set&rsquo;s remove method returns a null value when an
+					attempt is made to remove the lease.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 111</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">GetLeaseTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that the getLease method returns the lease of the set itself.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 29</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Save
+					a reference to the lease as lease #1.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Using
+					the set&rsquo;s getLease method save reference to the returned
+					lease as lease #2.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					lease #1 equals (lease #2).</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 111</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">EventRegistrationTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				the following:</P>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">An
+					event registration and the set from which it is generated share
+					the same lease.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">An
+					event registration  is valid with respect to all other active
+					registrations generated by the same LRS.  (weak test because
+					only 40 cases are tested. It would be impractical to test all
+					cases exhaustively.)</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that when a registration is replaced it is replaced with a new
+					one that has the same event ID. 
+					</P>
+				</OL>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 37, 38, 39, 40, 48, 50</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					20 lease renewal sets #1 - #20 with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					20 RemoteEventListener objects #1 - #20.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Save
+					a reference to the lease of renewal set #1as lease #1.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Register
+					RemoteEventListener #1 with renewal set #1 to receive
+					ExpirationWarningEvents.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Save
+					a reference to the event registration object returned from a
+					call to the setExpirationWarningListener method.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Using
+					the EventRegistration object&rsquo;s getLease() method save a
+					reference to the registration&rsquo;s lease as lease #2.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					lease #1 equals (lease #2).</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Register
+					RemoteEventListener #1 with renewal set #1 to receive
+					RenewalFailureEvents Events.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Save
+					a reference to the event registration object returned from a
+					call to the setRenewalFailureListener method. 
+					</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Using
+					the EventRegistration&rsquo;s object&rsquo;s getLease() method
+					save a reference to the registration&rsquo;s lease as lease #3.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					lease #1 equals (lease #3).</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Register
+					each listener with its corresponding set for both
+					ExpirationWarningEvents and RenewalFailureEvents and save
+					references to each registrations warnReg #1-#20 and failReg #1 -
+					#20.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the event ID of each registration is unique with respect to
+					each of the others.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a RemoteEventListener newListener.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Install
+					newListener into set #1 by using the set&rsquo;s
+					setExpirationWarningListener method.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Capture
+					the registration as newWarnReg.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that warnReg #1 getLease() equals newWarnReg getLease() returns
+					a value of false.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					warnReg #1 getID() == newWarnReg getID().</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Install
+					newListener into set #1 by using its setRenewalFailureListener
+					method.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Capture
+					the registration as newFailReg.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that failReg #1 getLease() equals newFailReg getLease() returns
+					a value of false.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					failReg #1 getID() == newFailReg getID().</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 112-113</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">EventSequenceWarnTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that events of the WarningExpirationEvent type sent to a newly
+				registered listener are in the same sequence as those sent to the
+				previously registered listener.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">(weak
+				test : because partial failure may cause the test to fail when it
+				really should succeed. This is because retransmission of events
+				is valid and in some cases it is impossible to tell if two events
+				with the same sequence number are in fact the same event or
+				different).</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 41</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					two RemoteEventListeners, listener #1 and listener #2. The
+					notify methods will automatically renew the lease of the set for
+					30000 milliseconds and save each event received.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of 30000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Register
+					listener #1 to receive ExpirationWarningEvents with a minWarning
+					of 10000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">After
+					listener #1 has received three events register listener #2 in
+					its place.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">After
+					listener #2 has received three events then call the set&rsquo;s
+					clearExpirationWarningListener method.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the sequence numbers for the events received by listener #1
+					are all in the proper sequence with no gaps.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the sequence numbers of the events received by listener #2
+					have no gaps and do not overlap with those of listener #1.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 113</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">EventSequenceFailTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that events of the RenewalFailureEvent type sent to a newly
+				registered listener are in the same sequence as those sent to the
+				previously registered listener.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">(Note:
+				This test is stronger than the <I>EventSequenceWarnTest </I>because
+				the RenewalFailureEvent carries a reference to the lease whose
+				renewal failed and thus imparts to the event an identity that can
+				be used to distinguish between two different events that might
+				have the same sequence number).</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 51</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					two RemoteEventListeners, listener #1 and listener #2. The
+					notify methods will save each event received.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					6 leases (lease #1 &ndash; lease #6) that will throw a definite
+					exception when their renew methods are called. Use a duration
+					value of 30000 * N milliseconds for each.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					each lease to the renewal set with membership duration value of
+					forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Register
+					listener #1 to receive RenewalFailureEvents.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">
+					After listener #1 has received three events register listener #2
+					in its place.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">After
+					listener #2 has received three events then call the set&rsquo;s
+					clearRenewalFailureListener.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the sequence numbers for the events received by listener #1
+					are all in the proper sequence with no gaps.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the sequence numbers of the events received by listener #2
+					have no gaps and do not overlap with those of listener #1 where
+					the leases of any two overlapping events are the different.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 113</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">ClearWarningListenerTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that the clearExpirationWarningListener method operates as
+				expected.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that this method may be called multiple times with no ill effect.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 42, 43 
+				</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a RemoteEventListener whose notify method will log the number of
+					times it has been called and will automatically renew the lease
+					of the set for 30000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of 30000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Register
+					the listener to receive ExpirationWarningEvents with a
+					minWarning of 10000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					for 35000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Call
+					the set&rsquo;s clearExpirationWarningListener method.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that only one call to notify has been made.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					for 60000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that only one call to notify has been made.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the set&rsquo;s lease has expired.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the set&rsquo;s clearExpirationWarningListener method can
+					be called 10 more times without generating any definite
+					exceptions.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 112</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">ClearFailureListenerTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that the clearRenewalFailureListener method operates as expected.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that this method may be called multiple times with no ill effect.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 52, 53.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a RemoteEventListener whose notify method will log the number of
+					times it has been called and will automatically renew the lease
+					of the set for 30000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Register
+					the listener to receive RenewalFailureEvents .</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					6 leases (lease #1 &ndash; lease #6) that will throw definite
+					exceptions each time their renew methods are called.  Create
+					leases #1 - #3 with a lease duration value of 30000 milliseconds
+					and the remaining 3 with a lease duration value of 60000
+					milliseconds. 
+					</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					for 35000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Call
+					the set&rsquo;s clearRenewalFailureListener method.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that only three calls to notify has been made.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					for 60000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that only three calls to notify has been made.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the leases #4 - #6 can successfully be removed from the
+					set.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the set&rsquo;s clearRenewalFailureListener method can be
+					called 10 more times without generating any definite exceptions</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 113</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">EventLeaseTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that when a RemoteEventListener&rsquo;s notify method is called
+					that the event contains the expected lease. This test covers
+					both ExpirationWarningEvents and RenewalFailureEvents.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the expiration time will reflect the expiration of the
+					lease when the event occurred.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">In
+					the case of the lease encapsulated in an ExpirationWarningEvent,
+					assert that the expiration time is correct.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the Throwable object encapsulated by the
+					RenewalFailureEvent is of the correct type.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the lease that caused the renewal failure event is removed
+					from the renewal set.</P>
+				</OL>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 54,  55, 57, 58, 59, 62</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"> 
+				</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					two RemoteEventListeners, listener #1 to receive
+					ExpirationWarningEvents and listener #2 to receive
+					RenewalFailureEvents</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">
+					Create a special lease #1 (duration of 30000 milliseconds) that
+					will throw a definite exception when any attempt is made to
+					renew it.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of 60000 milliseconds and save
+					a reference to the lease as lease #2.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Register
+					listener #1 using the set&rsquo;s setExpirationWarningListener
+					method with a minWarning of 10000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Register
+					listener #2 using the set&rsquo;s setRenewalFailureListener.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">In
+					the notify method of listener #1 assert that the lease returned
+					by the event&rsquo;s getLease() method is equal to lease #1 and
+					the expiration times are also equal.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">In
+					the notify method of listener #1 assert that the lease returned
+					in the event object is no longer in the lease renewal set (use
+					the remove method).</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">In
+					the notify method of listener #2 assert that the lease returned
+					by the event&rsquo;s getLease() method is equal to lease #2 . 
+					</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">In
+					the notify method of listener #2 assert that the Throwable
+					object returned by getThrowable method of the event object is
+					the correct type of Exception based upon the definite exception
+					thrown by the lease.</P>
+				</OL>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M3</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 113</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">LeaseRenewalTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that if the renewal service was able to renew the lease before
+				the event occurred, the lease&rsquo;s expiration will reflect the
+				result of the last successful renewal call.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 61</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a listener to receive RenewalFailureEvents.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a special lease with a duration value of 30000 milliseconds that
+					will throw a definite exception after allowing one successful
+					call to renew.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Save
+					a reference to the lease as lease #1.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Register
+					the listener to receive RenewalFailureEvents.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					the lease to the set with duration of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					in notify method of the listener that the lease encapsulated in
+					the event object has an expiration time later than that of lease
+					#1. 
+					</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M4</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 113</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Note:
+				This test is categorized as M4 because it is not certain that
+				every implementation will allow for 3 failures before a renewal
+				is granted.</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">IndefiniteRenewalTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that if the renewal service was unable to call renew before the
+				lease expired, then the Throwable returned in the event object is
+				null.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 62</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a listener to receive RenewalFailureEvents.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a test lease with a duration of 10000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					for 20000 milliseconds to allow the lease to expire.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Register
+					the listener to receive RenewalFailureEvents.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					the lease to the set with duration of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					in notify method of the listener that the value returned by the
+					getThrowable method of the event is null. 
+					</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M4</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 114</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">This
+				test is categorized M4 because it is not certain from the
+				specification that the LRS must send a RenewalFailureEvent in the
+				case where an expired lease is added to the renewal set,
+				althrough Norm does this.</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">EventSequenceTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that events arrive in strictly increasing order. (This is a weak
+				test because it is possible to fail if events are lost on the
+				network and the test is not and can not be exhaustive.)</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 63</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					10 lease renewal sets each with a lease of 40000 milliseconds. 
+					</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a listener to receive ExpirationWarningEvents.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">For
+					each set register the listener to receive events with a
+					minWarning of 10000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">In
+					the notify method of the listener collect each sequence number
+					as it comes in.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sort
+					the sequence numbers.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that there are 10 sequence numbers and that they are strictly
+					increasing.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a listener to receive RenewalFailureEvents.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Register
+					the listener with the set.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					10 leases with duration values of 30000 milliseconds that will
+					throw definite exceptions when attempts are made to renew them.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					each lease to the set.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">In
+					the notify method of the listener collect each sequence number
+					as it comes in.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sort
+					the sequence numbers.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that there are 10 sequence numbers and that they are strictly
+					increasing.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 114</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">MaxMembershipTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that if a lease is added to a set with a membership duration of
+				Long.MAX_VALUE then its membership expiration is Long.MAX_VALUE.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 64</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a test lease with duration value of 30000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					the test lease to the set with a membership duration of
+					Long.MAX_LONG.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					until the test lease expires and is renewed by the LRS.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Remove
+					the test lease from the renewal set.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the expiration time on the lease is  Long.MAX_VALUE.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3 pg. 113</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">DurationExpirationTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that if the membership duration of a managed lease is less than
+				its expiration time then the lease will not be renewed but it
+				will remain in the set.</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 65</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a test lease with duration of 60000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					the test lease to the set with a membership duration value of 
+					30000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					25000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the array returned from the getLeases method is of size one
+					and contains the test lease.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the expiration time of the test lease has not changed.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					10000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the array returned from the getLeases method is of size 0.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3.1 pg. 113</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">GetLeasesTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that <FONT FACE="Arial, sans-serif">the getLeases method returns
+				all the client leases in the set at the time of the call as an
+				array of type Lease.</FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><FONT FACE="Arial, sans-serif">Matrix
+				ID 66</FONT></P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a test lease #1 with duration of 30000.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a test lease #2 with duration of 60000.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a test lease #3 with duration of 90000.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					all three leases to the renewal set each with a membership
+					duration of 10000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Obtain
+					an array #1 of leases using the getLeases method.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					35000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Obtain
+					an array #2 of leases using the getLeases method.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					35000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Obtain
+					an array #3 of leases using the getLeases method.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					35000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Obtain
+					an array #4 of leases using the getLeases method.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that array #1 has exactly 3 leases no two of which are the same.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that array #2 has exactly 2 different test leases that are equal
+					to test lease #2 and test lease #3.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that array #3 has exactly 1 test lease that is equal to  test
+					lease #3.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that array #4 is empty.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3.1 pg. 113</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">LeaseUnmarshalExceptionTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><FONT FACE="Arial, sans-serif">Assert
+				that if one or more of the leases in the array can not be
+				de-serialized a LeaseUnmarshalException is thrown and the
+				getMarshalledLeases, getStillMarshalledLeases, and getExceptions
+				methods work as advertised.</FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><FONT FACE="Arial, sans-serif">Matrix
+				ID 67, 68, 70</FONT></P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					two special test leases (called specialLease01 and
+					specialLease02) with duration of forever that has the property
+					of throwing an exception when an attempt is made to de-serialize
+					it.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					three test leases (called testLease01, testLease02 and
+					testLease03) with duration of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					all the leases to the set with a membership duration of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Obtain
+					an array of leases by calling the getLeases method.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that a LeaseUnmarshalException is thrown.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the array returned from the getUnmarshalledLeases method of
+					the exception has a size of 3 and contains exactly testLease01,
+					testLease02, and testLease03.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the array returned from the getStillMarshalledLeases method
+					of the exception has a size of 2 and contains exactly the
+					marshalled representation of  specialLease01 and speciallease02.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the array returned from the getExceptions method of the
+					exception has a size of 2 and contains exactly two Throwable
+					objects that where the original cause of the de-serialization
+					errors and the order of their appearance in the array parallels
+					the order of the array returned from getStillMarshalledLeases.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				section 9.3.1 pg. 113</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">LeaseUnmarshalNoneTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that if none of the leases in the array can be de-serialized a
+				LeaseUnmarshalException is thrown and the getMarshalledLeases
+				method  returns a 0 length array. 
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><FONT FACE="Arial, sans-serif">Matrix
+				ID 69</FONT></P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					two special test leases (called specialLease01 and
+					specialLease02) with duration of forever that has the property
+					of throwing an exception when an attempt is made to de-serialize
+					it.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					all the leases to the set with a membership duration of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Obtain
+					an array of leases by calling the getLeases method.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that a LeaseUnmarshalException is thrown.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the array returned from the getUnmarshalledLeases method of
+					the exception has a size of 0. 
+					</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				9.3.1 pg. 113</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western"><FONT FACE="Arial, sans-serif">AssocExpWarnSetTest</FONT></H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><FONT FACE="Arial, sans-serif">Each
+				event generated by the lease renewal service has as its source
+				the renewal set that the event is associated with. In the case of
+				an expiration warning event this is the set which is about to
+				expire. </FONT>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 71</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					two lease renewal sets (set01 and set02) with leases for
+					forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set (set03) with a lease of 30000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a listener to receive ExpirationWarningEvents..</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Register
+					the listener with the set to receive events with a minWarning of
+					10000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					for 30000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">In
+					the notify method of the ExpirationWarningEvent listener assert
+					that the source of the event is equal to the set set03.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				9.3.1 pg. 113</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western"><FONT FACE="Arial, sans-serif">AssocRenewalFailSetTest</FONT></H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><FONT FACE="Arial, sans-serif">Each
+				event generated by the lease renewal service has as its source
+				the renewal set that the event is associated with. In the case of
+				a renewal failure event this is the set the client lease was in
+				when the event occurred.</FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 71</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever,</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a listener to receive RenewalFailureEvents..</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Register
+					the listener with the to receive events. 
+					</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a special test lease called specialLease01 with duration of
+					30000 that has the property of throwing an exception when an
+					attempt is made to renew it.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a test lease called testLease01 with duration of 30000
+					milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					testLease01 to the set with membership duration values of
+					forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					specialLease01 to the set with membership duration value of
+					forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					for 30000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">In
+					the notify method of the RenewalFailureEvent listener assert
+					that the source of the event is equal to the set.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				9.3.1 pg. 113</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">EventIDWarnTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><FONT FACE="Arial, sans-serif">Because
+				a given set will only have one expiration warning event
+				registration at a given time all expiration warning events will
+				have the same event ID,
+				LeaseRenewalSet.EXPIRATION_WARNING_EVENT_ID. </FONT>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><FONT FACE="Arial, sans-serif">Matrix
+				ID 72</FONT></P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					three lease renewal sets with a lease of 40000 milliseconds
+					(called set01, set02 and set03).</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a listener to receive ExpirationWarningEvents..</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Register
+					the listener with the set01, set02, and set03 to receive events
+					with a minWarning of 10000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					for 80000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">In
+					the notify method of the ExpirationWarningEvent listener assert
+					that the event id of  all events received is
+					LeaseRenwalSet.EXPIRATION_WARNING_EVENT_ID.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">As
+					an extra measure assert that the number of events received by
+					the listener is 3.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				9.3.1 pg. 113</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">EventIDFailTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><FONT FACE="Arial, sans-serif">Because
+				a given set will only have one renewal failure event registration
+				at a given time all renewal failure events will have the same
+				event ID, LeaseRenewalSet.RENEWAL_FAILURE_EVENT_ID.</FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><FONT FACE="Arial, sans-serif">Matrix
+				ID 72</FONT></P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal sets with a lease of  forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a listener to receive RenewalFailureEvents..</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Register
+					the listener with the set to receive events. 
+					</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					3 special test lease called specialLease01, specialLease02 and
+					specialLease03 with duration of 40000 that has the property of
+					throwing an exception when an attempt is made to renew it.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					specialLease01, specialLease02, and specialLease03 to set with
+					membership duration values of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					for 80000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">In
+					the notify method of the RenewalFailureEvent listener assert
+					that the event is of all events received is
+					LeaseRenwalSet.RENEWAL_FAILURE_EVENT_ID.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">As
+					an extra measure assert that the number of events received by
+					the listener is 3.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				9.3.1 pg. 113</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western"><FONT FACE="Arial, sans-serif">ClearEventRegistrationTest</FONT></H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><FONT FACE="Arial, sans-serif">If
+				a RemoteListener registered for a renewal failure or an
+				expiration warning event throws an UnknownEventException, this
+				will only clear the specific event registration, it will not
+				cancel  the lease on the renewal set, or affect any other event
+				registration on the set.</FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><FONT FACE="Arial, sans-serif">Matrix
+				ID 73</FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					two lease renewal sets with a lease of 100000 milliseconds 
+					(called set01 and set02).</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a special listener (specialListener01) to receive
+					ExpirationWarningEvents that will throw an UnknownEventException
+					from its notify method as well as count the number of times the
+					notify method has been called.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a listener (normalListener01) to receive ExpirationWarningEvents
+					that counts the number of times its notify method has been
+					called.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Register
+					the specialListener01 with the set01 to receive events with a
+					minWarning of 40000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Register
+					the normalListener01 with the set02 to receive events with a
+					minWarning of 25000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a special listener (specialListener02) to receive
+					RenewalFailureEvents that will throw an UnknownEventException
+					from its notify method as well as count the number of times the
+					notify method has been called.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a listener (normalListener02) to receive RenewalFailureEvents
+					that counts the number of times its notify method has been
+					called.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Register
+					the specialListener02 with the set02.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Register
+					the normalListener02 with the set01.</P>
+				</OL>
+				<OL START=10>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					three special leases  (specialLease01, specialLease02 and
+					specialLease03 with duration values of 30000, 50000 and 600000
+					milliseconds respectively) that will throw a definite exception
+					when any attempt is made to renew it.</P>
+				</OL>
+				<OL START=10>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					specialLease01 to set01 and specialLease02 to set02 with
+					membership duration values of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					for 80000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Renew
+					each lease for 60000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that renewals on both lease sets do not result in an
+					UnknownLeaseException.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that calls to remove on set01 and set02 do not result in a
+					NoSuchObjectException.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					specialLease03 to set02.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					for 60000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that exactly one call to notify was made to specialListener01
+					and specialListener02.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that exactly two calls were made to normalListener01 and
+					normalListener02.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				9.3.1 pg. 113</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western">NewListenerEventTest</H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><FONT FACE="Arial, sans-serif">If
+				an event listener is replaced, and one or more event delivery
+				attempts on the original listener failed or were indeterminate,
+				implementations may chose to send some or all of these events to
+				the new listener.</FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><FONT FACE="Arial, sans-serif">Matrix
+				ID 74</FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a special listener (specialListener01) to receive renewal
+					failure events whose notify method throws an exception.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a normal listener (normalListener01) to receive renewal failure
+					events.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Register
+					specialListener01 with the lease renewal set.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					3 special leases (duration value 40000 milliseconds) whose renew
+					method will throw a definite exception each time it is called.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					the leases to the set with membership duration of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					60000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Register
+					normalListener01 to receive renewal failure events.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					60000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that at lease one event was received by normalListener01.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M4</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				9.3.1 pg. 114</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<P LANG="en-US" CLASS="western"><I>NormalEventReturnTest</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><FONT FACE="Arial, sans-serif">Both
+				the getLease and getThrowable methods are declared to throw
+				IOException and ClassNotFoundException, this delcaration allows
+				implementations to delay unmarshalling this state until it is
+				actually needed. Once either method of a given
+				RenewalFailureEvent object returns normally, future calls on that
+				method must return the same object and may not throw an
+				exception. </FONT>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><FONT FACE="Arial, sans-serif">Matrix
+				ID 75</FONT></P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a listener to receive renewal failure events.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Register
+					the listener with the set.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease whose renew method will throw a definite exception each
+					time it is called.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					the lease to the set with membership duration of 30000
+					milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					90000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">In
+					the notify method of the listener assert that multiple calls to
+					getLease and getThrowable always return the same object and they
+					throw no exceptions.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				9.3.1 pg. 116</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western"><FONT FACE="Arial, sans-serif">RenewalFailureEventTest</FONT></H1>
+				<H2 LANG="en-US" CLASS="western">RenewalFailureEventIndefiniteTest</H2>
+				<H1 LANG="en-US" CLASS="western"><FONT FACE="Arial, sans-serif"><SPAN STYLE="font-style: normal">The
+				RenewalFailureEvent is a subclass of RemoteEvent, adding two
+				additional items of abstract state &ndash; the client lease which
+				could not be renewed before expiration and the Throwable object
+				that was thrown by the first failed renewal attempt in the last
+				series of consecutive failures</SPAN></FONT><FONT FACE="Arial, sans-serif">.</FONT></H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Matrix
+				ID 76</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a listener to receive renewal failure events. This listener
+					saves the last event received by its notify method in an
+					accessible instance variable.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Register
+					the listener with the set.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a special lease that will throw a ServerErrorException when its
+					renew method is called for the first time and a RemoteException
+					every time after that. Create it with a duration value of 60000
+					milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					lease to the set with membership duration of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Sleep
+					70000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that the getThrowable method of the event returns a
+					ServerErrorException.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					the the getLease method returns the lease being used for the
+					test.  
+					</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">A1, M1</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LRS
+				9.3.1 pg. 115</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=28%>
+				<H1 LANG="en-US" CLASS="western"><FONT FACE="Arial, sans-serif">RenewAtIntervalTest</FONT></H1>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+				that the renewFor/3 method causes leases to be renewed with a
+				value that is equal to the lease duration specified in the call
+				(3<SUP>RD</SUP> argument).</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">Not in
+				Matrix</P>
+			</TD>
+			<TD WIDTH=32%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					a lease renewal set with a lease of forever.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Create
+					3 leases (lease01, lease02, lease03) with renewal times of
+					30000, 60000, and 90000 milliseconds respectively.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Add
+					them to the renewal set using the renewFor/4 method with a lease
+					duration of 75000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Wait
+					until lease01 expires.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Remove
+					lease01 from the set.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Assert
+					that lease01 has an expiration time that is greater than the
+					original expiration time of lease01 but not greater than the
+					original expiration time + 75000 milliseconds.</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="font-style: normal">Repeat
+					steps 4 through 6 for lease02 and lease03.</P>
+				</OL>
+			</TD>
+			<TD WIDTH=7%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+				</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="font-style: normal">LS2.0
+				pg 193-194</P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P LANG="en-US" CLASS="western" STYLE="font-style: normal"><BR>
+</P>
+</BODY>
+</HTML>

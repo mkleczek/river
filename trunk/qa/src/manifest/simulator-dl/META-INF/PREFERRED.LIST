@@ -1,0 +1,18 @@
+PreferredResources-Version: 1.0
+
+Preferred: true
+
+Name: org/apache/river/start/*
+Preferred: false
+
+Name: org/apache/river/admin/*
+Preferred: false
+
+Name: org/apache/river/test/services/lookupsimulator/LookupSimulatorProxyInterface.class
+Preferred: false
+
+Name: org/apache/river/-
+Preferred: true
+
+Name: net/jini/-
+Preferred: false

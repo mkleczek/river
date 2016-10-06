@@ -1,0 +1,7 @@
+# Java security property overrides
+
+# Debugging version of the dynamic policy provider
+policy.provider=org.apache.river.tool.DebugDynamicPolicyProvider
+
+# Enable grant all priviledges
+org.apache.river.tool.DebugDynamicPolicyProvider.grantAll=true

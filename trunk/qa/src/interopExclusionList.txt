@@ -1,0 +1,8 @@
+org/apache/river/test/impl/fiddler/joinadmin/AddLookupAttributes.td
+org/apache/river/test/impl/fiddler/joinadmin/GetLookupAttributes.td
+org/apache/river/test/impl/fiddler/joinadmin/ModifyLookupAttributes.td
+org/apache/river/test/impl/fiddler/joinadmin/ModifyLookupAttributesDeleteOne.td
+org/apache/river/test/impl/fiddler/joinadmin/ModifyLookupAttributesDeleteAll.td
+org/apache/river/test/spec/lookupservice/test_set03/SimpleModifyLookupAttributes.td
+org/apache/river/test/spec/lookupservice/ToStringTest.td
+

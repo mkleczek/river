@@ -1,0 +1,2540 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+	<TITLE>ServiceDiscoveryManager Tests</TITLE>
+	<META NAME="GENERATOR" CONTENT="StarOffice 8  (Solaris Sparc)">
+	<META NAME="AUTHOR" CONTENT="SMI Software">
+	<META NAME="CREATED" CONTENT="20000207;23190000">
+	<META NAME="CHANGEDBY" CONTENT="Peter Firmstone">
+	<META NAME="CHANGED" CONTENT="20130101;10030800">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { size: 21.59cm 27.94cm; margin-left: 3.18cm; margin-right: 3.18cm; margin-top: 2.54cm; margin-bottom: 1.27cm }
+		P { margin-bottom: 0.21cm; direction: ltr; color: #000000; widows: 2; orphans: 2 }
+		P.western { font-family: "Times New Roman", serif; font-size: 10pt; so-language: en-US }
+		P.cjk { font-family: "Times New Roman", serif; font-size: 10pt }
+		P.ctl { font-family: "Times New Roman", serif; font-size: 10pt; so-language: ar-SA }
+		H1 { margin-bottom: 0.11cm; direction: ltr; color: #000000; widows: 2; orphans: 2 }
+		H1.western { font-family: "Arial", sans-serif; font-size: 14pt; so-language: en-US }
+		H1.cjk { font-family: "Times New Roman", serif; font-size: 14pt }
+		H1.ctl { font-family: "Times New Roman", serif; font-size: 10pt; so-language: ar-SA; font-weight: medium }
+		H2 { margin-top: 0cm; margin-bottom: 0cm; direction: ltr; color: #000000; text-align: center; widows: 2; orphans: 2 }
+		H2.western { font-size: 10pt; so-language: en-US }
+		H2.cjk { font-family: "Times New Roman", serif; font-size: 10pt }
+		H2.ctl { font-family: "Times New Roman", serif; font-size: 10pt; so-language: ar-SA; font-weight: medium }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-AU" TEXT="#000000" DIR="LTR">
+<P LANG="en-US" ALIGN=CENTER STYLE="margin-bottom: 0cm"><FONT FACE="Arial, sans-serif"><FONT SIZE=4>ServiceDiscoveryManager
+Tests</FONT></FONT></P>
+<H1 LANG="en-US" CLASS="western"><FONT FACE="Times New Roman, serif"><FONT SIZE=4 STYLE="font-size: 16pt">Spec
+Tests</FONT></FONT></H1>
+<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+</P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=7 CELLSPACING=0>
+	<COL WIDTH=86*>
+	<COL WIDTH=106*>
+	<COL WIDTH=28*>
+	<COL WIDTH=37*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" ALIGN=CENTER><B>Test Name &amp;
+				Motivation</B></P>
+			</TD>
+			<TD WIDTH=41%>
+				<P LANG="en-US" CLASS="western" ALIGN=CENTER><B>Description</B></P>
+			</TD>
+			<TD WIDTH=11%>
+				<P LANG="en-US" CLASS="western" ALIGN=CENTER><B>Category</B></P>
+			</TD>
+			<TD WIDTH=14%>
+				<P LANG="en-US" CLASS="western" ALIGN=CENTER><B>Specification
+				Requirements</B></P>
+			</TD>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.spec.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>DefaultDiscoverPublic</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+				respect to the lookup discovery processing performed by the
+				<FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+				utility class, verifies that the <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+				operates as specified. That is, this test verifies the following
+				statement from the specification:</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">&ldquo;<I>If
+				the value of the </I><FONT FACE="Courier, monospace"><I>DiscoveryManagement</I></FONT><I>
+				argument is </I><FONT FACE="Courier, monospace"><I>null</I></FONT><I>,
+				then an instance of the </I><FONT FACE="Courier, monospace"><I>net.jini.discovery.</I></FONT></P>
+				<P LANG="en-US" CLASS="western"><FONT FACE="Courier, monospace"><I>LookupDiscoveryManager</I></FONT><I>
+				utility class will be constructed to discover only those lookup
+				services that are members of the </I><I><B>public</B></I><I>
+				group</I>.&rdquo;</P>
+			</TD>
+			<TD WIDTH=41%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Start
+					no lookup services</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Create
+					an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>,
+					inputting null for both the <FONT FACE="Courier, monospace">DiscoveryManagement</FONT>
+					parameter and the <FONT FACE="Courier, monospace">LeaseRenewalManager</FONT>
+					parameter</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+					the <FONT FACE="Courier, monospace">getDiscoveryManager</FONT>
+					method on the service discovery manager created in step 2 
+					</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Verify
+					that the object retrieved in step 3 is and instance of
+					<FONT FACE="Courier, monospace">LookupDiscoveryManager</FONT></P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+					the <FONT FACE="Courier, monospace">getGroups</FONT> method on
+					the lookup discovery manager retrieved in step 3</P>
+					<LI><P LANG="en-US" CLASS="western">Verify the set of groups
+					retrieved in step 5 contain only the <I><B>public</B></I> group</P>
+				</OL>
+			</TD>
+			<TD WIDTH=11%>
+				<P LANG="en-US">A1,M1</P>
+			</TD>
+			<TD WIDTH=14%>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">SD.4.1.1</P>
+				<P LANG="en-US" CLASS="western"><BR>
+				</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.spec.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.cache.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>AddListenerNPE</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Verifies
+				that the <FONT FACE="Courier, monospace">addListener</FONT>
+				method of the lookup cache employed by the
+				<FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+				utility class operates as specified. That is, this test verifies
+				the following statement from the specification:</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western">&ldquo;<I>If </I><FONT FACE="Courier, monospace"><I>null</I></FONT><I>
+				 is input as the listener parameter of the </I><FONT FACE="Courier, monospace"><I>addListener</I></FONT><I>
+				method of the LookupCache interface, a </I><FONT FACE="Courier, monospace"><I>NullPointerException</I></FONT><I>
+				 is thrown</I>.&rdquo;</P>
+			</TD>
+			<TD WIDTH=41%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Start
+					no lookup services</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Create
+					an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>,
+					inputting an instance of <FONT FACE="Courier, monospace">DiscoveryManagement</FONT>
+					that discovers no groups and no locators, and inputting <FONT FACE="Courier, monospace">null</FONT>
+					to the <FONT FACE="Courier, monospace">LeaseRenewalManager</FONT>
+					parameter</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+					the <FONT FACE="Courier, monospace">createLookupCache</FONT>
+					method on the service discovery manager created in step 2 
+					</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+					the <FONT FACE="Courier, monospace">addListener</FONT> method on
+					the lookup cache created in step 2, inputting a non-<FONT FACE="Courier, monospace">null</FONT>
+					instance of <FONT FACE="Courier, monospace">ServiceDiscoveryListener</FONT>
+					so as to verify that a <FONT FACE="Courier, monospace">NullPointerException</FONT>
+					is <I>not</I> always thrown on any arbitrary invocation of the
+					<FONT FACE="Courier, monospace">addListener</FONT> method</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+					the <FONT FACE="Courier, monospace">addListener</FONT> method on
+					the lookup cache created in step 2, inputting  <FONT FACE="Courier, monospace">null</FONT>
+					to the listener parameter</P>
+					<LI><P LANG="en-US" CLASS="western">Verify that a
+					<FONT FACE="Courier, monospace">NullPointerException</FONT> is
+					thrown</P>
+				</OL>
+			</TD>
+			<TD WIDTH=11%>
+				<P LANG="en-US" CLASS="western">A1,M1</P>
+			</TD>
+			<TD WIDTH=14%>
+				<P LANG="en-US" CLASS="western">SD.4.1.1</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.spec.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.cache.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>CacheDiscard</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western">Verifies that the <FONT FACE="Courier, monospace">discard</FONT>
+				method of the <FONT FACE="Courier, monospace">LookupCache</FONT>
+				interface operates as specified.</P>
+			</TD>
+			<TD WIDTH=41%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, start N lookup services whose member groups are finite
+					(not NO_GROUPS) and unique (not public) relative to the member
+					groups of all other lookup services running within the same
+					multicast radius of the lookup; and whose locator ports are
+					randomly selected</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, register 1 test service with some subset of the lookup
+					services created in step 1</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+					that discovers the lookup services started in step 1, and which
+					uses the default lease renewal manager to manage any leases on
+					registrations with the event mechanism of the lookup services</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a template that will match the test service
+					registered in step 2 based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+					the <FONT FACE="Courier, monospace">createLookupCache</FONT>
+					method on the service discovery manager created in step 3;
+					inputting the template created in step 4, <FONT FACE="Courier, monospace">null</FONT>
+					as the <FONT FACE="Courier, monospace">filter</FONT> parameter
+					(so that no first-stage filtering is applied by the lookup
+					cache), and <FONT FACE="Courier, monospace">null</FONT> as the
+					<FONT FACE="Courier, monospace">listener</FONT> parameter</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+					respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+					method on the lookup cache created in step 5, invoke the version
+					that returns a single instance of <FONT FACE="Courier, monospace">ServiceItem</FONT>,
+					inputting <FONT FACE="Courier, monospace">null</FONT> as the
+					filter parameter so that no second-stage filtering is applied by
+					the <FONT FACE="Courier, monospace">lookup</FONT> method</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+					the <FONT FACE="Courier, monospace">discard</FONT> method on the
+					lookup cache created in step 5, inputting the service reference
+					returned by the <FONT FACE="Courier, monospace">lookup</FONT>
+					method in step 6</P>
+					<LI><P LANG="en-US" CLASS="western">Execute step 6 again and
+					verify that the service has indeed been discarded as expected</P>
+				</OL>
+			</TD>
+			<TD WIDTH=11%>
+				<P LANG="en-US" CLASS="western">A1,M1</P>
+			</TD>
+			<TD WIDTH=14%>
+				<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.2</P>
+				<P LANG="en-US">SD.5.5.1</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.spec.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.cache.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>CacheLookup</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+				respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+				method defined by the <FONT FACE="Courier, monospace">LookupCache</FONT>
+				interface, verifies that the version that returns a single
+				instance of <FONT FACE="Courier, monospace">ServiceItem</FONT>
+				operates as specified when invoked under the following
+				conditions:</P>
+				<UL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">template
+					matching performed by the service discovery manager is based on
+					service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					lookup cache applies no <I>first-stage</I> filtering to the
+					results of the template matching</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					<FONT FACE="Courier, monospace">lookup</FONT> method of the
+					lookup cache applies no <I>second-stage</I> filtering to the
+					results of the template; that is, <FONT FACE="Courier, monospace">null</FONT>
+					is input as the <FONT FACE="Courier, monospace">filter</FONT>
+					parameter of the <FONT FACE="Courier, monospace">lookup</FONT>
+					method</P>
+				</UL>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItem
+				lookup</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">     
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">(ServiceItemFilter
+				filter)</FONT></FONT></P>
+				<P LANG="en-US" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western"><BR>
+				</P>
+			</TD>
+			<TD WIDTH=41%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, start N lookup services whose member groups are finite
+					(not NO_GROUPS) and unique (not public) relative to the member
+					groups of all other lookup services running within the same
+					multicast radius of the lookup; and whose locator ports are
+					randomly selected</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, register M test services with some subset of the lookup
+					services created in step 1</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+					that discovers the lookup services started in step 1, and which
+					uses the default lease renewal manager to manage any leases on
+					registrations with the event mechanism of the lookup services</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a template that will match the test services
+					registered in step 2 based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+					the <FONT FACE="Courier, monospace">createLookupCache</FONT>
+					method on the service discovery manager created in step 3;
+					inputting the template created in step 4, <FONT FACE="Courier, monospace">null</FONT>
+					as the <FONT FACE="Courier, monospace">filter</FONT> parameter
+					(so that no first-stage filtering is applied by the lookup
+					cache), and <FONT FACE="Courier, monospace">null</FONT> as the
+					<FONT FACE="Courier, monospace">listener</FONT> parameter</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+					respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+					method on the lookup cache created in step 5, invoke the version
+					that returns a single instance of <FONT FACE="Courier, monospace">ServiceItem</FONT>,
+					inputting <FONT FACE="Courier, monospace">null</FONT> as the
+					filter parameter so that no second-stage filtering is applied by
+					the <FONT FACE="Courier, monospace">lookup</FONT> method</P>
+					<LI><P LANG="en-US" CLASS="western">Verify that the service item
+					returned is the service item expected 
+					</P>
+				</OL>
+			</TD>
+			<TD WIDTH=11%>
+				<P LANG="en-US" CLASS="western">A1,M1</P>
+			</TD>
+			<TD WIDTH=14%>
+				<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.2</P>
+				<P LANG="en-US">SD.5.5.1</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.spec.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.cache.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>CacheLookupFilterFilter</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+				respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+				method defined by the <FONT FACE="Courier, monospace">LookupCache</FONT>
+				interface, verifies that the version that returns a single
+				instance of <FONT FACE="Courier, monospace">ServiceItem</FONT>
+				operates as specified when invoked under the following
+				conditions:</P>
+				<UL>
+					<LI VALUE=1><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">
+					template matching performed by the service discovery manager is
+					based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					lookup cache applies <I>first-stage</I> filtering to the results
+					of the template matching</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					<FONT FACE="Courier, monospace">lookup</FONT> method of the
+					lookup cache applies <I>second-stage</I> filtering to the
+					results of the template matching and the first-stage filtering</P>
+				</UL>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItem
+				lookup</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">     
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">(ServiceItemFilter
+				filter)</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western"><BR>
+				</P>
+			</TD>
+			<TD WIDTH=41%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, start N lookup services whose member groups are finite
+					(not NO_GROUPS) and unique (not public) relative to the member
+					groups of all other lookup services running within the same
+					multicast radius of the lookup; and whose locator ports are
+					randomly selected</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, register M test services with some subset of the lookup
+					services created in step 1</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+					that discovers the lookup services started in step 1, and which
+					uses the default lease renewal manager to manage any leases on
+					registrations with the event mechanism of the lookup services</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a template that will match the test services
+					registered in step 2 based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a filter that will reject some &ndash; but not all
+					&ndash; of the services registered in step 2</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+					the <FONT FACE="Courier, monospace">createLookupCache</FONT>
+					method on the service discovery manager created in step 3;
+					inputting the template created in step 4, the filter created in
+					step 5 (so that first-stage filtering is applied by the lookup
+					cache), and <FONT FACE="Courier, monospace">null</FONT> as the
+					<FONT FACE="Courier, monospace">listener</FONT> parameter</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Create
+					a second filter that will reject some &ndash; but not all &ndash;
+					of the services that result when template matching and
+					first-stage filtering are applied to the services registered in
+					step 2</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+					respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+					method on the lookup cache created in step 6, invoke the version
+					that returns a single instance of <FONT FACE="Courier, monospace">ServiceItem</FONT>,
+					inputting the filter created in step 7 so that second-stage
+					filtering is applied by the <FONT FACE="Courier, monospace">lookup</FONT>
+					method</P>
+					<LI><P LANG="en-US" CLASS="western">Verify that the service item
+					returned is the service item expected</P>
+				</OL>
+			</TD>
+			<TD WIDTH=11%>
+				<P LANG="en-US" CLASS="western">A1,M1</P>
+			</TD>
+			<TD WIDTH=14%>
+				<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.2</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">SD.5.2.1</P>
+				<P LANG="en-US">SD.5.5.1</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.spec.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.cache.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>CacheLookupFilterNoFilter</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+				respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+				method defined by the <FONT FACE="Courier, monospace">LookupCache</FONT>
+				interface, verifies that the version that returns a single
+				instance of <FONT FACE="Courier, monospace">ServiceItem</FONT>
+				operates as specified when invoked under the following
+				conditions:</P>
+				<UL>
+					<LI VALUE=1><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">
+					template matching performed by the service discovery manager is
+					based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					lookup cache applies <I>first-stage</I> filtering to the results
+					of the template matching</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					<FONT FACE="Courier, monospace">lookup</FONT> method of the
+					lookup cache applies no <I>second-stage</I> filtering to the
+					results of the template matching and the first-stage filtering;
+					that is, <FONT FACE="Courier, monospace">null</FONT> is input as
+					the <FONT FACE="Courier, monospace">filter</FONT> parameter of
+					the <FONT FACE="Courier, monospace">lookup</FONT> method</P>
+				</UL>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItem
+				lookup</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">     
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">(ServiceItemFilter
+				filter)</FONT></FONT></P>
+				<P LANG="en-US"><BR>
+				</P>
+			</TD>
+			<TD WIDTH=41%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, start N lookup services whose member groups are finite
+					(not NO_GROUPS) and unique (not public) relative to the member
+					groups of all other lookup services running within the same
+					multicast radius of the lookup; and whose locator ports are
+					randomly selected</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, register M test services with some subset of the lookup
+					services created in step 1</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+					that discovers the lookup services started in step 1, and which
+					uses the default lease renewal manager to manage any leases on
+					registrations with the event mechanism of the lookup services</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a template that will match the test services
+					registered in step 2 based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a filter that will reject some &ndash; but not all
+					&ndash; of the services registered in step 2</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+					the <FONT FACE="Courier, monospace">createLookupCache</FONT>
+					method on the service discovery manager created in step 3;
+					inputting the template created in step 4, the filter created in
+					step 5 (so that first-stage filtering is applied by the lookup
+					cache), and <FONT FACE="Courier, monospace">null</FONT> as the
+					<FONT FACE="Courier, monospace">listener</FONT> parameter</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+					respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+					method on the lookup cache created in step 6, invoke the version
+					that returns a single instance of <FONT FACE="Courier, monospace">ServiceItem</FONT>,
+					inputting <FONT FACE="Courier, monospace">null</FONT> as the
+					filter parameter so that no second-stage filtering is applied by
+					the <FONT FACE="Courier, monospace">lookup</FONT> method</P>
+					<LI><P LANG="en-US" CLASS="western">Verify that the service item
+					returned is the service item expected</P>
+				</OL>
+			</TD>
+			<TD WIDTH=11%>
+				<P LANG="en-US" CLASS="western">A1,M1</P>
+			</TD>
+			<TD WIDTH=14%>
+				<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.2</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">SD.5.2.1</P>
+				<P LANG="en-US" CLASS="western">SD.5.5.1</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.spec.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.cache.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>CacheLookupNoFilterFilter</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+				respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+				method defined by the <FONT FACE="Courier, monospace">LookupCache</FONT>
+				interface, verifies that the version that returns a single
+				instance of <FONT FACE="Courier, monospace">ServiceItem</FONT>
+				operates as specified when invoked under the following
+				conditions:</P>
+				<UL>
+					<LI VALUE=1><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">
+					template matching performed by the service discovery manager is
+					based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					lookup cache applies no <I>first-stage</I> filtering to the
+					results of the template matching</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					<FONT FACE="Courier, monospace">lookup</FONT> method of the
+					lookup cache applies <I>second-stage</I> filtering to the
+					results of the template</P>
+				</UL>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItem
+				lookup</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western">      <FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">(ServiceItemFilter
+				filter)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=41%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, start N lookup services whose member groups are finite
+					(not NO_GROUPS) and unique (not public) relative to the member
+					groups of all other lookup services running within the same
+					multicast radius of the lookup; and whose locator ports are
+					randomly selected</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, register M test services with some subset of the lookup
+					services created in step 1</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+					that discovers the lookup services started in step 1, and which
+					uses the default lease renewal manager to manage any leases on
+					registrations with the event mechanism of the lookup services</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a template that will match the test services
+					registered in step 2 based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+					the <FONT FACE="Courier, monospace">createLookupCache</FONT>
+					method on the service discovery manager created in step 3;
+					inputting the template created in step 4, <FONT FACE="Courier, monospace">null</FONT>
+					as the <FONT FACE="Courier, monospace">filter</FONT> parameter
+					(so that no first-stage filtering is applied by the lookup
+					cache), and <FONT FACE="Courier, monospace">null</FONT> as the
+					<FONT FACE="Courier, monospace">listener</FONT> parameter</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Create
+					a second filter that will reject some &ndash; but not all &ndash;
+					of the services that result when template matching is applied to
+					the services registered in step 2</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+					respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+					method on the lookup cache created in step 5, invoke the version
+					that returns a single instance of <FONT FACE="Courier, monospace">ServiceItem</FONT>,
+					inputting the filter created in step 6 so that second-stage
+					filtering is applied by the <FONT FACE="Courier, monospace">lookup</FONT>
+					method</P>
+					<LI><P LANG="en-US" CLASS="western">Verify that the service item
+					returned is the service item expected</P>
+				</OL>
+			</TD>
+			<TD WIDTH=11%>
+				<P LANG="en-US" CLASS="western">A1,M1</P>
+			</TD>
+			<TD WIDTH=14%>
+				<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.2</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">SD.5.2.1</P>
+				<P LANG="en-US" CLASS="western">SD.5.5.1</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.spec.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.event.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>AddAttrServiceChanged</I></P>
+				<P LANG="en-US" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western">Verifies that the event mechanism
+				defined by the <FONT FACE="Courier, monospace">LookupCache</FONT>
+				interface operates as specified with respect to the <FONT FACE="Courier, monospace">serviceAdded</FONT>
+				events when the set of attributes associated with a set of
+				registered services is augmented (add attributes).</P>
+			</TD>
+			<TD WIDTH=41%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, start N lookup services whose member groups are finite
+					(not NO_GROUPS) and unique (not public) relative to the member
+					groups of all other lookup services running within the same
+					multicast radius of the lookup; and whose locator ports are
+					explicitly pre-set</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+					that discovers the lookup services started in step 1, and which
+					uses the default lease renewal manager to manage any leases on
+					registrations with the event mechanism of the lookup services</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a template that will match the test services that
+					will be registered based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+					each of the lookup services started in step 1, register M test
+					services along with an associated attribute, and verify that the
+					registration was successful</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+					the <FONT FACE="Courier, monospace">createLookupCache</FONT>
+					method on the service discovery manager created in step 2;
+					inputting the template created in step 3, <FONT FACE="Courier, monospace">null</FONT>
+					as the <FONT FACE="Courier, monospace">filter</FONT> parameter
+					(so that no first-stage filtering is applied by the lookup
+					cache), and a non-<FONT FACE="Courier, monospace">null</FONT>
+					instance of <FONT FACE="Courier, monospace">ServiceDiscoveryListener</FONT>
+					to register with the event mechanism of the lookup cache
+					returned by the call to <FONT FACE="Courier, monospace">createLookupCache</FONT></P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Verify
+					that the lookup cache created in step 5 and its event mechanism
+					operates as expected</P>
+					<LI><P LANG="en-US" CLASS="western">To each service registered
+					in step 4, add a new attribute, and verify that the expected
+					<FONT FACE="Courier, monospace">serviceAdded</FONT> events are
+					sent by the event mechanism of the lookup cache created in step
+					5</P>
+				</OL>
+			</TD>
+			<TD WIDTH=11%>
+				<P LANG="en-US" CLASS="western">A1,M1</P>
+			</TD>
+			<TD WIDTH=14%>
+				<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.2</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">SD.5.3.1</P>
+				<P LANG="en-US">SD.5.4.1</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.spec.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.event.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>ModifyAttrServiceChanged</I></P>
+				<P LANG="en-US" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western">Verifies that the event mechanism
+				defined by the <FONT FACE="Courier, monospace">LookupCache</FONT>
+				interface operates as specified with respect to the
+				<FONT FACE="Courier, monospace">serviceChanged</FONT> events when
+				the set of attributes associated with a set of registered
+				services is modified.</P>
+			</TD>
+			<TD WIDTH=41%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, start N lookup services whose member groups are finite
+					(not NO_GROUPS) and unique (not public) relative to the member
+					groups of all other lookup services running within the same
+					multicast radius of the lookup; and whose locator ports are
+					explicitly pre-set</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+					that discovers the lookup services started in step 1, and which
+					uses the default lease renewal manager to manage any leases on
+					registrations with the event mechanism of the lookup services</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a template that will match the test services that
+					will be registered based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+					each of the lookup services started in step 1, register M test
+					services along with an associated attribute, and verify that the
+					registration was successful</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+					the <FONT FACE="Courier, monospace">createLookupCache</FONT>
+					method on the service discovery manager created in step 2;
+					inputting the template created in step 3, <FONT FACE="Courier, monospace">null</FONT>
+					as the <FONT FACE="Courier, monospace">filter</FONT> parameter
+					(so that no first-stage filtering is applied by the lookup
+					cache), and a non-<FONT FACE="Courier, monospace">null</FONT>
+					instance of <FONT FACE="Courier, monospace">ServiceDiscoveryListener</FONT>
+					to register with the event mechanism of the lookup cache
+					returned by the call to <FONT FACE="Courier, monospace">createLookupCache</FONT></P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Verify
+					that the lookup cache created in step 5 and its event mechanism
+					operates as expected</P>
+					<LI><P LANG="en-US" CLASS="western">Modify the attributes
+					associated with each service registered in step 4, and verify
+					that the expected <FONT FACE="Courier, monospace">serviceChanged</FONT>
+					events are sent by the event mechanism of the lookup cache
+					created in step 5</P>
+				</OL>
+			</TD>
+			<TD WIDTH=11%>
+				<P LANG="en-US" CLASS="western">A1,M1</P>
+			</TD>
+			<TD WIDTH=14%>
+				<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.2</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">SD.5.3.1</P>
+				<P LANG="en-US">SD.5.4.1</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.spec.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.event.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>SetAttrServiceChanged</I></P>
+				<P LANG="en-US" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western">Verifies that the event mechanism
+				defined by the <FONT FACE="Courier, monospace">LookupCache</FONT>
+				interface operates as specified with respect to the
+				<FONT FACE="Courier, monospace">serviceRemoved</FONT> events when
+				the set of attributes associated with a set of registered
+				services is replaced.</P>
+			</TD>
+			<TD WIDTH=41%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, start N lookup services whose member groups are finite
+					(not NO_GROUPS) and unique (not public) relative to the member
+					groups of all other lookup services running within the same
+					multicast radius of the lookup; and whose locator ports are
+					explicitly pre-set</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+					that discovers the lookup services started in step 1, and which
+					uses the default lease renewal manager to manage any leases on
+					registrations with the event mechanism of the lookup services</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a template that will match the test services that
+					will be registered based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+					each of the lookup services started in step 1, register M test
+					services along with an associated attribute, and verify that the
+					registration was successful</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+					the <FONT FACE="Courier, monospace">createLookupCache</FONT>
+					method on the service discovery manager created in step 2;
+					inputting the template created in step 3, <FONT FACE="Courier, monospace">null</FONT>
+					as the <FONT FACE="Courier, monospace">filter</FONT> parameter
+					(so that no first-stage filtering is applied by the lookup
+					cache), and a non-<FONT FACE="Courier, monospace">null</FONT>
+					instance of <FONT FACE="Courier, monospace">ServiceDiscoveryListener</FONT>
+					to register with the event mechanism of the lookup cache
+					returned by the call to <FONT FACE="Courier, monospace">createLookupCache</FONT></P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Verify
+					that the lookup cache created in step 5 and its event mechanism
+					operates as expected</P>
+					<LI><P LANG="en-US" CLASS="western">Replace with a new set of
+					attributes, the attributes associated with each service
+					registered in step 4, and verify that the expected
+					<FONT FACE="Courier, monospace">serviceRemoved</FONT> events are
+					sent by the event mechanism of the lookup cache created in step
+					5</P>
+				</OL>
+			</TD>
+			<TD WIDTH=11%>
+				<P LANG="en-US" CLASS="western">A1,M1</P>
+			</TD>
+			<TD WIDTH=14%>
+				<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.2</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">SD.5.3.1</P>
+				<P LANG="en-US">SD.5.4.1</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.spec.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.lookup.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>Lookup</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+				respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+				method defined by the <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+				utility class, verifies that the <I>non-blocking</I> version that
+				returns a single instance of <FONT FACE="Courier, monospace">ServiceItem</FONT>
+				operates as specified when invoked under the following
+				conditions:</P>
+				<UL>
+					<LI VALUE=1><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">
+					template matching performed by the service discovery manager is
+					based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					service discovery manager applies no filtering to the results of
+					the template matching</P>
+				</UL>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItem
+				lookup</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">     
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">(ServiceItemTemplate
+				tmpl,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western">       <FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItemFilter
+				filter)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=41%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, start N lookup services whose member groups are finite
+					(not NO_GROUPS) and unique (not public) relative to the member
+					groups of all other lookup services running within the same
+					multicast radius of the lookup; and whose locator ports are
+					randomly selected</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, register M test services with some subset of the lookup
+					services created in step 1</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+					that discovers the lookup services started in step 1, and which
+					uses the default lease renewal manager to manage any leases on
+					registrations with the event mechanism of the lookup services</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a template that will match the test services
+					registered in step 2 based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+					respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+					method on the service discovery manager created in step 3,
+					invoke the non-blocking version that returns a single instance
+					of <FONT FACE="Courier, monospace">ServiceItem</FONT>, inputting
+					the template created in step 4, and inputting <FONT FACE="Courier, monospace">null</FONT>
+					as the filter parameter so that no filtering is applied by the
+					<FONT FACE="Courier, monospace">lookup</FONT> method</P>
+					<LI><P LANG="en-US" CLASS="western">Verify that the service item
+					returned is the service item expected</P>
+				</OL>
+			</TD>
+			<TD WIDTH=11%>
+				<P LANG="en-US" CLASS="western">A1,M1</P>
+			</TD>
+			<TD WIDTH=14%>
+				<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.1</P>
+				<P LANG="en-US" CLASS="western">SD.4.1.3</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.spec.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.lookup.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>LookupFilter</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+				respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+				method defined by the <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+				utility class, verifies that the <I>non-blocking</I> version that
+				returns a single instance of <FONT FACE="Courier, monospace">ServiceItem</FONT>
+				operates as specified when invoked under the following
+				conditions:</P>
+				<UL>
+					<LI VALUE=1><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">
+					template matching performed by the service discovery manager is
+					based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					service discovery manager applies filtering to the results of
+					the template matching</P>
+				</UL>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItem
+				lookup</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">     
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">(ServiceItemTemplate
+				tmpl,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western">       <FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItemFilter
+				filter)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=41%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, start N lookup services whose member groups are finite
+					(not NO_GROUPS) and unique (not public) relative to the member
+					groups of all other lookup services running within the same
+					multicast radius of the lookup; and whose locator ports are
+					randomly selected</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, register M test services with some subset of the lookup
+					services created in step 1</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+					that discovers the lookup services started in step 1, and which
+					uses the default lease renewal manager to manage any leases on
+					registrations with the event mechanism of the lookup services</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a template that will match the test services
+					registered in step 2 based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a filter that will reject some &ndash; but not all
+					&ndash; of the services registered in step 2</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+					respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+					method on the service discovery manager created in step 3,
+					invoke the non-blocking version that returns a single instance
+					of <FONT FACE="Courier, monospace">ServiceItem</FONT>, inputting
+					the template created in step 4, and the filter created in step 5
+					so that filtering is applied by the <FONT FACE="Courier, monospace">lookup</FONT>
+					method</P>
+					<LI><P LANG="en-US" CLASS="western">Verify that the service item
+					returned is the service item expected</P>
+				</OL>
+			</TD>
+			<TD WIDTH=11%>
+				<P LANG="en-US" CLASS="western">A1,M1</P>
+			</TD>
+			<TD WIDTH=14%>
+				<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.1</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">SD.4.1.3</P>
+				<P LANG="en-US" CLASS="western">SD.5.2.1</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.spec.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.lookup.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>LookupMax</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+				respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+				method defined by the <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+				utility class, verifies that the <I>non-blocking</I> version that
+				returns an array of  instances of <FONT FACE="Courier, monospace">ServiceItem</FONT>
+				operates as specified when invoked under the following
+				conditions:</P>
+				<UL>
+					<LI VALUE=1><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">
+					template matching performed by the service discovery manager is
+					based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					service discovery manager applies no filtering to the results of
+					the template matching</P>
+				</UL>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItem
+				lookup</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">     
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">(ServiceItemTemplate
+				tmpl,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">      
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">int
+				maxMatches,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western">       <FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItemFilter
+				filter)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=41%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, start N lookup services whose member groups are finite
+					(not NO_GROUPS) and unique (not public) relative to the member
+					groups of all other lookup services running within the same
+					multicast radius of the lookup; and whose locator ports are
+					randomly selected</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, register M test services with some subset of the lookup
+					services created in step 1</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+					that discovers the lookup services started in step 1, and which
+					uses the default lease renewal manager to manage any leases on
+					registrations with the event mechanism of the lookup services</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a template that will match the test services
+					registered in step 2 based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+					respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+					method on the service discovery manager created in step 3,
+					invoke the non-blocking version that returns an array of
+					instances of <FONT FACE="Courier, monospace">ServiceItem</FONT>,
+					inputting the template created in step 4, and inputting <FONT FACE="Courier, monospace">null</FONT>
+					as the filter parameter so that no filtering is applied by the
+					<FONT FACE="Courier, monospace">lookup</FONT> method</P>
+					<LI><P LANG="en-US" CLASS="western">Verify that the service
+					items returned are the service items expected</P>
+				</OL>
+			</TD>
+			<TD WIDTH=11%>
+				<P LANG="en-US" CLASS="western">A1,M1</P>
+			</TD>
+			<TD WIDTH=14%>
+				<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.1</P>
+				<P LANG="en-US" CLASS="western">SD.4.1.3</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.spec.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.lookup.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>LookupMaxFilter</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+				respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+				method defined by the <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+				utility class, verifies that the <I>non-blocking</I> version that
+				returns an array of  instances of <FONT FACE="Courier, monospace">ServiceItem</FONT>
+				operates as specified when invoked under the following
+				conditions:</P>
+				<UL>
+					<LI VALUE=1><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">
+					template matching performed by the service discovery manager is
+					based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					service discovery manager applies filtering to the results of
+					the template matching</P>
+				</UL>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItem
+				lookup</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">     
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">(ServiceItemTemplate
+				tmpl,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">      
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">int
+				maxMatches,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western">       <FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItemFilter
+				filter)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=41%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, start N lookup services whose member groups are finite
+					(not NO_GROUPS) and unique (not public) relative to the member
+					groups of all other lookup services running within the same
+					multicast radius of the lookup; and whose locator ports are
+					randomly selected</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, register M test services with some subset of the lookup
+					services created in step 1</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+					that discovers the lookup services started in step 1, and which
+					uses the default lease renewal manager to manage any leases on
+					registrations with the event mechanism of the lookup services</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a template that will match the test services
+					registered in step 2 based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a filter that will reject some &ndash; but not all
+					&ndash; of the services registered in step 2</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+					respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+					method on the service discovery manager created in step 3,
+					invoke the non-blocking version that returns an array of
+					instances of <FONT FACE="Courier, monospace">ServiceItem</FONT>,
+					inputting the template created in step 4, and the filter created
+					in step 5 so that filtering is applied by the <FONT FACE="Courier, monospace">lookup</FONT>
+					method</P>
+					<LI><P LANG="en-US" CLASS="western">Verify that the service
+					items returned are the service items expected</P>
+				</OL>
+			</TD>
+			<TD WIDTH=11%>
+				<P LANG="en-US" CLASS="western">A1,M1</P>
+			</TD>
+			<TD WIDTH=14%>
+				<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.1</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">SD.4.1.3</P>
+				<P LANG="en-US" CLASS="western">SD.5.2.1</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.spec.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.lookup.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>LookupMinEqualsMax</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+				respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+				method defined by the <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+				utility class, verifies that the <I>blocking</I> version that
+				returns an array of  instances of <FONT FACE="Courier, monospace">ServiceItem</FONT>
+				operates as specified when invoked under the following
+				conditions:</P>
+				<UL>
+					<LI VALUE=1><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">
+					template matching performed by the service discovery manager is
+					based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					service discovery manager applies no filtering to the results of
+					the template matching</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					minimum number of desired services is equal to the maximum
+					number of desired services</P>
+				</UL>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItem
+				lookup</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">     
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">(ServiceItemTemplate
+				tmpl,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">      
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">int
+				minMatches,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">      
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">int
+				maxMatches,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">      
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItemFilter
+				filter,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western">       <FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">long
+				waitDur)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=41%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, start N lookup services whose member groups are finite
+					(not NO_GROUPS) and unique (not public) relative to the member
+					groups of all other lookup services running within the same
+					multicast radius of the lookup; and whose locator ports are
+					randomly selected</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, register M test services with some subset of the lookup
+					services created in step 1</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+					that discovers the lookup services started in step 1, and which
+					uses the default lease renewal manager to manage any leases on
+					registrations with the event mechanism of the lookup services</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a template that will match the test services
+					registered in step 2 based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+					respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+					method on the service discovery manager created in step 3,
+					invoke the blocking version that returns an array of instances
+					of <FONT FACE="Courier, monospace">ServiceItem</FONT>, inputting
+					the template created in step 4, inputting <FONT FACE="Courier, monospace">null</FONT>
+					as the filter parameter so that no filtering is applied by the
+					<FONT FACE="Courier, monospace">lookup</FONT> method, and
+					inputting the same value for both the <FONT FACE="Courier, monospace">minMatches</FONT>
+					and <FONT FACE="Courier, monospace">maxMatches</FONT> parameters</P>
+					<LI><P LANG="en-US" CLASS="western">Verify that the service
+					items returned are the service items expected, and that the
+					blocking mechanism of the <FONT FACE="Courier, monospace">lookup</FONT>
+					method blocks for the expected amount of time</P>
+				</OL>
+			</TD>
+			<TD WIDTH=11%>
+				<P LANG="en-US" CLASS="western">A1,M1</P>
+			</TD>
+			<TD WIDTH=14%>
+				<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.1</P>
+				<P LANG="en-US" CLASS="western">SD.4.1.3</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.spec.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.lookup.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>LookupMinEqualsMaxFilter</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+				respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+				method defined by the <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+				utility class, verifies that the <I>blocking</I> version that
+				returns an array of  instances of <FONT FACE="Courier, monospace">ServiceItem</FONT>
+				operates as specified when invoked under the following
+				conditions:</P>
+				<UL>
+					<LI VALUE=1><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">
+					template matching performed by the service discovery manager is
+					based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					service discovery manager applies filtering to the results of
+					the template matching</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					minimum number of desired services is equal to the maximum
+					number of desired services</P>
+				</UL>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItem
+				lookup</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">     
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">(ServiceItemTemplate
+				tmpl,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">      
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">int
+				minMatches,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">      
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">int
+				maxMatches,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">      
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItemFilter
+				filter,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western">       <FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">long
+				waitDur)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=41%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, start N lookup services whose member groups are finite
+					(not NO_GROUPS) and unique (not public) relative to the member
+					groups of all other lookup services running within the same
+					multicast radius of the lookup; and whose locator ports are
+					randomly selected</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, register M test services with some subset of the lookup
+					services created in step 1</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+					that discovers the lookup services started in step 1, and which
+					uses the default lease renewal manager to manage any leases on
+					registrations with the event mechanism of the lookup services</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a template that will match the test services
+					registered in step 2 based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a filter that will reject some &ndash; but not all
+					&ndash; of the services registered in step 2</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+					respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+					method on the service discovery manager created in step 3,
+					invoke the blocking version that returns an array of instances
+					of <FONT FACE="Courier, monospace">ServiceItem</FONT>, inputting
+					the template created in step 4, the filter created in step 5 so
+					that filtering is applied by the <FONT FACE="Courier, monospace">lookup</FONT>
+					method, and inputting the same value for both the <FONT FACE="Courier, monospace">minMatches</FONT>
+					and <FONT FACE="Courier, monospace">maxMatches</FONT> parameters</P>
+					<LI><P LANG="en-US" CLASS="western">Verify that the service
+					items returned are the service items expected, and that the
+					blocking mechanism of the <FONT FACE="Courier, monospace">lookup</FONT>
+					method blocks for the expected amount of time</P>
+				</OL>
+			</TD>
+			<TD WIDTH=11%>
+				<P LANG="en-US" CLASS="western">A1,M1</P>
+			</TD>
+			<TD WIDTH=14%>
+				<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.1</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">SD.4.1.3</P>
+				<P LANG="en-US" CLASS="western">SD.5.2.1</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.spec.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.lookup.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>LookupMinLessMax</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+				respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+				method defined by the <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+				utility class, verifies that the <I>blocking</I> version that
+				returns an array of  instances of <FONT FACE="Courier, monospace">ServiceItem</FONT>
+				operates as specified when invoked under the following
+				conditions:</P>
+				<UL>
+					<LI VALUE=1><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">
+					template matching performed by the service discovery manager is
+					based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					service discovery manager applies no filtering to the results of
+					the template matching</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					minimum number of desired services is less than the maximum
+					number of desired services</P>
+				</UL>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItem
+				lookup</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">     
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">(ServiceItemTemplate
+				tmpl,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">      
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">int
+				minMatches,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">      
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">int
+				maxMatches,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">      
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItemFilter
+				filter,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western">       <FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">long
+				waitDur)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=41%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, start N lookup services whose member groups are finite
+					(not NO_GROUPS) and unique (not public) relative to the member
+					groups of all other lookup services running within the same
+					multicast radius of the lookup; and whose locator ports are
+					randomly selected</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, register M test services with some subset of the lookup
+					services created in step 1</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+					that discovers the lookup services started in step 1, and which
+					uses the default lease renewal manager to manage any leases on
+					registrations with the event mechanism of the lookup services</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a template that will match the test services
+					registered in step 2 based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+					respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+					method on the service discovery manager created in step 3,
+					invoke the blocking version that returns an array of instances
+					of <FONT FACE="Courier, monospace">ServiceItem</FONT>, inputting
+					the template created in step 4, inputting <FONT FACE="Courier, monospace">null</FONT>
+					as the filter parameter so that no filtering is applied by the
+					<FONT FACE="Courier, monospace">lookup</FONT> method, and
+					inputting values for the <FONT FACE="Courier, monospace">minMatches</FONT>
+					and <FONT FACE="Courier, monospace">maxMatches</FONT> parameters
+					in which <FONT FACE="Courier, monospace">minMatches</FONT> is
+					less than <FONT FACE="Courier, monospace">maxMatches</FONT></P>
+					<LI><P LANG="en-US" CLASS="western">Verify that the service
+					items returned are the service items expected, and that the
+					blocking mechanism of the <FONT FACE="Courier, monospace">lookup</FONT>
+					method blocks for the expected amount of time</P>
+				</OL>
+			</TD>
+			<TD WIDTH=11%>
+				<P LANG="en-US" CLASS="western">A1,M1</P>
+			</TD>
+			<TD WIDTH=14%>
+				<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.1</P>
+				<P LANG="en-US" CLASS="western">SD.4.1.3</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.spec.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.lookup.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>LookupMinLessMaxFilter</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+				respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+				method defined by the <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+				utility class, verifies that the <I>blocking</I> version that
+				returns an array of  instances of <FONT FACE="Courier, monospace">ServiceItem</FONT>
+				operates as specified when invoked under the following
+				conditions:</P>
+				<UL>
+					<LI VALUE=1><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">
+					template matching performed by the service discovery manager is
+					based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					service discovery manager applies filtering to the results of
+					the template matching</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					minimum number of desired services is less than the maximum
+					number of desired services</P>
+				</UL>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItem
+				lookup</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">     
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">(ServiceItemTemplate
+				tmpl,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">      
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">int
+				minMatches,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">      
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">int
+				maxMatches,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">      
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItemFilter
+				filter,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western">       <FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">long
+				waitDur)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=41%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, start N lookup services whose member groups are finite
+					(not NO_GROUPS) and unique (not public) relative to the member
+					groups of all other lookup services running within the same
+					multicast radius of the lookup; and whose locator ports are
+					randomly selected</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, register M test services with some subset of the lookup
+					services created in step 1</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+					that discovers the lookup services started in step 1, and which
+					uses the default lease renewal manager to manage any leases on
+					registrations with the event mechanism of the lookup services</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a template that will match the test services
+					registered in step 2 based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a filter that will reject some &ndash; but not all
+					&ndash; of the services registered in step 2</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+					respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+					method on the service discovery manager created in step 3,
+					invoke the blocking version that returns an array of instances
+					of <FONT FACE="Courier, monospace">ServiceItem</FONT>, inputting
+					the template created in step 4, the filter created in step 5 so
+					that no filtering is applied by the <FONT FACE="Courier, monospace">lookup</FONT>
+					method, and inputting values for the <FONT FACE="Courier, monospace">minMatches</FONT>
+					and <FONT FACE="Courier, monospace">maxMatches</FONT> parameters
+					in which <FONT FACE="Courier, monospace">minMatches</FONT> is
+					less than <FONT FACE="Courier, monospace">maxMatches</FONT></P>
+					<LI><P LANG="en-US" CLASS="western">Verify that the service
+					items returned are the service items expected, and that the
+					blocking mechanism of the <FONT FACE="Courier, monospace">lookup</FONT>
+					method blocks for the expected amount of time</P>
+				</OL>
+			</TD>
+			<TD WIDTH=11%>
+				<P LANG="en-US" CLASS="western">A1,M1</P>
+			</TD>
+			<TD WIDTH=14%>
+				<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.1</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">SD.4.1.3</P>
+				<P LANG="en-US" CLASS="western">SD.5.2.1</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.spec.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.lookup.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>LookupMinMaxNoBlock</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+				respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+				method defined by the <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+				utility class, verifies that the <I>blocking</I> version that
+				returns an array of  instances of <FONT FACE="Courier, monospace">ServiceItem</FONT>
+				operates as specified when invoked under the following
+				conditions:</P>
+				<UL>
+					<LI VALUE=1><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">
+					template matching performed by the service discovery manager is
+					based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					service discovery manager applies no filtering to the results of
+					the template matching</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					number of services available for discovery is greater than the
+					acceptable minimum number of services input to the <FONT FACE="Courier, monospace">lookup</FONT>
+					method</P>
+				</UL>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItem
+				lookup</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">     
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">(ServiceItemTemplate
+				tmpl,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">      
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">int
+				minMatches,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">      
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">int
+				maxMatches,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">      
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItemFilter
+				filter,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">      
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">long
+				waitDur)</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western">If there are more services
+				available to be discovered than the acceptable minimum number of
+				services (<FONT FACE="Courier, monospace">minMatches</FONT>),
+				then no blocking should occur; rather, the <FONT FACE="Courier, monospace">lookup</FONT>
+				method should return immediately after discovering the acceptable
+				number of services.</P>
+			</TD>
+			<TD WIDTH=41%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, start N lookup services whose member groups are finite
+					(not NO_GROUPS) and unique (not public) relative to the member
+					groups of all other lookup services running within the same
+					multicast radius of the lookup; and whose locator ports are
+					randomly selected</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, register M (M &gt;= 1) test services with some subset of
+					the lookup services created in step 1</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+					that discovers the lookup services started in step 1, and which
+					uses the default lease renewal manager to manage any leases on
+					registrations with the event mechanism of the lookup services</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a template that will match the test services
+					registered in step 2 based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+					respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+					method on the service discovery manager created in step 3,
+					invoke the blocking version that returns an array of instances
+					of <FONT FACE="Courier, monospace">ServiceItem</FONT>, inputting
+					the template created in step 4, inputting <FONT FACE="Courier, monospace">null</FONT>
+					as the filter parameter so that no filtering is applied by the
+					<FONT FACE="Courier, monospace">lookup</FONT> method, and
+					inputting a value for the <FONT FACE="Courier, monospace">minMatches</FONT>
+					parameter that is less than or equal to the number of services
+					registered in step 2, and a value for the <FONT FACE="Courier, monospace">maxMatches</FONT>
+					parameters that is greater than or equal to the value of
+					<FONT FACE="Courier, monospace">minMatches</FONT></P>
+					<LI><P LANG="en-US" CLASS="western">Verify that the service
+					items returned are the service items expected, and that the
+					blocking mechanism of the <FONT FACE="Courier, monospace">lookup</FONT>
+					method returns immediately without blocking</P>
+				</OL>
+			</TD>
+			<TD WIDTH=11%>
+				<P LANG="en-US" CLASS="western">A1,M1</P>
+			</TD>
+			<TD WIDTH=14%>
+				<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.1</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">SD.4.1.3</P>
+				<P LANG="en-US" CLASS="western"><BR>
+				</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.spec.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.lookup.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>LookupMinMaxNoBlockFilter</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+				respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+				method defined by the <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+				utility class, verifies that the <I>blocking</I> version that
+				returns an array of  instances of <FONT FACE="Courier, monospace">ServiceItem</FONT>
+				operates as specified when invoked under the following
+				conditions:</P>
+				<UL>
+					<LI VALUE=1><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">
+					template matching performed by the service discovery manager is
+					based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					service discovery manager applies filtering to the results of
+					the template matching</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					number of services available for discovery is greater than the
+					acceptable minimum number of services input to the <FONT FACE="Courier, monospace">lookup</FONT>
+					method</P>
+				</UL>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItem
+				lookup</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">     
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">(ServiceItemTemplate
+				tmpl,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">      
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">int
+				minMatches,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">      
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">int
+				maxMatches,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">      
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItemFilter
+				filter,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">      
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">long
+				waitDur)</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western">If there are more services
+				available to be discovered than the acceptable minimum number of
+				services (<FONT FACE="Courier, monospace">minMatches</FONT>),
+				then no blocking should occur; rather, the <FONT FACE="Courier, monospace">lookup</FONT>
+				method should return immediately after discovering the acceptable
+				number of services.</P>
+			</TD>
+			<TD WIDTH=41%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, start N lookup services whose member groups are finite
+					(not NO_GROUPS) and unique (not public) relative to the member
+					groups of all other lookup services running within the same
+					multicast radius of the lookup; and whose locator ports are
+					randomly selected</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, register M (M &gt;= 1) test services with some subset of
+					the lookup services created in step 1</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+					that discovers the lookup services started in step 1, and which
+					uses the default lease renewal manager to manage any leases on
+					registrations with the event mechanism of the lookup services</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a template that will match the test services
+					registered in step 2 based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a filter that will reject some &ndash; but not all
+					&ndash; of the services registered in step 2</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+					respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+					method on the service discovery manager created in step 3,
+					invoke the blocking version that returns an array of instances
+					of <FONT FACE="Courier, monospace">ServiceItem</FONT>, inputting
+					the template created in step 4, the filter created in step 5 so
+					that no filtering is applied by the <FONT FACE="Courier, monospace">lookup</FONT>
+					method, and inputting a value for the <FONT FACE="Courier, monospace">minMatches</FONT>
+					parameter that is less than or equal to the number of services
+					registered in step 2, and a value for the <FONT FACE="Courier, monospace">maxMatches</FONT>
+					parameters that is greater than or equal to the value of
+					<FONT FACE="Courier, monospace">minMatches</FONT></P>
+					<LI><P LANG="en-US" CLASS="western">Verify that the service
+					items returned are the service items expected, and that the
+					blocking mechanism of the <FONT FACE="Courier, monospace">lookup</FONT>
+					method returns immediately without blocking</P>
+				</OL>
+			</TD>
+			<TD WIDTH=11%>
+				<P LANG="en-US" CLASS="western">A1,M1</P>
+			</TD>
+			<TD WIDTH=14%>
+				<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.1</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">SD.4.1.3</P>
+				<P LANG="en-US" CLASS="western">SD.5.2.1</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.spec.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.lookup.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>LookupWait</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+				respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+				method defined by the <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+				utility class, verifies that the <I>blocking</I> version that
+				returns a single  instance of <FONT FACE="Courier, monospace">ServiceItem</FONT>
+				operates as specified when invoked under the following
+				conditions:</P>
+				<UL>
+					<LI VALUE=1><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">
+					template matching performed by the service discovery manager is
+					based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					service discovery manager applies no filtering to the results of
+					the template matching</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					minimum number of desired services is equal to the maximum
+					number of desired services</P>
+				</UL>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItem
+				lookup</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">     
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">(ServiceItemTemplate
+				tmpl,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">      
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItemFilter
+				filter,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western">       <FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">long
+				waitDur)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=41%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, start N lookup services whose member groups are finite
+					(not NO_GROUPS) and unique (not public) relative to the member
+					groups of all other lookup services running within the same
+					multicast radius of the lookup; and whose locator ports are
+					randomly selected</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+					that discovers the lookup services started in step 1, and which
+					uses the default lease renewal manager to manage any leases on
+					registrations with the event mechanism of the lookup services</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a template that will match the test service that
+					will be registered in step 6 based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+					respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+					method on the service discovery manager created in step 2,
+					invoke the blocking version that returns a single instance of
+					<FONT FACE="Courier, monospace">ServiceItem</FONT>, inputting
+					the template created in step 3, and inputting <FONT FACE="Courier, monospace">null</FONT>
+					as the filter parameter so that no filtering is applied by the
+					<FONT FACE="Courier, monospace">lookup</FONT> method</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Verify
+					that because no services are currently available to be
+					discovered, the call to the <FONT FACE="Courier, monospace">lookup</FONT>
+					method blocks for the full amount of time requested through the
+					<FONT FACE="Courier, monospace">waitDur</FONT> parameter</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Register
+					1 test service with each of the lookup services created in step
+					1</P>
+					<LI><P LANG="en-US" CLASS="western">Again invoke the lookup
+					method in the same way as in step 4, and verify that the service
+					item returned is the service item expected, and that the
+					blocking mechanism of the <FONT FACE="Courier, monospace">lookup</FONT>
+					method blocks until the registration of the test service from
+					step 6 completes successfully</P>
+				</OL>
+			</TD>
+			<TD WIDTH=11%>
+				<P LANG="en-US" CLASS="western">A1,M1</P>
+			</TD>
+			<TD WIDTH=14%>
+				<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.1</P>
+				<P LANG="en-US" CLASS="western">SD.4.1.3</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.spec.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.lookup.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>LookupWaitFilter</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+				respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+				method defined by the <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+				utility class, verifies that the <I>blocking</I> version that
+				returns a single  instance of <FONT FACE="Courier, monospace">ServiceItem</FONT>
+				operates as specified when invoked under the following
+				conditions:</P>
+				<UL>
+					<LI VALUE=1><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">
+					template matching performed by the service discovery manager is
+					based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					service discovery manager applies filtering to the results of
+					the template matching</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					minimum number of desired services is equal to the maximum
+					number of desired services</P>
+				</UL>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItem
+				lookup</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">     
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">(ServiceItemTemplate
+				tmpl,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">      
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItemFilter
+				filter,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western">       <FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">long
+				waitDur)</FONT></FONT></P>
+			</TD>
+			<TD WIDTH=41%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, start N lookup services whose member groups are finite
+					(not NO_GROUPS) and unique (not public) relative to the member
+					groups of all other lookup services running within the same
+					multicast radius of the lookup; and whose locator ports are
+					randomly selected</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+					that discovers the lookup services started in step 1, and which
+					uses the default lease renewal manager to manage any leases on
+					registrations with the event mechanism of the lookup services</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a template that will match the test services that
+					will be registered in steps 7 and 10 based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a filter that will reject some &ndash; but not all
+					&ndash; of the services that will be registered in steps 7 and
+					10</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+					respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+					method on the service discovery manager created in step 2,
+					invoke the blocking version that returns a single instance of
+					<FONT FACE="Courier, monospace">ServiceItem</FONT>, inputting
+					the template created in step 4, and inputting the filter created
+					in step 3 so that filtering is applied by the <FONT FACE="Courier, monospace">lookup</FONT>
+					method</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Verify
+					that because no services are currently available to be
+					discovered, the call to the <FONT FACE="Courier, monospace">lookup</FONT>
+					method blocks for the full amount of time requested through the
+					<FONT FACE="Courier, monospace">waitDur</FONT> parameter</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Register
+					3 test services and 1 associated attribute with each of the
+					lookup services created in step 1</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Create
+					a template that will match the test services registered in step
+					7 based on both the service type and each service&rsquo;s
+					associated attribute</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Again
+					invoke the lookup method in the same way as in step 5, and
+					verify that the service item returned is the service item
+					expected, and that the blocking mechanism of the <FONT FACE="Courier, monospace">lookup</FONT>
+					method blocks until the registrations of the test services from
+					step 6 complete successfully</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+					each lookup service started in step 1, register 4 more test
+					services, each with 1 associated attribute</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Create
+					a template that will match the test services registered in step
+					10 based on both the service type and each service&rsquo;s
+					associated attribute</P>
+					<LI><P LANG="en-US" CLASS="western">Again invoke the lookup
+					method in the same way as in steps 5 and 9, and verify that
+					because the filter rejects the services that would normally be
+					discovered if the filter were not applied, the call to the
+					<FONT FACE="Courier, monospace">lookup</FONT> method blocks for
+					the full amount of time requested through the <FONT FACE="Courier, monospace">waitDur</FONT>
+					parameter 
+					</P>
+				</OL>
+			</TD>
+			<TD WIDTH=11%>
+				<P LANG="en-US" CLASS="western">A1,M1</P>
+			</TD>
+			<TD WIDTH=14%>
+				<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.1</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">SD.4.1.3</P>
+				<P LANG="en-US">SD.5.2.1</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.spec.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.lookup.</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>LookupWaitNoBlock</I></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+				respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+				method defined by the <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+				utility class, verifies that the <I>blocking</I> version that
+				returns a single  instance of <FONT FACE="Courier, monospace">ServiceItem</FONT>
+				operates as specified when invoked under the following
+				conditions:</P>
+				<UL>
+					<LI VALUE=1><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">
+					template matching performed by the service discovery manager is
+					based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">the
+					service discovery manager applies no filtering to the results of
+					the template matching</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">at
+					least 1 matching service is already available for discovery when
+					the <FONT FACE="Courier, monospace">lookup</FONT> method is
+					called</P>
+				</UL>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItem
+				lookup</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">     
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">(ServiceItemTemplate
+				tmpl,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">      
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">ServiceItemFilter
+				filter,</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">      
+				<FONT FACE="Courier, monospace"><FONT SIZE=1 STYLE="font-size: 8pt">long
+				waitDur)</FONT></FONT></P>
+				<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+				</P>
+				<P LANG="en-US" CLASS="western">If at least 1 matching service is
+				already available to be discovered when the <FONT FACE="Courier, monospace">lookup</FONT>
+				method is called (that is, the <FONT FACE="Courier, monospace">lookup</FONT>
+				method does not have to wait for the desired service to be
+				registered), then the <FONT FACE="Courier, monospace">lookup</FONT>
+				method will not block. In that case, the <FONT FACE="Courier, monospace">lookup</FONT>
+				method should return immediately after discovering the desired
+				service.</P>
+			</TD>
+			<TD WIDTH=41%>
+				<OL>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, start N lookup services whose member groups are finite
+					(not NO_GROUPS) and unique (not public) relative to the member
+					groups of all other lookup services running within the same
+					multicast radius of the lookup; and whose locator ports are
+					randomly selected</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, register M test services with some subset of the lookup
+					services created in step 1</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+					that discovers the lookup services started in step 1, and which
+					uses the default lease renewal manager to manage any leases on
+					registrations with the event mechanism of the lookup services</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+					setup, create a template that will match the test services
+					registered in step 2 based on service type only</P>
+					<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+					respect to the <FONT FACE="Courier, monospace">lookup</FONT>
+					method on the service discovery manager created in step 3,
+					invoke the blocking version that returns a single instance of
+					<FONT FACE="Courier, monospace">ServiceItem</FONT>, inputting
+					the template created in step 4, and inputting <FONT FACE="Courier, monospace">null</FONT>
+					as the filter parameter so that no filtering is applied by the
+					<FONT FACE="Courier, monospace">lookup</FONT> method</P>
+					<LI><P LANG="en-US" CLASS="western">Verify that the service item
+					returned is the service item expected, and that the blocking
+					mechanism of the <FONT FACE="Courier, monospace">lookup</FONT>
+					method returns immediately without blocking</P>
+				</OL>
+			</TD>
+			<TD WIDTH=11%>
+				<P LANG="en-US" CLASS="western">A1,M1</P>
+			</TD>
+			<TD WIDTH=14%>
+				<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.1</P>
+				<P LANG="en-US" CLASS="western">SD.4.1.3</P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+</P>
+<H1 LANG="en-US" CLASS="western"><FONT FACE="Times New Roman, serif"><FONT SIZE=4 STYLE="font-size: 16pt">Impl
+Tests</FONT></FONT></H1>
+<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+</P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=7 CELLSPACING=0>
+	<COL WIDTH=84*>
+	<COL WIDTH=108*>
+	<COL WIDTH=27*>
+	<COL WIDTH=36*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=33%>
+			<H2 LANG="en-US" CLASS="western">Test Name &amp; Motivation</H2>
+		</TD>
+		<TD WIDTH=42%>
+			<H2 LANG="en-US" CLASS="western">Description</H2>
+		</TD>
+		<TD WIDTH=11%>
+			<H2 LANG="en-US" CLASS="western">Category</H2>
+		</TD>
+		<TD WIDTH=14%>
+			<H2 LANG="en-US" CLASS="western">Specification Requirements</H2>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=33%>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.impl.</I></P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovert.</I></P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>TerminateSemantics</I></P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+			</P>
+			<P LANG="en-US" CLASS="western">Verifies that &ndash; except for
+			the <FONT FACE="Courier, monospace">terminate</FONT> method itself
+			&ndash; if any of the public methods of the current implementation
+			of  the <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+			utility class are invoked after the service discovery manager has
+			been terminated, an <FONT FACE="Courier, monospace">IllegalStateException</FONT>
+			results. Also verifies that any invocation of the <FONT FACE="Courier, monospace">terminate</FONT>
+			method made after the initial invocation of <FONT FACE="Courier, monospace">terminate</FONT>
+			will result in no action being taken, and no exception being
+			thrown.</P>
+		</TD>
+		<TD WIDTH=42%>
+			<OL>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Start
+				no lookup services</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Create
+				an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>,
+				using the default parameters</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+				the <FONT FACE="Courier, monospace">terminate</FONT> method on
+				the service discovery manager created in step 1</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+				each public method (other than the <FONT FACE="Courier, monospace">terminate</FONT>
+				method itself) on the service discovery manager created in step
+				1, and verify that an <FONT FACE="Courier, monospace">IllegalStateException</FONT>
+				results on each invocation 
+				</P>
+				<LI><P LANG="en-US" CLASS="western">Invoke the <FONT FACE="Courier, monospace">terminate</FONT>
+				method on the service discovery manager created in step 1, and
+				verify that no action is taken and no exception results</P>
+			</OL>
+		</TD>
+		<TD WIDTH=11%>
+			<P LANG="en-US" CLASS="western">A1,M4</P>
+		</TD>
+		<TD WIDTH=14%>
+			<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.3</P>
+			<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.6</P>
+			<P LANG="en-US" STYLE="margin-bottom: 0cm"><BR>
+			</P>
+			<P LANG="en-US"><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=33%>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.impl.</I></P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovert.cache.</I></P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>CacheTerminateSemantics</I></P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+			</P>
+			<P LANG="en-US" CLASS="western">Verifies that &ndash; except for
+			the <FONT FACE="Courier, monospace">terminate</FONT> method itself
+			&ndash; if any of the public methods of the current implementation
+			of  the <FONT FACE="Courier, monospace">LookupCache</FONT>
+			interface (returned by the <FONT FACE="Courier, monospace">createLookupCache</FONT>
+			method of the <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+			utility class) are invoked after the lookup cache has been
+			terminated, an <FONT FACE="Courier, monospace">IllegalStateException</FONT>
+			results. Also verifies that any invocation of the <FONT FACE="Courier, monospace">terminate</FONT>
+			method made after the initial invocation of <FONT FACE="Courier, monospace">terminate</FONT>
+			will result in no action being taken, and no exception being
+			thrown.</P>
+		</TD>
+		<TD WIDTH=42%>
+			<OL>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Start
+				no lookup services</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Create
+				an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>,
+				using the default parameters</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+				the <FONT FACE="Courier, monospace">createLookupCache</FONT>
+				method on the service discovery manager created in step 1</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+				the <FONT FACE="Courier, monospace">terminate</FONT> method on
+				the lookup cache created in step 2</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+				each public method (other than the <FONT FACE="Courier, monospace">terminate</FONT>
+				method itself) on the lookup cache created in step 2, and verify
+				that an <FONT FACE="Courier, monospace">IllegalStateException</FONT>
+				results on each invocation 
+				</P>
+				<LI><P LANG="en-US" CLASS="western">Invoke the <FONT FACE="Courier, monospace">terminate</FONT>
+				method on the lookup cache created in step 2, and verify that no
+				action is taken and no exception results</P>
+			</OL>
+		</TD>
+		<TD WIDTH=11%>
+			<P LANG="en-US" CLASS="western">A1,M4</P>
+		</TD>
+		<TD WIDTH=14%>
+			<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.5.5</P>
+			<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.5.5.1</P>
+			<P LANG="en-US"><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=33%>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.impl.</I></P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.event.</I></P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>DiscardDownReDiscover</I></P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+			</P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Verifies
+			that the <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+			utility class handles the <I>discard problem</I> in the manner
+			described in the specification. To do so, this test simulates the
+			situation where an entity discards from a lookup cache, a service
+			that actually goes down. This test then verifies that the service
+			discovery manager identifies the situation and eventually <I>commits</I>
+			the service discard that occurred previously. This test then
+			verifies that when the down service comes back on line and
+			re-registers with each lookup service, the service is
+			re-discovered.</P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+			</P>
+			<P LANG="en-US" CLASS="western">The discard problem occurs when an
+			entity discards a service from a lookup cache (because the service
+			is unavailable to the entity), but the entity is not really down
+			(the service can still communicate with the lookup services with
+			which it is registered). When this situation occurs, unless the
+			service discovery manager takes steps equivalent to those
+			described in section SD.5.5.1 of the specification, the service
+			may never be re-discovered (because the service &ndash; since it&rsquo;s
+			not actually down &ndash; continues to renew its leases with the
+			lookup services, so none of those lookup services will ever
+			re-discover the service).</P>
+		</TD>
+		<TD WIDTH=42%>
+			<OL>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+				setup, start N lookup services whose member groups are finite
+				(not NO_GROUPS) and unique (not public) relative to the member
+				groups of all other lookup services running within the same
+				multicast radius of the lookup; and whose locator ports are
+				randomly selected</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+				setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+				that discovers the lookup services started in step 1, and which
+				uses the default lease renewal manager to manage any leases on
+				registrations with the event mechanism of the lookup services</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+				setup, create a template that will match the test services to be
+				registered based on service type only</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Register
+				M test services with some subset of the lookup services created
+				in step 1</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+				the <FONT FACE="Courier, monospace">createLookupCache</FONT>
+				method on the service discovery manager created in step 2;
+				inputting the template created in step 3, and a non-<FONT FACE="Courier, monospace">null</FONT>
+				instance of <FONT FACE="Courier, monospace">ServiceDiscoveryListener</FONT>
+				to register with the event mechanism of the lookup cache returned
+				by the call to <FONT FACE="Courier, monospace">createLookupCache</FONT></P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+				the lookup method on the <FONT FACE="Courier, monospace">lookup</FONT>
+				cache created in step 5 and use the results to verify that the
+				lookup and its event mechanism operate as expected</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Discard
+				from the lookup cache, the services returned in step 6 to
+				simulate service that appears down to the entity</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Verify
+				that a <FONT FACE="Courier, monospace">serviceRemoved</FONT>
+				event occurs as a result of the service discard in step 7</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Stop
+				renewing the lease each registered service holds with each lookup
+				service (to simulate services that are actually down)</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Verify
+				that the previously discarded service is <I><B>not</B></I>
+				re-discovered</P>
+				<LI><P LANG="en-US" CLASS="western">Re-register each test service
+				with each lookup service, and verify that each service is
+				re-discovered</P>
+			</OL>
+		</TD>
+		<TD WIDTH=11%>
+			<P LANG="en-US" CLASS="western">A1,M4</P>
+		</TD>
+		<TD WIDTH=14%>
+			<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.2</P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">SD.5.3.1</P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">SD.5.4.1</P>
+			<P LANG="en-US" CLASS="western">SD.5.5.1</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=33%>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.impl.</I></P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.event.</I></P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>DiscardServiceDown</I></P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+			</P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Verifies
+			that the <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+			utility class handles the <I>discard problem</I> in the manner
+			described in the specification. To do so, this test simulates the
+			situation where an entity discards from a lookup cache, a service
+			that actually goes down. This test then verifies that the service
+			discovery manager identifies the situation and eventually <I>commits</I>
+			the service discard that occurred previously.</P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+			</P>
+			<P LANG="en-US" CLASS="western">The discard problem occurs when an
+			entity discards a service from a lookup cache (because the service
+			is unavailable to the entity), but the entity is not really down
+			(the service can still communicate with the lookup services with
+			which it is registered). When this situation occurs, unless the
+			service discovery manager takes steps equivalent to those
+			described in section SD.5.5.1 of the specification, the service
+			may never be re-discovered (because the service &ndash; since it&rsquo;s
+			not actually down &ndash; continues to renew its leases with the
+			lookup services, so none of those lookup services will ever
+			re-discover the service).</P>
+		</TD>
+		<TD WIDTH=42%>
+			<OL>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+				setup, start N lookup services whose member groups are finite
+				(not NO_GROUPS) and unique (not public) relative to the member
+				groups of all other lookup services running within the same
+				multicast radius of the lookup; and whose locator ports are
+				randomly selected</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+				setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+				that discovers the lookup services started in step 1, and which
+				uses the default lease renewal manager to manage any leases on
+				registrations with the event mechanism of the lookup services</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+				setup, create a template that will match the test services to be
+				registered based on service type only</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Register
+				M test services with some subset of the lookup services created
+				in step 1</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+				the <FONT FACE="Courier, monospace">createLookupCache</FONT>
+				method on the service discovery manager created in step 2;
+				inputting the template created in step 3, and a non-<FONT FACE="Courier, monospace">null</FONT>
+				instance of <FONT FACE="Courier, monospace">ServiceDiscoveryListener</FONT>
+				to register with the event mechanism of the lookup cache returned
+				by the call to <FONT FACE="Courier, monospace">createLookupCache</FONT></P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+				the lookup method on the <FONT FACE="Courier, monospace">lookup</FONT>
+				cache created in step 5 and use the results to verify that the
+				lookup and its event mechanism operate as expected</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Discard
+				from the lookup cache, the services returned in step 6 to
+				simulate services that appears down to the entity</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Verify
+				that a <FONT FACE="Courier, monospace">serviceRemoved</FONT>
+				event occurs as a result of the service discard in step 7</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Stop
+				renewing the lease each registered service holds with each lookup
+				service (to simulate services that are actually down)</P>
+				<LI><P LANG="en-US" CLASS="western">Verify that the previously
+				discarded service is <I><B>not</B></I> re-discovered</P>
+			</OL>
+		</TD>
+		<TD WIDTH=11%>
+			<P LANG="en-US" CLASS="western">A1,M4</P>
+		</TD>
+		<TD WIDTH=14%>
+			<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.2</P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">SD.5.3.1</P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">SD.5.4.1</P>
+			<P LANG="en-US" CLASS="western">SD.5.5.1</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=33%>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.impl.</I></P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.event.</I></P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>DiscardServiceUp</I></P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+			</P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Verifies
+			that the <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+			utility class handles the <I>discard problem</I> in the manner
+			described in the specification. To do so, this test simulates the
+			situation where an entity discards from a lookup cache, a service
+			that never actually goes down. This test then verifies that the
+			service discovery manager identifies the situation and
+			<I>re-discovers</I> the previously discarded service.</P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+			</P>
+			<P LANG="en-US">The discard problem occurs when an entity discards
+			a service from a lookup cache (because the service is unavailable
+			to the entity), but the entity is not really down (the service can
+			still communicate with the lookup services with which it is
+			registered). When this situation occurs, unless the service
+			discovery manager takes steps equivalent to those described in
+			section SD.5.5.1 of the specification, the service may never be
+			re-discovered (because the service &ndash; since it&rsquo;s not
+			actually down &ndash; continues to renew its leases with the
+			lookup services, so none of those lookup services will ever
+			re-discover the service).</P>
+		</TD>
+		<TD WIDTH=42%>
+			<OL>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+				setup, start N lookup services whose member groups are finite
+				(not NO_GROUPS) and unique (not public) relative to the member
+				groups of all other lookup services running within the same
+				multicast radius of the lookup; and whose locator ports are
+				randomly selected</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+				setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+				that discovers the lookup services started in step 1, and which
+				uses the default lease renewal manager to manage any leases on
+				registrations with the event mechanism of the lookup services</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+				setup, create a template that will match the test services to be
+				registered based on service type only</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Register
+				M test services with some subset of the lookup services created
+				in step 1</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+				the <FONT FACE="Courier, monospace">createLookupCache</FONT>
+				method on the service discovery manager created in step 2;
+				inputting the template created in step 3, and a non-<FONT FACE="Courier, monospace">null</FONT>
+				instance of <FONT FACE="Courier, monospace">ServiceDiscoveryListener</FONT>
+				to register with the event mechanism of the lookup cache returned
+				by the call to <FONT FACE="Courier, monospace">createLookupCache</FONT></P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+				the lookup method on the <FONT FACE="Courier, monospace">lookup</FONT>
+				cache created in step 5 and use the results to verify that the
+				lookup and its event mechanism operate as expected</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Discard
+				from the lookup cache, the services returned in step 6 to
+				simulate services that appears down to the entity</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Verify
+				that a <FONT FACE="Courier, monospace">serviceRemoved</FONT>
+				event occurs as a result of the service discard in step 7</P>
+				<LI><P LANG="en-US" CLASS="western">Verify that the previously
+				discarded &ndash; but actually up &ndash; service is eventually
+				re-discovered</P>
+			</OL>
+		</TD>
+		<TD WIDTH=11%>
+			<P LANG="en-US" CLASS="western">A1,M4</P>
+		</TD>
+		<TD WIDTH=14%>
+			<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.2</P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">SD.5.3.1</P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">SD.5.4.1</P>
+			<P LANG="en-US" CLASS="western">SD.5.5.1</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=33%>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.impl.</I></P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.event.</I></P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>ReRegisterBadEquals</I></P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+			</P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+			respect to the use of a lookup cache to perform service discovery,
+			this test verifies that when the services to be discovered are
+			implemented with a poorly defined or non-existent (<I>bad</I>)
+			<FONT FACE="Courier, monospace">equals</FONT> method, the event
+			mechanism of the lookup cache will operate in a predictable
+			fashion, sending a number of <FONT FACE="Courier, monospace">serviceAdded</FONT>
+			and <FONT FACE="Courier, monospace">serviceRemoved</FONT> events.</P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+			</P>
+			<P LANG="en-US" CLASS="western">With respect to services defined
+			with a <I>bad</I> <FONT FACE="Courier, monospace">equals</FONT>
+			method, the lookup cache will always view different instances of
+			such services as being different. Based on this fact, the number
+			of <FONT FACE="Courier, monospace">serviceAdded</FONT> and
+			<FONT FACE="Courier, monospace">serviceRemoved</FONT> events can
+			be computed from the number of services and the number of lookup
+			services with which each service has registered.</P>
+		</TD>
+		<TD WIDTH=42%>
+			<OL>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+				setup, start N lookup services whose member groups are finite
+				(not NO_GROUPS) and unique (not public) relative to the member
+				groups of all other lookup services running within the same
+				multicast radius of the lookup; and whose locator ports are
+				randomly selected</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+				setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+				that discovers the lookup services started in step 1, and which
+				uses the default lease renewal manager to manage any leases on
+				registrations with the event mechanism of the lookup services</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+				setup, create a template that will match the test services to be
+				registered based on service type only</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Register
+				M test services &ndash; each containing a poorly defined or
+				non-existent <FONT FACE="Courier, monospace">equals</FONT> method
+				&ndash; with some subset of the lookup services created in step 1</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+				the <FONT FACE="Courier, monospace">createLookupCache</FONT>
+				method on the service discovery manager created in step 2;
+				inputting the template created in step 3, and a non-<FONT FACE="Courier, monospace">null</FONT>
+				instance of <FONT FACE="Courier, monospace">ServiceDiscoveryListener</FONT>
+				to register with the event mechanism of the lookup cache returned
+				by the call to <FONT FACE="Courier, monospace">createLookupCache</FONT></P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">After
+				the original services have been discovered and all expected
+				notifications have arrived, register a new version of each of the
+				previously registered services.</P>
+				<LI><P LANG="en-US" CLASS="western">Verify that the expected
+				<FONT FACE="Courier, monospace">serviceAdded</FONT> and
+				<FONT FACE="Courier, monospace">serviceRemoved</FONT> events
+				occur</P>
+			</OL>
+		</TD>
+		<TD WIDTH=11%>
+			<P LANG="en-US" CLASS="western">A1,M4</P>
+		</TD>
+		<TD WIDTH=14%>
+			<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.2</P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">SD.5.3.1</P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">SD.5.4.1</P>
+			<P LANG="en-US"><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=33%>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.impl.</I></P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.event.</I></P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>ReRegisterGoodEquals</I></P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+			</P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">With
+			respect to the use of a lookup cache to perform service discovery,
+			this test verifies that when the services to be discovered are
+			implemented with a well defined (<I>good</I>) <FONT FACE="Courier, monospace">equals</FONT>
+			method, the event mechanism of the lookup cache will operate in a
+			predictable fashion, sending a number of <FONT FACE="Courier, monospace">serviceAdded</FONT>
+			and <FONT FACE="Courier, monospace">serviceRemoved</FONT> events.</P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+			</P>
+			<P LANG="en-US" CLASS="western">With respect to services defined
+			with a <I>good</I> <FONT FACE="Courier, monospace">equals</FONT>
+			method, the lookup cache will always view different instances of
+			such a service as being the same service since different instances
+			of the service will have the same service ID. Based on this fact,
+			the number of <FONT FACE="Courier, monospace">serviceAdded</FONT>
+			and <FONT FACE="Courier, monospace">serviceRemoved</FONT> events
+			can be computed from the number of services and the number of
+			lookup services with which each service has registered.</P>
+		</TD>
+		<TD WIDTH=42%>
+			<OL>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+				setup, start N lookup services whose member groups are finite
+				(not NO_GROUPS) and unique (not public) relative to the member
+				groups of all other lookup services running within the same
+				multicast radius of the lookup; and whose locator ports are
+				randomly selected</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+				setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+				that discovers the lookup services started in step 1, and which
+				uses the default lease renewal manager to manage any leases on
+				registrations with the event mechanism of the lookup services</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+				setup, create a template that will match the test services to be
+				registered based on service type only</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Register
+				M test services &ndash; each containing a well defined <FONT FACE="Courier, monospace">equals</FONT>
+				method &ndash; with some subset of the lookup services created in
+				step 1</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+				the <FONT FACE="Courier, monospace">createLookupCache</FONT>
+				method on the service discovery manager created in step 2;
+				inputting the template created in step 3, and a non-<FONT FACE="Courier, monospace">null</FONT>
+				instance of <FONT FACE="Courier, monospace">ServiceDiscoveryListener</FONT>
+				to register with the event mechanism of the lookup cache returned
+				by the call to <FONT FACE="Courier, monospace">createLookupCache</FONT></P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">After
+				the original services have been discovered and all expected
+				notifications have arrived, register a new version of each of the
+				previously registered services. That is, each new version should
+				be associated with a new service value so that the <FONT FACE="Courier, monospace">equals</FONT>
+				method returns <FONT FACE="Courier, monospace">false</FONT>, but
+				each new version should have the same service ID as its original
+				counterpart so that the cache will interpret the different
+				versions as the same service.</P>
+				<LI><P LANG="en-US" CLASS="western">Verify that the expected
+				<FONT FACE="Courier, monospace">serviceAdded</FONT> and
+				<FONT FACE="Courier, monospace">serviceRemoved</FONT> events
+				occur 
+				</P>
+			</OL>
+		</TD>
+		<TD WIDTH=11%>
+			<P LANG="en-US" CLASS="western">A1,M4</P>
+		</TD>
+		<TD WIDTH=14%>
+			<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.2</P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">SD.5.3.1</P>
+			<P LANG="en-US" CLASS="western">SD.5.4.1</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=33%>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>org.apache.river.qa.impl.</I></P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>servicediscovery.event.</I></P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><I>ServiceDiscardCacheTerminate</I></P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+			</P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Verifies
+			that the <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+			utility class handles the <I>discard problem</I> in the manner
+			described in the specification by verifying that the tasks
+			involved in the service discard process are terminated correctly
+			when the lookup cache itself is terminated.</P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm"><BR>
+			</P>
+			<P LANG="en-US" CLASS="western">The discard problem occurs when an
+			entity discards a service from a lookup cache (because the service
+			is unavailable to the entity), but the entity is not really down
+			(the service can still communicate with the lookup services with
+			which it is registered). When this situation occurs, unless the
+			service discovery manager takes steps equivalent to those
+			described in section SD.5.5.1 of the specification, the service
+			may never be re-discovered (because the service &ndash; since it&rsquo;s
+			not actually down &ndash; continues to renew its leases with the
+			lookup services, so none of those lookup services will ever
+			re-discover the service).</P>
+		</TD>
+		<TD WIDTH=42%>
+			<OL>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+				setup, start N lookup services whose member groups are finite
+				(not NO_GROUPS) and unique (not public) relative to the member
+				groups of all other lookup services running within the same
+				multicast radius of the lookup; and whose locator ports are
+				randomly selected</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+				setup, create an instance of <FONT FACE="Courier, monospace">ServiceDiscoveryManager</FONT>
+				that discovers the lookup services started in step 1, and which
+				uses the default lease renewal manager to manage any leases on
+				registrations with the event mechanism of the lookup services</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">During
+				setup, create a template that will match the test services to be
+				registered based on service type only</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Register
+				M test services with some subset of the lookup services created
+				in step 1</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+				the <FONT FACE="Courier, monospace">createLookupCache</FONT>
+				method on the service discovery manager created in step 2;
+				inputting the template created in step 3, and a non-<FONT FACE="Courier, monospace">null</FONT>
+				instance of <FONT FACE="Courier, monospace">ServiceDiscoveryListener</FONT>
+				to register with the event mechanism of the lookup cache returned
+				by the call to <FONT FACE="Courier, monospace">createLookupCache</FONT></P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+				the lookup method on the <FONT FACE="Courier, monospace">lookup</FONT>
+				cache created in step 5 and use the results to verify that the
+				lookup and its event mechanism operate as expected</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Discard
+				from the lookup cache, the services returned in step 6 to cause
+				creation of tasks that handle the discard problem</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Invoke
+				the <FONT FACE="Courier, monospace">terminate</FONT> method on
+				the lookup cache created in step 5</P>
+				<LI><P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">Stop
+				renewing the lease each registered service holds with each lookup
+				service to cause the generation of service events</P>
+				<LI><P LANG="en-US" CLASS="western">Verify that the expected
+				service events are received</P>
+			</OL>
+		</TD>
+		<TD WIDTH=11%>
+			<P LANG="en-US" CLASS="western">A1,M4</P>
+		</TD>
+		<TD WIDTH=14%>
+			<P LANG="en-US" STYLE="margin-bottom: 0cm">SD.4.1.2</P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">SD.5.3.1</P>
+			<P LANG="en-US" CLASS="western" STYLE="margin-bottom: 0cm">SD.5.4.1</P>
+			<P LANG="en-US" CLASS="western">SD.5.5.1</P>
+		</TD>
+	</TR>
+</TABLE>
+<H1 LANG="en-US" CLASS="western"></H1>
+</BODY>
+</HTML>

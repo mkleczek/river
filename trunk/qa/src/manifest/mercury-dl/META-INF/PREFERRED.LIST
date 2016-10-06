@@ -1,0 +1,25 @@
+PreferredResources-Version: 1.0
+
+Preferred: false
+
+Name: org/apache/river/landlord/-
+Preferred: true
+
+Name: org/apache/river/lease/-
+Preferred: true
+
+Name: org/apache/river/proxy/-
+Preferred: true
+
+Name: org/apache/river/test/impl/mercury/DisableListenerImpl_Stub.class
+Preferred: true
+
+Name: org/apache/river/test/impl/mercury/DisableNSOListenerImpl_Stub.class
+Preferred: true
+
+Name: org/apache/river/test/impl/mercury/TestGeneratorImpl_Stub.class
+Preferred: true
+
+Name: org/apache/river/test/impl/mercury/TestListenerImpl_Stub.class
+Preferred: true
+

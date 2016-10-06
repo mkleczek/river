@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+! Licensed to the Apache Software Foundation (ASF) under one
+! or more contributor license agreements.  See the NOTICE file
+! distributed with this work for additional information
+! regarding copyright ownership. The ASF licenses this file
+! to you under the Apache License, Version 2.0 (the
+! "License"); you may not use this file except in compliance
+! with the License. You may obtain a copy of the License at
+!
+!      http://www.apache.org/licenses/LICENSE-2.0
+!
+! Unless required by applicable law or agreed to in writing, software
+! distributed under the License is distributed on an "AS IS" BASIS,
+! WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+! See the License for the specific language governing permissions and
+! limitations under the License.
+!-->
+ 
+<ivy-module
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xsi:noNamespaceSchemaLocation='http://ant.apache.org/ivy/schemas/ivy.xsd' version="2.0">
+    <info organisation="org.apache.river"
+          module="river"/>
+    <configurations>
+        <conf name="tools"/>
+        <conf name="tests"/>
+        <conf name="asm"/>
+        <conf name="dnsjava"/>
+        <conf name="bouncy"/>
+        <conf name="animal"/>
+        <conf name="hslib"/>
+        <conf name="velocity"/>
+        <conf name="groovy"/>
+    </configurations>
+    <dependencies>
+        <dependency org="org.ow2.asm" name="asm" rev="5.0.4" conf="asm->default"/>
+        <dependency org="org.ow2.asm" name="asm-commons" rev="5.0.4" conf="asm->default"/>
+        <dependency org="org.ow2.asm" name="asm-tree" rev="5.0.4" conf="asm->default"/>
+        
+        <dependency org="org.apache.velocity" name="velocity" rev="1.7" conf="velocity->default"/>   
+        
+        <dependency org="junit" name="junit" rev="4.11" conf="tests->default"/>
+        <dependency org="org.mockito" name="mockito-all" rev="1.9.5" conf="tests->default"/>
+        
+        <dependency org="org.bouncycastle" name="bcmail-jdk15on" rev="1.54" conf="bouncy->default"/>
+        <dependency org="org.bouncycastle" name="bcprov-jdk15on" rev="1.54" conf="bouncy->default"/>
+
+        <dependency org="dnsjava" name="dnsjava" rev="2.1.7" conf="dnsjava->default"/>
+
+        <dependency org="org.codehaus.groovy" name="groovy-all" rev="2.4.5" conf="groovy->default"/>
+       
+        <dependency org="com.github.stephenc.high-scale-lib" name="high-scale-lib" rev="1.1.4" conf="hslib->default"/> 
+        
+        <dependency org="org.codehaus.mojo" name="animal-sniffer" rev="1.14" conf="animal->default"/>
+        <dependency org="org.codehaus.mojo" name="animal-sniffer-ant-tasks" rev="1.14" conf="animal->default"/>
+        <dependency org="org.codehaus.mojo.signature" name="java14" rev="1.0" conf="animal->default"/>
+        <dependency org="org.codehaus.mojo.signature" name="java14-sun" rev="1.0" conf="animal->default"/>
+        <dependency org="org.codehaus.mojo.signature" name="java15" rev="1.0" conf="animal->default"/>
+        <dependency org="org.codehaus.mojo.signature" name="java15-sun" rev="1.0" conf="animal->default"/>
+        <dependency org="org.codehaus.mojo.signature" name="java15-ibm" rev="1.0" conf="animal->default"/>
+    </dependencies>   
+
+</ivy-module>

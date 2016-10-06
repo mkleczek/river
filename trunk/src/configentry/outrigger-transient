@@ -1,0 +1,40 @@
+#/*
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership. The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License. You may obtain a copy of the License at
+# 
+#      http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#*/
+
+# transient outrigger configuration entries
+org.apache.river.outrigger.contentsLeasePeriodPolicy: org.apache.river.landlord.LeasePeriodPolicy
+org.apache.river.outrigger.discoveryManager: net.jini.discovery.DiscoveryManagement
+org.apache.river.outrigger.entryLeasePeriodPolicy: org.apache.river.landlord.LeasePeriodPolicy
+org.apache.river.outrigger.eventLeasePolicy: org.apache.river.landlord.LeasePeriodPolicy
+org.apache.river.outrigger.initialLookupAttributes: net.jini.core.entry.Entry[]
+org.apache.river.outrigger.initialLookupGroups: String[]
+org.apache.river.outrigger.initialLookupLocators: net.jini.core.discovery.LookupLocator[]
+org.apache.river.outrigger.iteratorBatchSize: int
+org.apache.river.outrigger.listenerPreparer: net.jini.security.ProxyPreparer
+org.apache.river.outrigger.loginContext: javax.security.auth.login.LoginContext
+org.apache.river.outrigger.lookupLocatorPreparer: net.jini.security.ProxyPreparer
+org.apache.river.outrigger.maxServerQueryTimeout: long
+org.apache.river.outrigger.maxUnexportDelay: long
+org.apache.river.outrigger.notificationsTaskManager: org.apache.river.thread.TaskManager
+org.apache.river.outrigger.reapingInterval: long
+org.apache.river.outrigger.reapingPriority: int
+org.apache.river.outrigger.serverExporter: net.jini.export.Exporter
+org.apache.river.outrigger.takeMultipleLimit: int
+org.apache.river.outrigger.transactionManagerPreparer: net.jini.security.ProxyPreparer
+org.apache.river.outrigger.txnMonitorTaskManager: org.apache.river.thread.TaskManager
+org.apache.river.outrigger.unexportRetryDelay: long

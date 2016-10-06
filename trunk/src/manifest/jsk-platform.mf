@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Class-Path: jsk-resources.jar high-scale-lib-1.1.4.jar
+Implementation-Vendor: Apache Software Foundation
+Implementation-Version: 3.0
