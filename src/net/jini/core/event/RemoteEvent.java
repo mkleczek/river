@@ -18,6 +18,8 @@
 
 package net.jini.core.event;
 
+import java.io.ObjectOutputStream.PutField;
+import java.io.ObjectStreamField;
 import java.rmi.MarshalledObject;
 
 /**
@@ -71,8 +73,6 @@ import java.rmi.MarshalledObject;
  * the transaction. This is true even if the event that triggered the
  * RemoteEvent object being sent occurs outside of the scope of the
  * transaction (but is visible within the transaction).
- *
- * Immutable since 3.0.0
  * 
  * @author Sun Microsystems, Inc.
  *
@@ -81,34 +81,42 @@ import java.rmi.MarshalledObject;
 public class RemoteEvent extends java.util.EventObject {
 
     private static final long serialVersionUID = 1777278867291906446L;
+   
+    private static final ObjectStreamField[] serialPersistentFields = 
+	{
+	    new ObjectStreamField("source", Object.class),
+	    new ObjectStreamField("eventID", long.class),
+	    new ObjectStreamField("seqNum", long.class),
+	    new ObjectStreamField("handback", MarshalledObject.class)
+	};
 
     /**
      * The event source.
      *
      * @serial
      */
-    private final Object source;
+    protected Object source;
 
     /**
      * The event identifier.
      *
      * @serial
      */
-    private final long eventID;
+    protected long eventID;
 
     /**
      * The event sequence number.
      *
      * @serial
      */
-    private final long seqNum;
+    protected long seqNum;
 
     /**
      * The handback object.
      *
      * @serial
      */
-    private final MarshalledObject handback;
+    protected MarshalledObject handback;
 
     /**
      * Constructs a RemoteEvent object.
@@ -187,5 +195,21 @@ public class RemoteEvent extends java.util.EventObject {
     {
 	stream.defaultReadObject();
 	super.source = source;
+    }
+    
+    /**
+     * All state is retrieved using getter methods and is written to the stream.
+     * @serialData
+     * @param stream
+     * @throws java.io.IOException 
+     */
+    private void writeObject(java.io.ObjectOutputStream stream) throws java.io.IOException
+    {
+	PutField fields = stream.putFields();
+	fields.put("source", getSource());
+	fields.put("eventID", getID());
+	fields.put("seqNum", getSequenceNumber());
+	fields.put("handback", getRegistrationObject());
+	stream.writeFields();
     }
 }

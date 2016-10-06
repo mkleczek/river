@@ -474,6 +474,23 @@
     </target>
 
     <!-- =========== ... ============ -->
+    
+    <!--<target name="sign-jars" description="Signs jar files with X509 Cert"
+        depends="jars">
+        <signjar
+            alias="apache-river" keystore="testkeystore"
+            storepass="apacheant"
+            sigalg="SHA256withRSA"
+            digestalg="SHA256">
+          <path>
+            <fileset id="jar.files" dir="${basedir}">
+                <include name="${lib}/*.jar"/>
+                <include name="${lib-dl}/*.jar"/>
+                <include name="${lib-ext}/*.jar"/>
+            </fileset>
+          </path>
+        </signjar>
+    </target>-->
 
     <target name="jars"	description="Generates JAR files"
 		depends="river.jars,
@@ -937,10 +954,10 @@
             <arg line="-in org.apache.river"/>
             <arg line="-in net.jini"/>
             <arg line="-in org.apache.river"/>
-			<arg line="-out net.jini.lookup"/>
-			<arg line="-out org.apache.river.api.lookup"/>
-			<arg line="-out net.jini.config.GroovyConfig"/>
-			<arg line="-out net.jini.config.Component"/>
+            <arg line="-out net.jini.lookup"/>
+            <arg line="-out org.apache.river.api.lookup"/>
+            <arg line="-skip net.jini.config.GroovyConfig"/>
+            <arg line="-skip net.jini.config.Component"/>
             <arg path="${build.classes.dir}/net/jini/activation"/>
             <arg path="${build.classes.dir}/net/jini/config"/>
             <arg path="${build.classes.dir}/net/jini/constraint"/>
