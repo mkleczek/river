@@ -20,7 +20,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.jini</groupId>
     <artifactId>jsk-platform</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
     <url>http://river.apache.org</url>
     <description>Configures specific service providers to be used, such as 
     PreferredClassProvider, trust and integrity verifiers, and DiscoveryFormatProvider
@@ -42,7 +42,7 @@
         <dependency>
             <groupId>net.jini</groupId>
             <artifactId>jsk-resources</artifactId>
-            <version>3.0.0</version>
+            <version>3.0.1</version>
         </dependency>
 		
 		<dependency>
