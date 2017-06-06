@@ -39,7 +39,7 @@ handlers = java.util.logging.ConsoleHandler
 # level setting (set below) to limit messages printed to
 # the console.
 
-.level = FINE
+.level = CONFIG
 
 ############################################################
 # Handler specific properties: formatters and logger levels
@@ -50,7 +50,7 @@ handlers = java.util.logging.ConsoleHandler
 # to the given level and above.
 
 java.util.logging.ConsoleHandler.formatter = java.util.logging.SimpleFormatter
-java.util.logging.ConsoleHandler.level = INFO
+java.util.logging.ConsoleHandler.level = FINEST
 
 # For messages printed to a file, do the following:
 # - use either a standard or XML formatter
@@ -113,10 +113,13 @@ org.apache.river.level = SEVERE
 org.apache.river.logging.LogManager.level = SEVERE
 
 # For Configuration
-net.jini.config.level = SEVERE
+net.jini.config.level = CONFIG
 
 # For activation
-net.jini.activation.ActivatableInvocationHandler.level = SEVERE
+net.jini.activation.ActivatableInvocationHandler.level = CONFIG
+
+# For phoenix
+org.apache.river.phoenix.level=CONFIG
 
 # For JRMP
 net.jini.jrmp.JrmpExporter.level = SEVERE
@@ -163,7 +166,7 @@ net.jini.loader.level = SEVERE
 net.jini.loader.pref.PreferredClassLoader.level = SEVERE
 net.jini.loader.pref.PreferredClassLoader.preferred.level = SEVERE
 net.jini.loader.pref.PreferredClassLoader.exception.level = SEVERE
-net.jini.loader.pref.PreferredClassProvider.level = SEVERE
+net.jini.loader.pref.PreferredClassProvider.level = CONFIG
 
 # For Security: trust, integrity, policy and permission granting,
 #               proxy trust verification
@@ -185,7 +188,7 @@ org.apache.river.discovery.level = SEVERE
 net.jini.discovery.LookupDiscovery.level = SEVERE
 net.jini.discovery.LookupLocatorDiscovery.level = SEVERE
 net.jini.lookup.JoinManager.level = SEVERE
-net.jini.lookup.ServiceDiscoveryManager.level = SEVERE
+net.jini.lookup.ServiceDiscoveryManager.level = FINEST
 net.jini.lease.LeaseRenewalManager.level = SEVERE
 
 # For Thread Pool Utilities
@@ -256,8 +259,8 @@ org.apache.river.outrigger.transactions.level = SEVERE
 org.apache.river.example.browser.level = SEVERE
 
 # For the test harness, tests, and infrastructure.
-org.apache.river.qa.harness.level = CONFIG
-org.apache.river.qa.harness.test.level = CONFIG
-org.apache.river.qa.harness.service.level = CONFIG
-org.apache.river.qa.harness.config.level = CONFIG
+org.apache.river.qa.harness.level = 550
+org.apache.river.qa.harness.test.level = FINEST
+org.apache.river.qa.harness.service.level = FINEST
+org.apache.river.qa.harness.config.level = 550
 org.apache.river.test.spec.jeri.mux.level = SEVERE
