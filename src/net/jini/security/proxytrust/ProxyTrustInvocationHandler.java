@@ -18,7 +18,6 @@
 
 package net.jini.security.proxytrust;
 
-import org.apache.river.jeri.internal.runtime.Util;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;

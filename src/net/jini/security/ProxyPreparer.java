@@ -19,7 +19,6 @@
 package net.jini.security;
 
 import java.rmi.RemoteException;
-import net.jini.config.Configuration;
 import net.jini.core.constraint.RemoteMethodControl;
 import net.jini.security.Security;
 
