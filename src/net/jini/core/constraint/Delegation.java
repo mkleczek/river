@@ -44,8 +44,7 @@ import java.io.Serializable;
  * @see net.jini.export.ServerContext
  * @since 2.0
  */
-public final class Delegation implements InvocationConstraint, Serializable {
-    private static final long serialVersionUID = -8636854709107393245L;
+public enum Delegation implements InvocationConstraint {
 
     /**
      * If the client authenticates to the server, then delegate from the
@@ -57,43 +56,12 @@ public final class Delegation implements InvocationConstraint, Serializable {
      * constraint is conditional on client authentication, it does not
      * conflict with {@link ClientAuthentication#NO}.
      */
-    public static final Delegation YES = new Delegation(true);
+    YES,
     /**
      * Do not delegate from the client to the server, such that the server
      * does not receive credentials which would allow it to authenticate using
      * the client's identity.
      */
-    public static final Delegation NO = new Delegation(false);
+    NO;
 
-    /**
-     * <code>true</code> for <code>YES</code>, <code>false</code> for
-     * <code>NO</code>
-     *
-     * @serial
-     */
-    private final boolean val;
-
-    /**
-     * Simple constructor.
-     *
-     * @param val <code>true</code> for <code>YES</code>, <code>false</code>
-     * for <code>NO</code>
-     */
-    private Delegation(boolean val) {
-	this.val = val;
-    }
-
-    /**
-     * Returns a string representation of this object.
-     */
-    public String toString() {
-	return val ? "Delegation.YES" : "Delegation.NO";
-    }
-
-    /**
-     * Canonicalize so that <code>==</code> can be used.
-     */
-    private Object readResolve() {
-	return val ? YES : NO;
-    }
 }

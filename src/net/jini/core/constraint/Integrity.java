@@ -18,8 +18,6 @@
 
 package net.jini.core.constraint;
 
-import java.io.Serializable;
-
 /**
  * Represents a constraint on the integrity of message contents, covering not
  * only data transmitted in band as part of the remote call itself, but also
@@ -62,8 +60,9 @@ import java.io.Serializable;
  * Security.verifyCodebaseIntegrity
  * @since 2.0
  */
-public final class Integrity implements InvocationConstraint, Serializable {
-    private static final long serialVersionUID = 418483423937969897L;
+public enum Integrity implements InvocationConstraint {
+    
+    //private static final long serialVersionUID = 418483423937969897L;
 
     /**
      * Detect when message contents (both requests and replies) have been
@@ -71,44 +70,13 @@ public final class Integrity implements InvocationConstraint, Serializable {
      * message and throw an exception. The mechanisms used to maintain
      * integrity are not specified by this constraint.
      */
-    public static final Integrity YES = new Integrity(true);
+    YES,
     /**
      * Do not detect when message contents have been altered by third parties.
      * Normally this constraint should not be used, as many secure
      * communication mechanisms have integrity mechanisms that cannot be
      * disabled.
      */
-    public static final Integrity NO = new Integrity(false);
+    NO;
 
-    /**
-     * <code>true</code> for <code>YES</code>, <code>false</code> for
-     * <code>NO</code>
-     *
-     * @serial
-     */
-    private final boolean val;
-
-    /**
-     * Simple constructor.
-     *
-     * @param val <code>true</code> for <code>YES</code>, <code>false</code>
-     * for <code>NO</code>
-     */
-    private Integrity(boolean val) {
-	this.val = val;
-    }
-
-    /**
-     * Returns a string representation of this object.
-     */
-    public String toString() {
-	return val ? "Integrity.YES" : "Integrity.NO";
-    }
-
-    /**
-     * Canonicalize so that <code>==</code> can be used.
-     */
-    private Object readResolve() {
-	return val ? YES : NO;
-    }
 }
