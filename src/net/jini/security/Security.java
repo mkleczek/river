@@ -20,7 +20,6 @@ package net.jini.security;
 
 import org.apache.river.collection.WeakIdentityMap;
 import org.apache.river.logging.Levels;
-import org.apache.river.resource.Service;
 import java.lang.ref.SoftReference;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -46,6 +45,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.WeakHashMap;
@@ -414,7 +414,7 @@ public final class Security {
 	    AccessController.doPrivileged(new PrivilegedAction() {
 		public Object run() {
 		    for (Iterator iter =
-			     Service.providers(IntegrityVerifier.class, cl);
+			     ServiceLoader.load(IntegrityVerifier.class, cl).iterator();
 			 iter.hasNext(); )
 		    {
 			list.add(iter.next());
@@ -1055,7 +1055,7 @@ public final class Security {
                     
 		    public Object run() {
 			for (Iterator iter =
-				Service.providers(TrustVerifier.class, scl);
+				ServiceLoader.load(TrustVerifier.class, scl).iterator();
 			     iter.hasNext(); )
 			{
 			    list.add(iter.next());

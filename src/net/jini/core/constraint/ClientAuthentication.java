@@ -64,53 +64,20 @@ import java.io.Serializable;
  * @see net.jini.security.AuthenticationPermission
  * @since 2.0
  */
-public final class ClientAuthentication
-				implements InvocationConstraint, Serializable
+public enum ClientAuthentication
+				implements InvocationConstraint
 {
-    private static final long serialVersionUID = -6326974440670504555L;
-
+    
     /**
      * Authenticate the client to the server. The mechanisms and credentials
      * used to authenticate the client are not specified by this constraint.
      */
-    public static final ClientAuthentication YES =
-					new ClientAuthentication(true);
+    YES,
+    
     /**
      * Do not authenticate the client to the server, so that the client
      * remains anonymous.
      */
-    public static final ClientAuthentication NO =
-					new ClientAuthentication(false);
+    NO;
 
-    /**
-     * <code>true</code> for <code>YES</code>, <code>false</code> for
-     * <code>NO</code>
-     *
-     * @serial
-     */
-    private final boolean val;
-
-    /**
-     * Simple constructor.
-     *
-     * @param val <code>true</code> for <code>YES</code>, <code>false</code>
-     * for <code>NO</code>
-     */
-    private ClientAuthentication(boolean val) {
-	this.val = val;
-    }
-
-    /**
-     * Returns a string representation of this object.
-     */
-    public String toString() {
-	return val ? "ClientAuthentication.YES" : "ClientAuthentication.NO";
-    }
-
-    /**
-     * Canonicalize so that <code>==</code> can be used.
-     */
-    private Object readResolve() {
-	return val ? YES : NO;
-    }
 }

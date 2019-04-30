@@ -29,54 +29,22 @@ import java.io.Serializable;
  * @author Sun Microsystems, Inc.
  * @since 2.0
  */
-public final class Confidentiality
-				implements InvocationConstraint, Serializable
+public enum Confidentiality
+				implements InvocationConstraint
 {
-    private static final long serialVersionUID = 6173438948668674131L;
 
     /**
      * Transmit message contents so that they cannot easily be interpreted by
      * third parties (typically by using encryption). The mechanisms used
      * to maintain confidentiality are not specified by this constraint.
      */
-    public static final Confidentiality YES = new Confidentiality(true);
+    YES,
     /**
      * Transmit message contents in the clear (no use of encryption).
      * <p>
      * Normally this constraint should not be used unless there is an
      * organizational policy that data must be transmitted in the clear.
      */
-    public static final Confidentiality NO = new Confidentiality(false);
+    NO;
 
-    /**
-     * <code>true</code> for <code>YES</code>, <code>false</code> for
-     * <code>NO</code>
-     *
-     * @serial
-     */
-    private final boolean val;
-
-    /**
-     * Simple constructor.
-     *
-     * @param val <code>true</code> for <code>YES</code>, <code>false</code>
-     * for <code>NO</code>
-     */
-    private Confidentiality(boolean val) {
-	this.val = val;
-    }
-
-    /**
-     * Returns a string representation of this object.
-     */
-    public String toString() {
-	return val ? "Confidentiality.YES" : "Confidentiality.NO";
-    }
-
-    /**
-     * Canonicalize so that <code>==</code> can be used.
-     */
-    private Object readResolve() {
-	return val ? YES : NO;
-    }
 }

@@ -413,7 +413,7 @@ public final class InvocationConstraints implements Serializable {
      *
      * @return an immutable set of all of the requirements
      */
-    public Set requirements() {
+    public Set<InvocationConstraint> requirements() {
 	return new ArraySet(reqs);
     }
 
@@ -424,7 +424,7 @@ public final class InvocationConstraints implements Serializable {
      *
      * @return an immutable set of all of the preferences
      */
-    public Set preferences() {
+    public Set<InvocationConstraint> preferences() {
 	return new ArraySet(prefs);
     }
 
