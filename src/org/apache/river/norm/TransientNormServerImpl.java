@@ -18,7 +18,6 @@
 package org.apache.river.norm;
 
 import org.apache.river.start.LifeCycle;
-import org.apache.river.start.ServiceStarter;
 
 /**
  * Provides a transient implementation of NormServer.
@@ -26,21 +25,23 @@ import org.apache.river.start.ServiceStarter;
  * @author Sun Microsystems, Inc.
  * @since 2.0
  */
-class TransientNormServerImpl extends NormServerBaseImpl {
+class TransientNormServerImpl extends NormServerBaseImpl
+{
 
     /**
-     * Provides a constructor for a transient implementation of NormServer
-     * suitable for use with {@link ServiceStarter}.
+     * Provides a constructor for a transient implementation of NormServer suitable for use with {@link ServiceStarter}.
      *
-     * @param configOptions the arguments to use when creating the
-     *	      configuration for the server
-     * @param lifeCycle object to notify when this service is destroyed, or
-     *	      <code>null</code>
-     * @throws Exception if there is a problem creating the server
+     * @param configOptions
+     *                      the arguments to use when creating the configuration for the server
+     * @param lifeCycle
+     *                      object to notify when this service is destroyed, or <code>null</code>
+     * @throws Exception
+     *                   if there is a problem creating the server
      */
-    TransientNormServerImpl(String[] configOptions, LifeCycle lifeCycle)
-	throws Exception
+    TransientNormServerImpl(String[] configOptions,
+                            LifeCycle lifeCycle)
+            throws Exception
     {
-        super(init( configOptions, new NormServerInitializer(false /* persistent */, lifeCycle)));
+        super(init(configOptions, new NormServerInitializer(false /* persistent */, lifeCycle)));
     }
 }
