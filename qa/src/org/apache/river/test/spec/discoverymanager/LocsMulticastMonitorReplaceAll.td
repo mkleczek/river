@@ -1,4 +1,0 @@
-testClass=LocsMulticastMonitorReplaceAll
-testCategories=discoverymanager,discoverymanager_spec,allgroups
-include0=discoverymanager.properties
-org/apache/river/test/share/allgroups_reggie3_0.properties

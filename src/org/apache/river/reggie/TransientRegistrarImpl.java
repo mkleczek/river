@@ -19,6 +19,7 @@
 package org.apache.river.reggie;
 
 import org.apache.river.start.LifeCycle;
+
 import net.jini.config.Configuration;
 
 /**
