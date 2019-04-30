@@ -30,6 +30,7 @@ import java.util.NavigableSet;
 import java.util.Queue;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.Spliterator;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -53,6 +54,12 @@ Queue<T>, Deque<T>, BlockingQueue<T>, BlockingDeque<T>{
     private volatile boolean built = false;
    
     ReadResolveFixCollectionCircularReferences(){}
+    
+    @Override
+    public Spliterator<T> spliterator()
+    {
+        return super.spliterator();
+    }
     
     @Override
     Collection<T> build() throws InstantiationException, IllegalAccessException,

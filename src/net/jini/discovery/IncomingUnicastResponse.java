@@ -17,54 +17,51 @@
  */
 package net.jini.discovery;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.rmi.MarshalledObject;
+
 import net.jini.core.lookup.ServiceRegistrar;
 import net.jini.io.MarshalledInstance;
 
 /**
- * This class encapsulates the details of unmarshaling an incoming
- * unicast response.
+ * This class encapsulates the details of unmarshaling an incoming unicast response.
  *
  * @author Sun Microsystems, Inc.
- *
  * @see IncomingUnicastRequest
  */
-public class IncomingUnicastResponse {
+public class IncomingUnicastResponse
+{
     /**
      * The registrar we have discovered.
      */
     protected ServiceRegistrar registrar;
     /**
-     * The groups the lookup service was a member of, at the time
-     * discovery was performed.  This may be out of date.
+     * The groups the lookup service was a member of, at the time discovery was performed. This may be out of date.
      */
     protected String[] groups;
-    
+
     /**
-     * Construct a new object, initialized by unmarshaling the
-     * contents of an input stream.
+     * Construct a new object, initialized by unmarshaling the contents of an input stream.
      *
-     * @param str the stream from which to unmarshal the response
-     * @exception IOException an error occurred while unmarshaling the
-     * response
-     * @exception ClassNotFoundException some of the lookup service
-     * classes could not be found or downloaded
+     * @param str
+     *            the stream from which to unmarshal the response
+     * @exception IOException
+     *                                   an error occurred while unmarshaling the response
+     * @exception ClassNotFoundException
+     *                                   some of the lookup service classes could not be found or downloaded
      */
-    public IncomingUnicastResponse(InputStream str)
-	throws IOException, ClassNotFoundException
+    public IncomingUnicastResponse(InputStream str) throws IOException, ClassNotFoundException
     {
-	ObjectInputStream istr = new ObjectInputStream(str);
-	registrar =
-	    (ServiceRegistrar) new MarshalledInstance(
-                    (MarshalledObject)istr.readObject()).get(false);
-	int grpCount = istr.readInt();
-	groups = new String[grpCount];
-	for (int i = 0; i < groups.length; i++) {
-	    groups[i] = istr.readUTF();
-	}
+        ObjectInputStream istr = new ObjectInputStream(str);
+        registrar = (ServiceRegistrar) new MarshalledInstance((MarshalledObject) istr.readObject()).get(false);
+        int grpCount = istr.readInt();
+        groups = new String[grpCount];
+        for (int i = 0; i < groups.length; i++)
+        {
+            groups[i] = istr.readUTF();
+        }
     }
 
     /**
@@ -72,33 +69,33 @@ public class IncomingUnicastResponse {
      *
      * @return the lookup service registrar we have discovered
      */
-    public ServiceRegistrar getRegistrar() {
-	return registrar;
+    public ServiceRegistrar getRegistrar()
+    {
+        return registrar;
     }
 
     /**
-     * Return the set of groups of which the lookup service we
-     * discovered was a member when we discovered it.  This set may be
-     * out of date.
+     * Return the set of groups of which the lookup service we discovered was a member when we discovered it. This set
+     * may be out of date.
      *
-     * @return the set of groups to which the lookup service
-     *         was a member when we discovered it
-     *
+     * @return the set of groups to which the lookup service was a member when we discovered it
      * @see net.jini.core.lookup.ServiceRegistrar#getGroups
      */
-    public String[] getGroups() {
-	return groups;
+    public String[] getGroups()
+    {
+        return groups;
     }
 
-    public int hashCode() {
-	return registrar.hashCode();
+    public int hashCode()
+    {
+        return registrar.hashCode();
     }
 
     /**
      * Two responses are equal if they have the same registrar.
      */
-    public boolean equals(Object o) {
-	return o instanceof IncomingUnicastResponse &&
-	    ((IncomingUnicastResponse) o).registrar.equals(registrar);
+    public boolean equals(Object o)
+    {
+        return o instanceof IncomingUnicastResponse && ((IncomingUnicastResponse) o).registrar.equals(registrar);
     }
 }
