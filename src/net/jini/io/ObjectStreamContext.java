@@ -44,11 +44,14 @@ import java.util.Collection;
  * Examples of types that a context object might implement include
  * {@link net.jini.io.context.ClientHost} and
  * {@link net.jini.io.context.ClientSubject}.
+ * 
+ * (Michal Kleczek) Updated to use generics.
  *
  * @author	Sun Microsystems, Inc.
  * @since 2.0
  */
-public interface ObjectStreamContext {
+public interface ObjectStreamContext
+{
 
     /**
      * Returns this object stream's collection of context information
@@ -63,5 +66,5 @@ public interface ObjectStreamContext {
      *
      * @return	a collection of this stream's context objects
      */
-    Collection getObjectStreamContext();
+    Collection<?> getObjectStreamContext();
 }

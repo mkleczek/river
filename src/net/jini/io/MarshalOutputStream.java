@@ -25,7 +25,10 @@ import java.rmi.server.RMIClassLoaderSpi;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Collection;
+
+import net.codespaces.io.CodeSpacesOutputStream;
 import net.jini.loader.ClassLoading;
+
 /**
  * An extension of <code>ObjectOutputStream</code> that implements the
  * dynamic class loading semantics of Java(TM) Remote Method Invocation
@@ -55,12 +58,10 @@ import net.jini.loader.ClassLoading;
  * @author Sun Microsystems, Inc.
  * @since 2.0
  **/
-public class MarshalOutputStream
-    extends ObjectOutputStream
-    implements ObjectStreamContext
+public class MarshalOutputStream extends CodeSpacesOutputStream implements ObjectStreamContext
 {
     /** context for ObjectStreamContext implementation */
-    private final Collection context;
+    private final Collection<?> context;
 
     /**
      * Creates a new <code>MarshalOutputStream</code> that writes
@@ -89,23 +90,27 @@ public class MarshalOutputStream
      * @throws NullPointerException if <code>out</code> or
      * <code>context</code> is <code>null</code>
      **/
-    public MarshalOutputStream(OutputStream out, Collection context)
-	throws IOException
+    public MarshalOutputStream(OutputStream out,
+                               Collection<?> context)
+            throws IOException
     {
-	super(out);
-	if (context == null) {
-	    throw new NullPointerException();
-	}
-	this.context = context;
-        
-        AccessController.doPrivileged(new PrivilegedAction<Object>(){
+        super(out);
+        if (context == null)
+        {
+            throw new NullPointerException();
+        }
+        this.context = context;
+
+        AccessController.doPrivileged(new PrivilegedAction<Object>()
+        {
 
             @Override
-            public Object run() {
+            public Object run()
+            {
                 enableReplaceObject(true);
                 return null;
             }
-            
+
         });
     }
 
@@ -113,80 +118,10 @@ public class MarshalOutputStream
      * Returns the collection of context information objects that
      * was passed to this stream's constructor.
      **/
-    public Collection getObjectStreamContext() {
-	return context;
+    @Override
+    public Collection<?> getObjectStreamContext()
+    {
+        return context;
     }
 
-    /**
-     * Annotates the stream descriptor for the class <code>cl</code>.
-     *
-     * <p><code>MarshalOutputStream</code> implements this method as
-     * follows:
-     *
-     * <p>This method invokes {@link RMIClassLoaderSpi#getClassAnnotation
-     * RMIClassLoaderSpi.getClassAnnotation} with <code>cl</code> to get
-     * the appropriate class annotation string value (possibly
-     * <code>null</code>), and then it invokes this stream's {@link
-     * #writeAnnotation writeAnnotation} method with that string to
-     * record the annotation.
-     *
-     * @param cl the class to annotate
-     *
-     * @throws IOException if <code>writeAnnotation</code> throws an
-     * <code>IOException</code>
-     *
-     * @throws NullPointerException if <code>cl</code> is
-     * <code>null</code>
-     **/
-    protected void annotateClass(Class cl) throws IOException {
-	writeAnnotation(ClassLoading.getClassAnnotation(cl));
-    }
-
-    /**
-     * Annotates the stream descriptor for the proxy class
-     * <code>cl</code>.
-     *
-     * <p><code>MarshalOutputStream</code> implements this method as
-     * follows:
-     *
-     * <p>This method invokes {@link RMIClassLoaderSpi#getClassAnnotation
-     * RMIClassLoaderSpi.getClassAnnotation} with <code>cl</code> to get
-     * the appropriate class annotation string value (possibly
-     * <code>null</code>), and then it invokes this stream's {@link
-     * #writeAnnotation writeAnnotation} method with that string to
-     * record the annotation.
-     *
-     * @param cl the proxy class to annotate
-     *
-     * @throws IOException if <code>writeAnnotation</code> throws an
-     * <code>IOException</code>
-     *
-     * @throws NullPointerException if <code>cl</code> is
-     * <code>null</code>
-     **/
-    protected void annotateProxyClass(Class cl) throws IOException {
-	writeAnnotation(ClassLoading.getClassAnnotation(cl));
-    }
-
-    /**
-     * Writes a class annotation string value (possibly
-     * <code>null</code>) to be read by a corresponding
-     * <code>MarshalInputStream</code> implementation.
-     *
-     * <p><code>MarshalOutputStream</code> implements this method to
-     * just write the annotation value to this stream using {@link
-     * ObjectOutputStream#writeObject writeObject}.
-     *
-     * <p>A subclass can override this method to write the annotation
-     * to a different location.
-     *
-     * @param annotation the class annotation string value (possibly
-     * <code>null</code>) to write
-     *
-     * @throws IOException if I/O exception occurs writing the
-     * annotation
-     **/
-    protected void writeAnnotation(String annotation) throws IOException {
-	writeObject(annotation);
-    }
 }

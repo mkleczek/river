@@ -1,6 +1,3 @@
-import net.jini.security.TrustVerifier;
-import net.jini.security.proxytrust.ProxyTrustVerifier;
-
 module net.codespaces.river.io
 {
 
@@ -13,6 +10,6 @@ module net.codespaces.river.io
     requires java.rmi;
     requires transitive net.codespaces.river.core;
 
-    provides TrustVerifier with ProxyTrustVerifier;
+    requires transitive net.codespaces.access;
 
 }
