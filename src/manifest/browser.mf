@@ -1,3 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: org.apache.river.example.browser.Browser
-Class-Path: jsk-platform.jar jsk-lib.jar serviceui.jar

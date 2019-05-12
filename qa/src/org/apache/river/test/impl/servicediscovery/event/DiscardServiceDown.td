@@ -1,4 +1,0 @@
-testClass=DiscardServiceDown
-testCategories=servicediscovery,servicediscovery_impl,servicediscoveryevent,implservicediscovery,implservicediscoveryevent,discardproblem
-include0=../servicediscovery.properties
-include1=org/apache/river/test/impl/servicediscovery/event/Discard.properties
