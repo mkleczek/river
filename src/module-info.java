@@ -8,8 +8,8 @@ module net.codespaces.river.io
 
     requires java.logging;
     requires java.rmi;
-    requires transitive net.codespaces.river.core;
+    requires net.codespaces.river.core;
 
-    requires transitive net.codespaces.access;
+    requires net.codespaces.access;
 
 }
