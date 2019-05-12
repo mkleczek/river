@@ -52,6 +52,12 @@ import org.apache.river.landlord.LeaseFactory;
 import org.apache.river.landlord.LeasePeriodPolicy;
 import org.apache.river.landlord.LocalLandlord;
 import org.apache.river.lookup.entry.BasicServiceType;
+import org.apache.river.norm.dl.AdminProxy;
+import org.apache.river.norm.dl.GetLeasesResult;
+import org.apache.river.norm.dl.NormProxy;
+import org.apache.river.norm.dl.NormServer;
+import org.apache.river.norm.dl.ProxyVerifier;
+import org.apache.river.norm.dl.SetProxy;
 import org.apache.river.norm.event.EventType;
 import org.apache.river.norm.event.EventTypeGenerator;
 import org.apache.river.norm.event.SendMonitor;
@@ -95,16 +101,16 @@ import net.jini.security.proxytrust.TrustEquivalence;
  *
  * @author Sun Microsystems, Inc.
  */
-abstract class NormServerBaseImpl implements NormServer, LocalLandlord, ServerProxyTrust, ProxyAccessor, Startable
+public abstract class NormServerBaseImpl implements NormServer, LocalLandlord, ServerProxyTrust, ProxyAccessor, Startable
 {
     /** Current version of log format */
     private static final int CURRENT_LOG_VERSION = 2;
 
     /** Logger and configuration component name for Norm */
-    static final String NORM = "org.apache.river.norm";
+    public static final String NORM = "org.apache.river.norm";
 
     /** Logger for logging information about this instance */
-    static final Logger logger = Logger.getLogger(NORM);
+    protected static final Logger logger = Logger.getLogger(NORM);
 
     /** Whether this server is persistent. */
     final boolean persistent;
@@ -142,7 +148,7 @@ abstract class NormServerBaseImpl implements NormServer, LocalLandlord, ServerPr
     final private ProxyPreparer recoveredLocatorPreparer;
 
     /** The exporter for exporting and unexporting */
-    final Exporter exporter;
+    protected final Exporter exporter;
 
     /** Object to notify when this service is destroyed, or null */
     final private LifeCycle lifeCycle;
@@ -1918,7 +1924,7 @@ abstract class NormServerBaseImpl implements NormServer, LocalLandlord, ServerPr
      * Portion of construction that is common between the activatable and not activatable cases. This method performs
      * the minimum number of operations before establishing the Subject, and logs errors.
      */
-    static NormServerInitializer init(String[] configOptions,
+    protected static NormServerInitializer init(String[] configOptions,
                                       final NormServerInitializer init)
             throws Exception
     {
@@ -1964,7 +1970,7 @@ abstract class NormServerBaseImpl implements NormServer, LocalLandlord, ServerPr
      * @param e
      *          the exception produced by the failure
      */
-    static void initFailed(Throwable e) throws Exception
+    protected static void initFailed(Throwable e) throws Exception
     {
         String message = null;
         if (e instanceof InitException)
@@ -2186,7 +2192,7 @@ abstract class NormServerBaseImpl implements NormServer, LocalLandlord, ServerPr
     /**
      * Creates an instance of this class.
      */
-    NormServerBaseImpl(NormServerInitializer init)
+    protected NormServerBaseImpl(NormServerInitializer init)
     {
         persistent = init.persistent;
         lifeCycle = init.lifeCycle;

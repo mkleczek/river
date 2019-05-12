@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.river.norm;
+package org.apache.river.norm.start;
 
 import java.rmi.MarshalledObject;
 import java.rmi.RemoteException;
@@ -27,6 +27,8 @@ import java.util.logging.Level;
 
 import org.apache.river.config.Config;
 import org.apache.river.logging.Levels;
+import org.apache.river.norm.NormServerBaseImpl;
+import org.apache.river.norm.NormServerInitializer;
 
 import net.jini.activation.ActivationExporter;
 import net.jini.config.Configuration;
@@ -45,7 +47,7 @@ import net.jini.security.ProxyPreparer;
  * @author Sun Microsystems, Inc.
  * @since 2.0
  */
-class ActivatableNormServerImpl extends NormServerBaseImpl
+public final class ActivatableNormServerImpl extends NormServerBaseImpl
 {
     /** Our activation ID */
     private final ActivationID activationID;
@@ -147,7 +149,7 @@ class ActivatableNormServerImpl extends NormServerBaseImpl
             super(persistent, null);
         }
 
-        void initAsSubject(Configuration config) throws Exception
+        protected void initAsSubject(Configuration config) throws Exception
         {
             ProxyPreparer activationSystemPreparer = (ProxyPreparer) Config.getNonNullEntry(config, NORM,
                     "activationSystemPreparer", ProxyPreparer.class, new BasicProxyPreparer());

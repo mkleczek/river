@@ -15,22 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.river.norm;
+package org.apache.river.norm.start;
 
+import org.apache.river.norm.NormServerBaseImpl;
+import org.apache.river.norm.NormServerInitializer;
 import org.apache.river.start.LifeCycle;
 
 /**
- * Provides a persistent, non-activatable implementation of NormServer.
+ * Provides a transient implementation of NormServer.
  *
  * @author Sun Microsystems, Inc.
  * @since 2.0
  */
-class PersistentNormServerImpl extends NormServerBaseImpl
+public final class TransientNormServerImpl extends NormServerBaseImpl
 {
 
     /**
-     * Provides a constructor for a persistent, non-activatable implementation of NormServer suitable for use with
-     * {@link ServiceStarter}.
+     * Provides a constructor for a transient implementation of NormServer suitable for use with {@link ServiceStarter}.
      *
      * @param configOptions
      *                      the arguments to use when creating the configuration for the server
@@ -39,10 +40,10 @@ class PersistentNormServerImpl extends NormServerBaseImpl
      * @throws Exception
      *                   if there is a problem creating the server
      */
-    PersistentNormServerImpl(String[] configOptions,
-                             LifeCycle lifeCycle)
+    TransientNormServerImpl(String[] configOptions,
+                            LifeCycle lifeCycle)
             throws Exception
     {
-        super(init(configOptions, new NormServerInitializer(true /* persistent */, lifeCycle)));
+        super(init(configOptions, new NormServerInitializer(false /* persistent */, lifeCycle)));
     }
 }

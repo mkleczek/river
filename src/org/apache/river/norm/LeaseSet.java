@@ -27,6 +27,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.river.landlord.LeasedResource;
+import org.apache.river.norm.dl.NormServer;
+import org.apache.river.norm.dl.SetProxy;
+import org.apache.river.norm.event.EventFactory;
+import org.apache.river.norm.event.EventType;
+import org.apache.river.norm.event.EventTypeGenerator;
+import org.apache.river.norm.event.SendMonitor;
+
 import net.jini.core.event.EventRegistration;
 import net.jini.core.event.RemoteEvent;
 import net.jini.core.event.RemoteEventListener;
@@ -36,12 +44,6 @@ import net.jini.io.MarshalledInstance;
 import net.jini.lease.ExpirationWarningEvent;
 import net.jini.lease.LeaseRenewalSet;
 import net.jini.security.ProxyPreparer;
-
-import org.apache.river.landlord.LeasedResource;
-import org.apache.river.norm.event.EventFactory;
-import org.apache.river.norm.event.EventType;
-import org.apache.river.norm.event.EventTypeGenerator;
-import org.apache.river.norm.event.SendMonitor;
 
 /**
  * Norm's internal representation of LeaseRenewalSets.  Unless otherwise

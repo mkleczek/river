@@ -1,5 +1,8 @@
 module net.codespaces.river.norm
 {
+    
+    exports org.apache.river.norm.start;
+    opens org.apache.river.norm.start;
 
     requires java.logging;
 
@@ -9,5 +12,7 @@ module net.codespaces.river.norm
     requires net.codespaces.river.services.api;
 
     requires net.codespaces.river.util.server;
+    
+    requires net.codespaces.river.norm.dl;
 
 }

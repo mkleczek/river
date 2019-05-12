@@ -14,6 +14,11 @@
 	<dependencies>
 		<dependency>
 			<groupId>net.codespaces</groupId>
+			<artifactId>net.codespaces.river.norm.dl</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>net.codespaces</groupId>
 			<artifactId>net.codespaces.river.jeri.tcp</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
@@ -36,6 +41,16 @@
 			<groupId>net.codespaces</groupId>
 			<artifactId>net.codespaces.river.services.api</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>net.codespaces</groupId>
+			<artifactId>net.codespaces.access</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.codespaces</groupId>
+			<artifactId>net.codespaces.core</artifactId>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 

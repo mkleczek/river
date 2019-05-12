@@ -45,7 +45,7 @@ import net.jini.security.ProxyPreparer;
  * synchronization by reducing scope to mutable fields and references 
  * to mutable objects.
  */
-class NormServerInitializer {
+public class NormServerInitializer {
     boolean persistent;
     LifeCycle lifeCycle;
     LoginContext loginContext;
@@ -77,7 +77,7 @@ class NormServerInitializer {
      * @param persistent true if implementation is persistent
      * @param lifeCycle object to notify when NormServer is destroyed.
      */
-    NormServerInitializer(boolean persistent, LifeCycle lifeCycle) {
+    public NormServerInitializer(boolean persistent, LifeCycle lifeCycle) {
         this.persistent = persistent;
         this.lifeCycle = lifeCycle;
     }
@@ -86,7 +86,7 @@ class NormServerInitializer {
      * Common construction for activatable and non-activatable cases, run
      * under the proper Subject.
      */
-    void initAsSubject(Configuration config) throws Exception {
+    protected void initAsSubject(Configuration config) throws Exception {
         this.config = config;
         /* Get configuration entries first */
         if (persistent) {
