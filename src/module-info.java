@@ -8,4 +8,6 @@ module net.codespaces.river.reggie.dl
     requires transitive net.codespaces.river.services.api;
     requires net.codespaces.river.base;
 
+    requires transitive net.codespaces.core;
+
 }
