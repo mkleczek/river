@@ -130,6 +130,7 @@ import org.apache.river.thread.ReadersWriter;
 import org.apache.river.thread.ReadersWriter.ConcurrentLockException;
 import org.apache.river.thread.SynchronousExecutors;
 
+import net.codespaces.core.ClassAnnotation;
 import net.jini.activation.ActivationExporter;
 import net.jini.activation.ActivationGroup;
 import net.jini.config.Configuration;
@@ -181,7 +182,7 @@ import net.jini.security.proxytrust.ServerProxyTrust;
  *
  * @author Sun Microsystems, Inc.
  */
-class RegistrarImpl implements Registrar, ProxyAccessor, ServerProxyTrust, Startable
+public class RegistrarImpl implements Registrar, ProxyAccessor, ServerProxyTrust, Startable
 {
 
     /** Maximum minMax lease duration for both services and events */
@@ -413,7 +414,7 @@ class RegistrarImpl implements Registrar, ProxyAccessor, ServerProxyTrust, Start
      * to/from disk. A RegistrarImpl instance cannot be constructed as both activatable and non-persistent. If lifeCycle
      * is non-null, its unregister method is invoked during shutdown.
      */
-    RegistrarImpl(String[] configArgs,
+    protected RegistrarImpl(String[] configArgs,
                   final ActivationID activationID,
                   final boolean persistent,
                   final LifeCycle lifeCycle)
@@ -429,7 +430,7 @@ class RegistrarImpl implements Registrar, ProxyAccessor, ServerProxyTrust, Start
      * RegistrarImpl instance cannot be constructed as both activatable and non-persistent. If lifeCycle is non-null,
      * its unregister method is invoked during shutdown.
      */
-    RegistrarImpl(final Configuration config,
+    protected RegistrarImpl(final Configuration config,
                   final ActivationID activationID,
                   final boolean persistent,
                   final LifeCycle lifeCycle)
@@ -4478,7 +4479,7 @@ class RegistrarImpl implements Registrar, ProxyAccessor, ServerProxyTrust, Start
                                  ServiceType[] bases,
                                  String prefix,
                                  ServiceType type,
-                                 String codebase)
+                                 ClassAnnotation codebase)
     {
         if (types.contains(type))
             return;
@@ -5059,7 +5060,7 @@ class RegistrarImpl implements Registrar, ProxyAccessor, ServerProxyTrust, Start
     }
 
     /** Return any valid codebase for an entry class that has instances. */
-    private String pickCodebase(EntryClass eclass,
+    private ClassAnnotation pickCodebase(EntryClass eclass,
                                 long now)
             throws ClassNotFoundException
     {
@@ -5081,7 +5082,7 @@ class RegistrarImpl implements Registrar, ProxyAccessor, ServerProxyTrust, Start
     }
 
     /** Return any valid codebase for an entry of the exact given class. */
-    private String pickCodebase(EntryClass eclass,
+    private ClassAnnotation pickCodebase(EntryClass eclass,
                                 ArrayList svcs,
                                 long now)
             throws ClassNotFoundException
@@ -5755,7 +5756,7 @@ class RegistrarImpl implements Registrar, ProxyAccessor, ServerProxyTrust, Start
     private EntryClassBase[] getEntryClassesDo(Template tmpl)
     {
         List<EntryClass> classes = new LinkedList<EntryClass>();
-        List<String> codebases = new LinkedList<String>();
+        List<ClassAnnotation> codebases = new LinkedList<ClassAnnotation>();
         if (tmpl.serviceID == null && isEmpty(tmpl.serviceTypes) && isEmpty(tmpl.attributeSetTemplates))
         {
             long now = System.currentTimeMillis();
@@ -5866,7 +5867,7 @@ class RegistrarImpl implements Registrar, ProxyAccessor, ServerProxyTrust, Start
                                                 String prefix)
     {
         List<ServiceType> classes = new LinkedList<ServiceType>();
-        List<String> codebases = new LinkedList<String>();
+        List<ClassAnnotation> codebases = new LinkedList<ClassAnnotation>();
         if (tmpl.serviceID == null && isEmpty(tmpl.attributeSetTemplates))
         {
             List services = matchingServices(tmpl.serviceTypes);

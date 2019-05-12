@@ -16,8 +16,9 @@
  * limitations under the License.
  */
 
-package org.apache.river.reggie;
+package org.apache.river.reggie.start;
 
+import org.apache.river.reggie.RegistrarImpl;
 import org.apache.river.start.LifeCycle;
 
 import net.jini.config.Configuration;

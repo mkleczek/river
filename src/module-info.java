@@ -8,5 +8,6 @@ module net.codespaces.river.reggie
     requires net.codespaces.river.jeri.tcp;
 
     requires net.codespaces.river.util.server;
+    requires net.codespaces.river.base;
 
 }

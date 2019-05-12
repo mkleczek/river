@@ -16,11 +16,12 @@
  * limitations under the License.
  */
 
-package org.apache.river.reggie;
+package org.apache.river.reggie.start;
 
 import java.rmi.MarshalledObject;
 import java.rmi.activation.ActivationID;
 
+import org.apache.river.reggie.RegistrarImpl;
 import org.apache.river.start.LifeCycle;
 
 import net.jini.io.MarshalledInstance;
@@ -38,7 +39,7 @@ public class PersistentRegistrarImpl extends RegistrarImpl {
      * configuration obtained using the provided arguments.  If lifeCycle is
      * non-null, then its unregister method is invoked during service shutdown.
      */
-    protected PersistentRegistrarImpl(String[] configArgs, LifeCycle lifeCycle)
+    public PersistentRegistrarImpl(String[] configArgs, LifeCycle lifeCycle)
 	throws Exception
     {
 	super(configArgs, null, true, lifeCycle);
@@ -49,7 +50,7 @@ public class PersistentRegistrarImpl extends RegistrarImpl {
      * the given activation ID, based on a configuration obtained using
      * the provided marshalled string array.
      */
-    PersistentRegistrarImpl(ActivationID activationID, MarshalledObject data)
+    public PersistentRegistrarImpl(ActivationID activationID, MarshalledObject data)
 	throws Exception
     {
 	super((String[]) new MarshalledInstance(data).get(false), activationID, true, null);
