@@ -18,11 +18,6 @@
 
 package net.jini.jeri.ssl;
 
-import org.apache.river.jeri.internal.http.ConnectionTimer;
-import org.apache.river.jeri.internal.http.HttpServerConnection;
-import org.apache.river.jeri.internal.http.HttpServerManager;
-import org.apache.river.jeri.internal.http.HttpSettings;
-import org.apache.river.logging.Levels;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -41,6 +36,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.net.ServerSocketFactory;
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLContext;
@@ -53,6 +49,13 @@ import javax.net.ssl.X509TrustManager;
 import javax.security.auth.Subject;
 import javax.security.auth.x500.X500Principal;
 import javax.security.auth.x500.X500PrivateCredential;
+
+import org.apache.river.jeri.internal.http.ConnectionTimer;
+import org.apache.river.jeri.internal.http.HttpServerConnection;
+import org.apache.river.jeri.internal.http.HttpServerManager;
+import org.apache.river.jeri.internal.http.HttpSettings;
+import org.apache.river.logging.Levels;
+
 import net.jini.core.constraint.ClientAuthentication;
 import net.jini.core.constraint.ClientMaxPrincipal;
 import net.jini.core.constraint.ClientMaxPrincipalType;
@@ -77,12 +80,14 @@ import net.jini.jeri.BasicJeriExporter;
 import net.jini.jeri.Endpoint;
 import net.jini.jeri.InboundRequest;
 import net.jini.jeri.RequestDispatcher;
-import net.jini.jeri.ServerEndpoint.ListenEndpoint;
-import net.jini.jeri.ServerEndpoint.ListenHandle;
 import net.jini.jeri.ServerEndpoint;
 import net.jini.jeri.connection.InboundRequestHandle;
 import net.jini.jeri.connection.ServerConnection;
 import net.jini.jeri.connection.ServerConnectionManager;
+import net.jini.jeri.ssl.internal.ConfidentialityStrength;
+import net.jini.jeri.ssl.internal.HttpsEndpoint;
+import net.jini.jeri.ssl.internal.SslServerEndpointImpl;
+import net.jini.jeri.ssl.internal.Utilities;
 import net.jini.security.AuthenticationPermission;
 import net.jini.security.SecurityContext;
 
@@ -538,8 +543,7 @@ public final class HttpsServerEndpoint implements ServerEndpoint {
 				SocketFactory socketFactory,
 				ServerSocketFactory serverSocketFactory)
     {
-	impl = new HttpsServerEndpointImpl(
-	    this, serverSubject, serverPrincipals,
+	impl = new HttpsServerEndpointImpl(serverSubject, serverPrincipals,
 	    serverHost, port, socketFactory, serverSocketFactory);
 	logger.log(Level.FINE, "created {0}", this);
     }
@@ -839,7 +843,7 @@ public final class HttpsServerEndpoint implements ServerEndpoint {
     private static final class HttpsServerEndpointImpl
 	extends SslServerEndpointImpl
     {
-	HttpsServerEndpointImpl(ServerEndpoint serverEndpoint,
+	HttpsServerEndpointImpl(
 				Subject serverSubject,
 				X500Principal[] serverPrincipals,
 				String serverHost,
@@ -847,7 +851,7 @@ public final class HttpsServerEndpoint implements ServerEndpoint {
 				SocketFactory socketFactory,
 				ServerSocketFactory serverSocketFactory)
 	{
-	    super(serverEndpoint, serverSubject, serverPrincipals,
+	    super(serverSubject, serverPrincipals,
 		  serverHost, port, socketFactory, serverSocketFactory);
 	}
 
@@ -1073,7 +1077,7 @@ public final class HttpsServerEndpoint implements ServerEndpoint {
 		super(listenHandle, socket);
 	    }
 
-	    void closeInternal(boolean removeFromListener) throws IOException {
+	    protected void closeInternal(boolean removeFromListener) throws IOException {
 		synchronized (this) {
 		    if (closed) {
 			return;

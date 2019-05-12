@@ -72,6 +72,8 @@ import net.jini.jeri.ServerEndpoint.ListenContext;
 import net.jini.jeri.ServerEndpoint.ListenEndpoint;
 import net.jini.jeri.ServerEndpoint;
 import net.jini.jeri.connection.ServerConnectionManager;
+import net.jini.jeri.ssl.internal.SslServerEndpointImpl;
+import net.jini.jeri.ssl.internal.Utilities;
 import net.jini.security.AuthenticationPermission;
 import net.jini.security.SecurityContext;
 
@@ -314,37 +316,10 @@ import net.jini.security.SecurityContext;
  *	requirements and preferences.
  * </ul>
  */
-public final class SslServerEndpoint implements ServerEndpoint {
+public abstract class SslServerEndpoint implements ServerEndpoint {
 
-    /* -- Fields -- */
-
-    /** Server logger */
-    static final Logger logger = Utilities.serverLogger;
-
-    /** Implementation delegate. */
-    final SslServerEndpointImpl impl;
-
-    /* -- Methods -- */
-
-    /**
-     * Returns a TLS/SSL server endpoint for the specified port. Uses the
-     * <code>null</code> server host (which requests that {@link
-     * #enumerateListenEndpoints enumerateListenEndpoints} compute the default
-     * server host), the subject associated with the current access control
-     * context, the principals in the subject with appropriate public and
-     * private credentials for which the caller has {@link
-     * AuthenticationPermission} to listen, and <code>null</code> socket
-     * factories to create default sockets. A <code>port</code> of
-     * <code>0</code> requests listening on any free port.
-     *
-     * @param port the port on which to listen for connections, or
-     *	      <code>0</code> for any free port
-     * @return an <code>SslServerEndpoint</code> instance
-     * @throws IllegalArgumentException if <code>port</code> is negative or
-     *	       greater than <code>65535</code>
-     */
     public static SslServerEndpoint getInstance(int port) {
-	return new SslServerEndpoint(null, null, null, port, null, null);
+	return new SslServerEndpointImpl(null, null, null, port, null, null);
     }
 
     /**
@@ -367,7 +342,7 @@ public final class SslServerEndpoint implements ServerEndpoint {
      *	       greater than <code>65535</code>
      */
     public static SslServerEndpoint getInstance(String serverHost, int port) {
-	return new SslServerEndpoint(null, null, serverHost, port, null, null);
+	return new SslServerEndpointImpl(null, null, serverHost, port, null, null);
     }
 
     /**
@@ -402,7 +377,7 @@ public final class SslServerEndpoint implements ServerEndpoint {
 	SocketFactory socketFactory,
 	ServerSocketFactory serverSocketFactory)
     {
-	return new SslServerEndpoint(null, null, serverHost, port,
+	return new SslServerEndpointImpl(null, null, serverHost, port,
 				     socketFactory, serverSocketFactory);
     }
 
@@ -444,7 +419,7 @@ public final class SslServerEndpoint implements ServerEndpoint {
 	String serverHost,
 	int port)
     {
-	return new SslServerEndpoint(serverSubject, serverPrincipals,
+	return new SslServerEndpointImpl(serverSubject, serverPrincipals,
 				     serverHost, port, null, null);
     }
 
@@ -495,312 +470,9 @@ public final class SslServerEndpoint implements ServerEndpoint {
 	SocketFactory socketFactory,
 	ServerSocketFactory serverSocketFactory)
     {
-	return new SslServerEndpoint(serverSubject, serverPrincipals,
+	return new SslServerEndpointImpl(serverSubject, serverPrincipals,
 				     serverHost, port, socketFactory,
 				     serverSocketFactory);
     }
 
-    /** Creates an instance of this class. */
-    private SslServerEndpoint(Subject serverSubject,
-			      X500Principal[] serverPrincipals,
-			      String serverHost,
-			      int port,
-			      SocketFactory socketFactory,
-			      ServerSocketFactory serverSocketFactory)
-    {
-	impl = new SslServerEndpointImpl(
-	    this, serverSubject, serverPrincipals,
-	    serverHost, port, socketFactory, serverSocketFactory);
-	logger.log(Level.FINE, "created {0}", this);
-    }
-
-    /**
-     * Returns the host name that will be used in {@link SslEndpoint} instances
-     * created by listening on this object, or <code>null</code> if {@link
-     * #enumerateListenEndpoints enumerateListenEndpoints} will use the default
-     * server host.
-     *
-     * @return the host name to use in <code>SslEndpoint</code> instances
-     *	       created by listening on this object, or <code>null</code> if
-     *	       using the default
-     */
-    public String getHost() {
-	return impl.serverHost;
-    }
-
-    /**
-     * Returns the TCP port on which this object listens for connections, or
-     * <code>0</code> if it selects a free port.
-     *
-     * @return the TCP port on which this object listens for connections, or
-     *	       <code>0</code> if it selects a free port
-     */
-    public int getPort() {
-	return impl.port;
-    }
-
-    /**
-     * Returns an immutable set of the principals that this instance uses for
-     * authentication, or <code>null</code> if it is anonymous.
-     *
-     * @return an immutable set of the principals or <code>null</code>
-     */
-    public Set getPrincipals() {
-	return impl.serverPrincipals == null
-	    ? null : Collections.unmodifiableSet(impl.serverPrincipals);
-    }
-
-    /**
-     * Returns the socket factory that the associated {@link SslEndpoint}
-     * instances created by listening on this server endpoint use to create
-     * {@link Socket} instances, or <code>null</code> if they use default
-     * sockets.
-     *
-     * @return the socket factory that associated endpoints use to create
-     *	       sockets, or <code>null</code> if they use default sockets
-     */
-    public SocketFactory getSocketFactory() {
-	return impl.socketFactory;
-    }
-
-    /**
-     * Returns the server socket factory that this server endpoint uses to
-     * create {@link ServerSocket} instances, or <code>null</code> if it uses
-     * default server sockets.
-     *
-     * @return the server socket factory that this server endpoint uses to
-     *	       create server sockets, or <code>null</code> if it uses default
-     *	       server sockets
-     */
-    public ServerSocketFactory getServerSocketFactory() {
-	return impl.serverSocketFactory;
-    }
-
-    /** Returns a string representation of this object. */
-    public String toString() {
-	return "SslServerEndpoint" + impl.fieldsToString();
-    }
-
-    /* -- Implement ServerCapabilities -- */
-
-    /**
-     * Checks that it is possible to receive requests that either
-     * fully or partially satisfy the specified requirements, and
-     * returns any constraints that must be fully or partially
-     * implemented by higher layers in order to fully satisfy all of
-     * the specified requirements. <p>
-     *
-     * This implementation only returns {@link Integrity#YES} constraints.
-     *
-     * @throws SecurityException if the current security context does not have
-     *	       the permissions necessary to perform this operation
-     * @throws NullPointerException if <code>constraints</code> is
-     *	       <code>null</code>
-     */
-    public InvocationConstraints checkConstraints(
-	InvocationConstraints constraints)
-	throws UnsupportedConstraintException
-    {
-	return impl.checkConstraints(constraints);
-    }
-
-    /* -- Implement ServerEndpoint -- */
-
-    /** Returns a hash code value for this object. */
-    public int hashCode() {
-	return impl.hashCode();
-    }
-
-    /**
-     * Two instances of this class are equal if they have server subjects that
-     * compare equal using <code>==</code>; have server principals that are
-     * either both <code>null</code> or are equal when compared as the elements
-     * of a {@link Set}; have the same values for server host and port; have
-     * socket factories that are either both <code>null</code>, or have the
-     * same actual class and are equal; and have server socket factories
-     * that are either both <code>null</code>, or have the same actual class
-     * and are equal.
-     */
-    public boolean equals(Object object) {
-	if (this == object) {
-	    return true;
-	} else {
-	    return object instanceof SslServerEndpoint &&
-		impl.equals(((SslServerEndpoint) object).impl);
-	}
-    }
-
-    /**
-     * Passes the {@link net.jini.jeri.ServerEndpoint.ListenEndpoint
-     * ListenEndpoint} for this <code>SslServerEndpoint</code> to
-     * <code>listenContext</code>, which will ensure an active listen
-     * operation on the endpoint, and returns an <code>SslEndpoint</code>
-     * instance corresponding to the listen operation chosen by
-     * <code>listenContext</code>. <p>
-     *
-     * If this server endpoint's server host is <code>null</code>, then the
-     * endpoint returned will contain the default server host. This method
-     * computes the default by invoking {@link InetAddress#getLocalHost
-     * InetAddress.getLocalHost} to obtain an <code>InetAddress</code> for the
-     * local host. If <code>InetAddress.getLocalHost</code> throws an
-     * exception, this method throws that exception. The default host name will
-     * be the string returned by invoking {@link InetAddress#getHostAddress
-     * getHostAddress} on that <code>InetAddress</code>. If there is a security
-     * manager, its {@link SecurityManager#checkConnect(String,int)
-     * checkConnect} method will be invoked with the string returned by
-     * invoking {@link InetAddress#getHostName getHostName} on that same
-     * <code>InetAddress</code> as the host argument and <code>-1</code> as the
-     * port argument; this could result in a
-     * <code>SecurityException</code>. <p>
-     *
-     * This method invokes <code>addListenEndpoint</code> on
-     * <code>listenContext</code> once, passing a <code>ListenEndpoint</code>
-     * as described below.  If <code>addListenEndpoint</code> throws an
-     * exception, then this method throws that exception.  Otherwise, this
-     * method returns an <code>SslEndpoint</code> instance with the host name
-     * described above, the TCP port number bound by the listen operation
-     * represented by the {@link net.jini.jeri.ServerEndpoint.ListenHandle
-     * ListenHandle} returned by <code>addListenEndpoint</code>, and the same
-     * <code>SocketFactory</code> as this <code>SslServerEndpoint</code>. <p>
-     *
-     * The <code>ListenEndpoint</code> passed to
-     * <code>addListenEndpoint</code> represents the server subject, server
-     * principals, TCP port number, and <code>ServerSocketFactory</code> of
-     * this <code>SslServerEndpoint</code>.  Its methods behave as follows: <p>
-     *
-     * {@link net.jini.jeri.ServerEndpoint.ListenEndpoint#listen ListenHandle
-     * listen(RequestDispatcher)}:
-     *
-     * <blockquote>
-     *
-     * Listens for requests received on this endpoint's TCP port, dispatching
-     * them to the supplied <code>RequestDispatcher</code> in the form of
-     * {@link InboundRequest} instances. <p>
-     *
-     * When the implementation of this method needs to create a new
-     * <code>ServerSocket</code>, it will do so by invoking one of the
-     * <code>createServerSocket</code> methods that returns a bound server
-     * socket on the contained <code>ServerSocketFactory</code> if
-     * non-<code>null</code>, or it will create a <code>ServerSocket</code>
-     * directly otherwise. <p>
-     *
-     * If there is a security manager, its {@link SecurityManager#checkListen
-     * checkListen} method will be invoked with this endpoint's TCP port; this
-     * could result in a <code>SecurityException</code>. In addition, for each
-     * server principal in this endpoint, the security manager's {@link
-     * SecurityManager#checkPermission checkPermission} method will be invoked
-     * with an {@link AuthenticationPermission} containing the server
-     * principal and the <code>listen</code> action; this could also result in
-     * a <code>SecurityException</code>.  Furthermore, before a given
-     * <code>InboundRequest</code> gets dispatched to the supplied request
-     * dispatcher, the security manager's {@link SecurityManager#checkAccept
-     * checkAccept} method must have been successfully invoked in the security
-     * context of this <code>listen</code> invocation with the remote IP
-     * address and port of the <code>Socket</code> used to receive the
-     * request, and if the server authenticated itself to the client, the
-     * security manager's <code>checkPermission</code> method must have been
-     * successfully invoked in the same context with an
-     * <code>AuthenticationPermission</code> containing that authenticated
-     * server principal as local principal, the client's authenticated
-     * principal (if any) as peer principal, and the <code>accept</code>
-     * action. The <code>checkPermissions</code> method of the dispatched
-     * <code>InboundRequest</code> also performs these latter security checks.
-     * (Note that in some cases, the implementation may carry out some of
-     * these security checks indirectly, such as through invocations of
-     * <code>ServerSocket</code>'s constructors or <code>accept</code>
-     * method.) <p>
-     *
-     * Requests will be dispatched in a {@link PrivilegedAction} wrapped by a
-     * {@link SecurityContext} obtained when this method was invoked, with the
-     * {@link AccessControlContext} of that <code>SecurityContext</code> in
-     * effect. <p>
-     *
-     * Dispatched requests will implement {@link
-     * InboundRequest#populateContext populateContext} to populate the given
-     * collection with an element that implements the {@link ClientHost}
-     * interface, and an element that implements the {@link ClientSubject}
-     * interface. The <code>ClientHost</code> element implements {@link
-     * ClientHost#getClientHost getClientHost} to return the IP address of the
-     * <code>Socket</code> that the request was received over (see {@link
-     * Socket#getInetAddress}). <p>
-     *
-     * Throws {@link IOException} if an I/O exception occurs while performing
-     * this operation, such as if the TCP port is already in use. <p>
-     *
-     * Throws {@link SecurityException} if there is a security manager and an
-     * invocation of its <code>checkListen</code> or
-     * <code>checkPermission</code> method fails. <p>
-     *
-     * Throws {@link NullPointerException} if <code>requestDispatcher</code>
-     * is <code>null</code>
-     *
-     * </blockquote>
-     *
-     * {@link net.jini.jeri.ServerEndpoint.ListenEndpoint#checkPermissions
-     * void checkPermissions()}:
-     *
-     * <blockquote>
-     *
-     * Verifies that the current security context has all of the security
-     * permissions necessary to listen for requests on this endpoint. <p>
-     *
-     * If there is a security manager, its <code>checkListen</code> method
-     * will be invoked with this endpoint's TCP port; this could result in a
-     * <code>SecurityException</code>. In addition, for each server principal
-     * in this endpoint, the security manager's {@link
-     * SecurityManager#checkPermission checkPermission} method will be invoked
-     * with an {@link AuthenticationPermission} containing the server
-     * principal and the <code>listen</code> action; this could also result in
-     * a <code>SecurityException</code>. <p>
-     *
-     * Throws {@link SecurityException} if there is a security manager and an
-     * invocation of its <code>checkListen</code> or
-     * <code>checkPermission</code> method fails.
-     *
-     * </blockquote>
-     *
-     * {@link Object#equals boolean equals(Object)}:
-     *
-     * <blockquote>
-     *
-     * Compares the specified object with this <code>ListenEndpoint</code> for
-     * equality. <p>
-     *
-     * This method returns <code>true</code> if and only if the specified
-     * object is also a <code>ListenEndpoint</code> produced by an
-     * <code>SslServerEndpoint</code>, and the two listen endpoints both have
-     * server subjects that compare equal using <code>==</code>; have server
-     * principals that are either both <code>null</code> or are equal when
-     * compared as the elements of a {@link Set}; have the same values for TCP
-     * port; and have server socket factories that are either both
-     * <code>null</code>, or have the same actual class and are equal.
-     *
-     * </blockquote>
-     *
-     * @throws SecurityException if there is a security manager, and either its
-     *	       {@link SecurityManager#checkListen checkListen} method fails,
-     *	       or <code>serverHost</code> is <code>null</code> and the security
-     *	       manager's {@link SecurityManager#checkConnect checkConnect}
-     *	       method fails; or if the calling thread does not have permission
-     *	       to authenticate as each of the endpoint's server principals when
-     *	       listening for connections
-     * @throws IllegalArgumentException if an invocation of the
-     *	       <code>addListenEndpoint</code> method on the supplied
-     *	       <code>ListenContext</code> returns a <code>ListenCookie</code>
-     *	       that does not correspond to the <code>ListenEndpoint</code> that
-     *	       was passed to it
-     * @throws NullPointerException if <code>listenContext</code> is
-     *	       <code>null</code>
-     * @throws UnknownHostException if this instance's server host 
-     *	       is <code>null</code> and <code>InetAddress.getLocalHost</code>
-     *	       throws an <code>UnknownHostException</code>
-     * @throws UnsupportedConstraintException if the server subject is missing
-     *	       any of the endpoint's server principals or the associated
-     *	       credentials
-     */
-    public Endpoint enumerateListenEndpoints(ListenContext listenContext)
-	throws IOException
-    {
-	return impl.enumerateListenEndpoints(listenContext);
-    }
 }
