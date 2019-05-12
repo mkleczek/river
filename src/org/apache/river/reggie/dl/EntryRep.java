@@ -26,6 +26,7 @@ import java.rmi.RemoteException;
 import org.apache.river.proxy.MarshalledWrapper;
 import org.apache.river.reggie.dl.ClassMapper.EntryField;
 
+import net.codespaces.core.ClassAnnotation;
 import net.jini.core.entry.Entry;
 
 /**
@@ -53,7 +54,7 @@ public class EntryRep implements Serializable, Cloneable
      * 
      * @serial
      */
-    public String codebase;
+    public ClassAnnotation codebase;
     /**
      * The public fields of the Entry, each converted as necessary to a MarshalledWrapper (or left as is if of known
      * java.lang immutable type). The fields are in super- to subclass order.

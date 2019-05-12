@@ -34,6 +34,8 @@ import java.util.StringTokenizer;
 import org.apache.river.proxy.CodebaseProvider;
 import org.apache.river.proxy.MarshalledWrapper;
 
+import net.codespaces.core.ClassAnnotation;
+
 /**
  * A ServiceType is a descriptor for a class, packaged up for transmission between client-side proxies and the registrar
  * server. Instances are never visible to clients, they are private to the communication between the proxies and the
@@ -223,11 +225,11 @@ public class ServiceType implements Serializable
      *                 String the codebase to load the class from
      * @return Class the class this descriptor represents
      */
-    public Class toClass(String codebase) throws IOException, ClassNotFoundException
+    public Class toClass(ClassAnnotation codebase) throws IOException, ClassNotFoundException
     {
         if (name.charAt(0) != ';')
         {
-            return CodebaseProvider.loadClass(codebase, name, null, integrity, null);
+            return CodebaseProvider.loadClass(codebase, name);
         }
         StringTokenizer st = new StringTokenizer(name, ";");
         String[] ifs = new String[st.countTokens()];
@@ -235,7 +237,7 @@ public class ServiceType implements Serializable
         {
             ifs[i] = st.nextToken();
         }
-        return CodebaseProvider.loadProxyClass(codebase, ifs, null, integrity, null);
+        return CodebaseProvider.loadProxyClass(codebase, ifs);
     }
 
     /**

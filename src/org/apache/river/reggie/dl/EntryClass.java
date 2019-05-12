@@ -31,6 +31,8 @@ import java.security.MessageDigest;
 import org.apache.river.proxy.CodebaseProvider;
 import org.apache.river.proxy.MarshalledWrapper;
 
+import net.codespaces.core.ClassAnnotation;
+
 /**
  * An EntryClass is a descriptor for an entry class, packaged up for transmission between client-side proxies and the
  * registrar server. Instances are never visible to clients, they are private to the communication between the proxies
@@ -175,9 +177,9 @@ public class EntryClass implements Serializable
     }
 
     // Converts this type descriptor to a Class object
-    public Class toClass(String codebase) throws IOException, ClassNotFoundException
+    public Class toClass(ClassAnnotation codebase) throws IOException, ClassNotFoundException
     {
-        Class cls = CodebaseProvider.loadClass(codebase, name, null, integrity, null);
+        Class cls = CodebaseProvider.loadClass(codebase, name);
         EntryClass local;
         try
         {

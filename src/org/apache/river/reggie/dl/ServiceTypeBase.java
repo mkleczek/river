@@ -21,6 +21,8 @@ import java.io.Serializable;
 
 import org.apache.river.proxy.CodebaseProvider;
 
+import net.codespaces.core.ClassAnnotation;
+
 /**
  * A ServiceType annotated with a codebase.
  *
@@ -42,11 +44,11 @@ public class ServiceTypeBase implements Serializable
      *
      * @serial
      */
-    public String codebase;
+    public ClassAnnotation codebase;
 
     /** Simple constructor */
     public ServiceTypeBase(ServiceType type,
-                           String codebase)
+                           ClassAnnotation codebase)
     {
         this.type = type;
         this.codebase = codebase;

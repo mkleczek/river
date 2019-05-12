@@ -32,6 +32,7 @@ import org.apache.river.action.GetBooleanAction;
 import org.apache.river.logging.Levels;
 import org.apache.river.proxy.MarshalledWrapper;
 
+import net.codespaces.core.ClassAnnotation;
 import net.jini.core.lookup.ServiceID;
 import net.jini.core.lookup.ServiceItem;
 import net.jini.security.Security;
@@ -89,7 +90,7 @@ public class Item implements Serializable, Cloneable
      *
      * @serial
      */
-    public final String codebase;
+    public final ClassAnnotation codebase;
     /**
      * ServiceItem.service as a MarshalledWrapper.
      *
@@ -140,7 +141,7 @@ public class Item implements Serializable, Cloneable
 
     public Item(ServiceID serviceID,
                 ServiceType serviceType,
-                String codebase,
+                ClassAnnotation codebase,
                 MarshalledWrapper service,
                 EntryRep[] attrSets)
     {

@@ -6,6 +6,6 @@ module net.codespaces.river.reggie.dl
     requires java.logging;
 
     requires transitive net.codespaces.river.services.api;
-    requires transitive net.codespaces.river.base;
+    requires net.codespaces.river.base;
 
 }

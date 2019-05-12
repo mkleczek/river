@@ -21,6 +21,8 @@ import java.io.Serializable;
 
 import org.apache.river.proxy.CodebaseProvider;
 
+import net.codespaces.core.ClassAnnotation;
+
 /**
  * An EntryClass annotated with a codebase.
  *
@@ -42,11 +44,11 @@ public class EntryClassBase implements Serializable
      *
      * @serial
      */
-    public String codebase;
+    public ClassAnnotation codebase;
 
     /** Simple constructor */
     public EntryClassBase(EntryClass eclass,
-                          String codebase)
+                          ClassAnnotation codebase)
     {
         this.eclass = eclass;
         this.codebase = codebase;
