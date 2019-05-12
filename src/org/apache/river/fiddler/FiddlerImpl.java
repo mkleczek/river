@@ -22,7 +22,14 @@ import org.apache.river.config.Config;
 import org.apache.river.constants.ThrowableConstants;
 import org.apache.river.constants.TimeConstants;
 import org.apache.river.constants.VersionConstants;
-
+import org.apache.river.fiddler.dl.Fiddler;
+import org.apache.river.fiddler.dl.FiddlerAdmin;
+import org.apache.river.fiddler.dl.FiddlerAdminProxy;
+import org.apache.river.fiddler.dl.FiddlerLease;
+import org.apache.river.fiddler.dl.FiddlerProxy;
+import org.apache.river.fiddler.dl.FiddlerRegistration;
+import org.apache.river.fiddler.dl.FiddlerRenewResults;
+import org.apache.river.fiddler.dl.ProxyVerifier;
 import org.apache.river.logging.Levels;
 
 import org.apache.river.lookup.entry.BasicServiceType;
@@ -170,7 +177,7 @@ import net.jini.io.MarshalledInstance;
  *
  * @author Sun Microsystems, Inc.
  */
-class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable {
+public class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable {
 
     /* Name of this component; used in config entry retrieval and the logger.*/
     static final String COMPONENT_NAME = "org.apache.river.fiddler";
@@ -434,7 +441,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *                                parameter is not a <code>String</code>
      *                                array.
      */
-    FiddlerImpl(ActivationID activationID,
+    protected FiddlerImpl(ActivationID activationID,
                 MarshalledObject data) throws IOException,
                                               ActivationException,
                                               ConfigurationException,
@@ -475,7 +482,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *                                fails while performing a JAAS login for
      *                                this service
      */
-    FiddlerImpl(String[] configArgs, LifeCycle lifeCycle, boolean persistent)
+    protected FiddlerImpl(String[] configArgs, LifeCycle lifeCycle, boolean persistent)
                                              throws IOException,
                                                     ConfigurationException,
                                                     LoginException
@@ -2506,7 +2513,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         there is a communication failure between the client and the
      *         lookup discovery service.
      *
-     * @see org.apache.river.fiddler.FiddlerAdminProxy#getLookupAttributes
+     * @see org.apache.river.fiddler.dl.FiddlerAdminProxy#getLookupAttributes
      * @see net.jini.admin.JoinAdmin#getLookupAttributes
      */
     public Entry[] getLookupAttributes()
@@ -2540,7 +2547,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         lookup discovery service. When this exception does occur, the
      *         attributes may or may not have been added successfully.
      *
-     * @see org.apache.river.fiddler.FiddlerAdminProxy#addLookupAttributes
+     * @see org.apache.river.fiddler.dl.FiddlerAdminProxy#addLookupAttributes
      * @see net.jini.admin.JoinAdmin#addLookupAttributes
      */
     public void addLookupAttributes(Entry[] attrSets)
@@ -2580,7 +2587,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         lookup discovery service. When this exception does occur, the
      *         attributes may or may not have been modified successfully.
      *
-     * @see org.apache.river.fiddler.FiddlerAdminProxy#modifyLookupAttributes
+     * @see org.apache.river.fiddler.dl.FiddlerAdminProxy#modifyLookupAttributes
      * @see net.jini.admin.JoinAdmin#modifyLookupAttributes
      */
     public void modifyLookupAttributes(Entry[] attrSetTemplates,
@@ -2618,7 +2625,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         there is a communication failure between the client and the
      *         lookup discovery service.
      *
-     * @see org.apache.river.fiddler.FiddlerAdminProxy#getLookupGroups
+     * @see org.apache.river.fiddler.dl.FiddlerAdminProxy#getLookupGroups
      * @see net.jini.admin.JoinAdmin#getLookupGroups
      */
     public String[] getLookupGroups()
@@ -2650,7 +2657,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         lookup discovery service. When this exception does occur, the
      *         group names may or may not have been added successfully.
      *
-     * @see org.apache.river.fiddler.FiddlerAdminProxy#addLookupGroups
+     * @see org.apache.river.fiddler.dl.FiddlerAdminProxy#addLookupGroups
      * @see net.jini.admin.JoinAdmin#addLookupGroups
      */
     public void addLookupGroups(String[] groups)
@@ -2690,7 +2697,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         lookup discovery service. When this exception does occur, the
      *         group names may or may not have been removed successfully.
      *
-     * @see org.apache.river.fiddler.FiddlerAdminProxy#removeLookupGroups
+     * @see org.apache.river.fiddler.dl.FiddlerAdminProxy#removeLookupGroups
      * @see net.jini.admin.JoinAdmin#removeLookupGroups
      */
     public void removeLookupGroups(String[] groups)
@@ -2726,7 +2733,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         lookup discovery service. When this exception does occur, the
      *         group names may or may not have been replaced successfully.
      *
-     * @see org.apache.river.fiddler.FiddlerAdminProxy#setLookupGroups
+     * @see org.apache.river.fiddler.dl.FiddlerAdminProxy#setLookupGroups
      * @see net.jini.admin.JoinAdmin#setLookupGroups
      */
     public void setLookupGroups(String[] groups)
@@ -2765,7 +2772,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         there is a communication failure between the client and the
      *         lookup discovery service.
      *
-     * @see org.apache.river.fiddler.FiddlerAdminProxy#getLookupLocators
+     * @see org.apache.river.fiddler.dl.FiddlerAdminProxy#getLookupLocators
      * @see net.jini.admin.JoinAdmin#getLookupLocators
      */
     public LookupLocator[] getLookupLocators()
@@ -2800,7 +2807,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         lookup discovery service. When this exception does occur, the
      *         new locators may or may not have been added successfully.
      *
-     * @see org.apache.river.fiddler.FiddlerAdminProxy#addLookupLocators
+     * @see org.apache.river.fiddler.dl.FiddlerAdminProxy#addLookupLocators
      * @see net.jini.admin.JoinAdmin#addLookupLocators
      */
     public void addLookupLocators(LookupLocator[] locators)
@@ -2844,7 +2851,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         lookup discovery service. When this exception does occur, the
      *         new locators may or may not have been removed successfully.
      *
-     * @see org.apache.river.fiddler.FiddlerAdminProxy#removeLookupLocators
+     * @see org.apache.river.fiddler.dl.FiddlerAdminProxy#removeLookupLocators
      * @see net.jini.admin.JoinAdmin#removeLookupLocators
      */
     public void removeLookupLocators(LookupLocator[] locators)
@@ -2890,7 +2897,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         locators in the managed set may or may not have been replaced
      *         successfully.
      *
-     * @see org.apache.river.fiddler.FiddlerAdminProxy#setLookupLocators
+     * @see org.apache.river.fiddler.dl.FiddlerAdminProxy#setLookupLocators
      * @see net.jini.admin.JoinAdmin#setLookupLocators
      */
     public void setLookupLocators(LookupLocator[] locators)
@@ -2935,7 +2942,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         lookup discovery service may or may not have been successfully
      *         destroyed.
      *
-     * @see org.apache.river.fiddler.FiddlerAdminProxy#destroy
+     * @see org.apache.river.fiddler.dl.FiddlerAdminProxy#destroy
      * @see org.apache.river.admin.DestroyAdmin#destroy
      */
     public void destroy() throws NoSuchObjectException, RemoteException {
@@ -2973,7 +2980,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         lookup discovery service. When this exception does occur, the
      *         bound value may or may not have been changed successfully.
      *
-     * @see org.apache.river.fiddler.FiddlerAdminProxy#setLeaseBound
+     * @see org.apache.river.fiddler.dl.FiddlerAdminProxy#setLeaseBound
      * @see org.apache.river.fiddler.FiddlerAdmin#setLeaseBound
      */
     public void setLeaseBound(long newBound)
@@ -3007,7 +3014,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         there is a communication failure between the client and the
      *         lookup discovery service.
      *
-     * @see org.apache.river.fiddler.FiddlerAdminProxy#getLeaseBound
+     * @see org.apache.river.fiddler.dl.FiddlerAdminProxy#getLeaseBound
      * @see org.apache.river.fiddler.FiddlerAdmin#getLeaseBound
      */
     public long getLeaseBound() throws NoSuchObjectException, RemoteException {
@@ -3035,7 +3042,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         lookup discovery service. When this exception does occur, the
      *         weight factor may or may not have been changed successfully.
      *
-     * @see org.apache.river.fiddler.FiddlerAdminProxy#setPersistenceSnapshotWeight
+     * @see org.apache.river.fiddler.dl.FiddlerAdminProxy#setPersistenceSnapshotWeight
      * @see org.apache.river.fiddler.FiddlerAdmin#setPersistenceSnapshotWeight
      */
     public void setPersistenceSnapshotWeight(float weight)
@@ -3066,7 +3073,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         there is a communication failure between the client and the
      *         lookup discovery service.
      *
-     * @see org.apache.river.fiddler.FiddlerAdminProxy#getPersistenceSnapshotWeight
+     * @see org.apache.river.fiddler.dl.FiddlerAdminProxy#getPersistenceSnapshotWeight
      * @see org.apache.river.fiddler.FiddlerAdmin#getPersistenceSnapshotWeight
      */
     public float getPersistenceSnapshotWeight()
@@ -3096,7 +3103,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         lookup discovery service. When this exception does occur, the
      *         threshold may or may not have been changed successfully.
      *
-     * @see org.apache.river.fiddler.FiddlerAdminProxy
+     * @see org.apache.river.fiddler.dl.FiddlerAdminProxy
      *                                       #setPersistenceSnapshotThreshold
      * @see org.apache.river.fiddler.FiddlerAdmin#setPersistenceSnapshotThreshold
      */
@@ -3127,7 +3134,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         there is a communication failure between the client and the
      *         lookup discovery service.
      *
-     * @see org.apache.river.fiddler.FiddlerAdminProxy
+     * @see org.apache.river.fiddler.dl.FiddlerAdminProxy
      *                                       #getPersistenceSnapshotThreshold
      * @see org.apache.river.fiddler.FiddlerAdmin#getPersistenceSnapshotThreshold
      */
@@ -3381,7 +3388,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         ThrowThis exception whenever the <code>registrationID</code>
      *         parameter references an invalid or non-existent registration.
      *
-     * @see org.apache.river.fiddler.FiddlerRegistration#getRegistrars
+     * @see org.apache.river.fiddler.dl.FiddlerRegistration#getRegistrars
      * @see net.jini.discovery.LookupDiscoveryRegistration#getRegistrars
      */
     public MarshalledObject[] getRegistrars(Uuid registrationID)
@@ -3443,7 +3450,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         <code>getRegistrars</code> method for more information on
      *         this exception.
      *
-     * @see org.apache.river.fiddler.FiddlerRegistration#getGroups
+     * @see org.apache.river.fiddler.dl.FiddlerRegistration#getGroups
      * @see net.jini.discovery.LookupDiscoveryRegistration#getGroups
      */
     public String[] getGroups(Uuid registrationID) 
@@ -3511,7 +3518,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         <code>getRegistrars</code> method for more information on
      *         this exception.
      *
-     * @see org.apache.river.fiddler.FiddlerRegistration#getLocators
+     * @see org.apache.river.fiddler.dl.FiddlerRegistration#getLocators
      * @see net.jini.discovery.LookupDiscoveryRegistration#getLocators
      */
     public LookupLocator[] getLocators(Uuid registrationID)
@@ -3612,7 +3619,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         <code>getRegistrars</code> method for more information on
      *         this exception.
      *
-     * @see org.apache.river.fiddler.FiddlerRegistration#addGroups
+     * @see org.apache.river.fiddler.dl.FiddlerRegistration#addGroups
      * @see net.jini.discovery.LookupDiscoveryRegistration#addGroups
      */
     public void addGroups(Uuid registrationID, String[] groups)
@@ -3709,7 +3716,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         <code>getRegistrars</code> method for more information on
      *         this exception.
      *
-     * @see org.apache.river.fiddler.FiddlerRegistration#setGroups
+     * @see org.apache.river.fiddler.dl.FiddlerRegistration#setGroups
      * @see net.jini.discovery.LookupDiscoveryRegistration#setGroups
      */
     public void setGroups(Uuid registrationID, String[] groups)
@@ -3809,7 +3816,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         <code>getRegistrars</code> method for more information on
      *         this exception.
      *
-     * @see org.apache.river.fiddler.FiddlerRegistration#removeGroups
+     * @see org.apache.river.fiddler.dl.FiddlerRegistration#removeGroups
      * @see net.jini.discovery.LookupDiscoveryRegistration#removeGroups
      */
     public void removeGroups(Uuid registrationID, String[] groups)
@@ -3918,7 +3925,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         <code>getRegistrars</code> method for more information on
      *         this exception.
      *
-     * @see org.apache.river.fiddler.FiddlerRegistration#addLocators
+     * @see org.apache.river.fiddler.dl.FiddlerRegistration#addLocators
      * @see net.jini.discovery.LookupDiscoveryRegistration#addLocators
      */
     public void addLocators(Uuid registrationID, LookupLocator[] locators)
@@ -4007,7 +4014,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         <code>getRegistrars</code> method for more information on
      *         this exception.
      *
-     * @see org.apache.river.fiddler.FiddlerRegistration#setLocators
+     * @see org.apache.river.fiddler.dl.FiddlerRegistration#setLocators
      * @see net.jini.discovery.LookupDiscoveryRegistration#setLocators
      */
     public void setLocators(Uuid registrationID, LookupLocator[] locators)
@@ -4093,7 +4100,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         <code>getRegistrars</code> method for more information on
      *         this exception.
      *
-     * @see org.apache.river.fiddler.FiddlerRegistration#removeLocators
+     * @see org.apache.river.fiddler.dl.FiddlerRegistration#removeLocators
      * @see net.jini.discovery.LookupDiscoveryRegistration#removeLocators
      */
     public void removeLocators(Uuid registrationID, LookupLocator[] locators)
@@ -4172,7 +4179,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *         <code>getRegistrars</code> method for more information on
      *         this exception.
      *
-     * @see org.apache.river.fiddler.FiddlerRegistration#discard
+     * @see org.apache.river.fiddler.dl.FiddlerRegistration#discard
      * @see net.jini.discovery.LookupDiscoveryRegistration#discard
      */
     public void discard(Uuid registrationID, ServiceRegistrar registrar)
@@ -4268,7 +4275,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      * @see net.jini.core.lease.Lease#renew
      * @see org.apache.river.lease.AbstractLease#renew
      * @see org.apache.river.lease.AbstractLease#doRenew
-     * @see org.apache.river.fiddler.FiddlerLease#doRenew
+     * @see org.apache.river.fiddler.dl.FiddlerLease#doRenew
      */
     public long renewLease(Uuid registrationID,
                            Uuid leaseID,
@@ -5493,7 +5500,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *                registration's managed set of groups.
      *
      * @see org.apache.river.fiddler.FiddlerImpl#addGroups
-     * @see org.apache.river.fiddler.FiddlerRegistration#addGroups
+     * @see org.apache.river.fiddler.dl.FiddlerRegistration#addGroups
      * @see net.jini.discovery.LookupDiscoveryRegistration#addGroups
      */
     private void addGroupsDo(RegistrationInfo regInfo, String[] groups) {
@@ -5519,7 +5526,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      * 
      * @see org.apache.river.fiddler.FiddlerImpl#addGroupsDo
      * @see org.apache.river.fiddler.FiddlerImpl#addGroups
-     * @see org.apache.river.fiddler.FiddlerRegistration#addGroups
+     * @see org.apache.river.fiddler.dl.FiddlerRegistration#addGroups
      * @see net.jini.discovery.LookupDiscoveryRegistration#addGroups
      */
     private void addGroupsDo(Uuid registrationID,
@@ -5543,7 +5550,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *                registration's managed set of groups.
      * 
      * @see org.apache.river.fiddler.FiddlerImpl#setGroups
-     * @see org.apache.river.fiddler.FiddlerRegistration#setGroups
+     * @see org.apache.river.fiddler.dl.FiddlerRegistration#setGroups
      * @see net.jini.discovery.LookupDiscoveryRegistration#setGroups
      */
     private void setGroupsDo(RegistrationInfo regInfo, String[] groups) {
@@ -5568,7 +5575,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      * 
      * @see org.apache.river.fiddler.FiddlerImpl#setGroupsDo
      * @see org.apache.river.fiddler.FiddlerImpl#setGroups
-     * @see org.apache.river.fiddler.FiddlerRegistration#setGroups
+     * @see org.apache.river.fiddler.dl.FiddlerRegistration#setGroups
      * @see net.jini.discovery.LookupDiscoveryRegistration#setGroups
      */
     private void setGroupsDo(Uuid registrationID,
@@ -5592,7 +5599,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *                registration's managed set of groups
      * 
      * @see org.apache.river.fiddler.FiddlerImpl#removeGroups
-     * @see org.apache.river.fiddler.FiddlerRegistration#removeGroups
+     * @see org.apache.river.fiddler.dl.FiddlerRegistration#removeGroups
      * @see net.jini.discovery.LookupDiscoveryRegistration#removeGroups
      */
     private void removeGroupsDo(RegistrationInfo regInfo, String[] groups) {
@@ -5618,7 +5625,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      * 
      * @see org.apache.river.fiddler.FiddlerImpl#removeGroupsDo
      * @see org.apache.river.fiddler.FiddlerImpl#removeGroups
-     * @see org.apache.river.fiddler.FiddlerRegistration#removeGroups
+     * @see org.apache.river.fiddler.dl.FiddlerRegistration#removeGroups
      * @see net.jini.discovery.LookupDiscoveryRegistration#removeGroups
      */
     private void removeGroupsDo(Uuid registrationID,
@@ -5756,7 +5763,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *                 of locators.
      * 
      * @see org.apache.river.fiddler.FiddlerImpl#addLocators
-     * @see org.apache.river.fiddler.FiddlerRegistration#addLocators
+     * @see org.apache.river.fiddler.dl.FiddlerRegistration#addLocators
      * @see net.jini.discovery.LookupDiscoveryRegistration#addLocators
      */
     private void addLocatorsDo(RegistrationInfo regInfo,
@@ -5784,7 +5791,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      * 
      * @see org.apache.river.fiddler.FiddlerImpl#addLocatorsDo
      * @see org.apache.river.fiddler.FiddlerImpl#addLocators
-     * @see org.apache.river.fiddler.FiddlerRegistration#addLocators
+     * @see org.apache.river.fiddler.dl.FiddlerRegistration#addLocators
      * @see net.jini.discovery.LookupDiscoveryRegistration#addLocators
      */
     private void addLocatorsDo(Uuid registrationID,
@@ -5809,7 +5816,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *                 of locators.
      * 
      * @see org.apache.river.fiddler.FiddlerImpl#setLocators
-     * @see org.apache.river.fiddler.FiddlerRegistration#setLocators
+     * @see org.apache.river.fiddler.dl.FiddlerRegistration#setLocators
      * @see net.jini.discovery.LookupDiscoveryRegistration#setLocators
      */
     private void setLocatorsDo(RegistrationInfo regInfo,
@@ -5836,7 +5843,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *
      * @see org.apache.river.fiddler.FiddlerImpl#setLocatorsDo
      * @see org.apache.river.fiddler.FiddlerImpl#setLocators
-     * @see org.apache.river.fiddler.FiddlerRegistration#setLocators
+     * @see org.apache.river.fiddler.dl.FiddlerRegistration#setLocators
      * @see net.jini.discovery.LookupDiscoveryRegistration#setLocators
      */
     private void setLocatorsDo(Uuid registrationID,
@@ -5861,7 +5868,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *                 locators.
      *
      * @see org.apache.river.fiddler.FiddlerImpl#removeLocators
-     * @see org.apache.river.fiddler.FiddlerRegistration#removeLocators
+     * @see org.apache.river.fiddler.dl.FiddlerRegistration#removeLocators
      * @see net.jini.discovery.LookupDiscoveryRegistration#removeLocators
      */
     private void removeLocatorsDo(RegistrationInfo regInfo,
@@ -5889,7 +5896,7 @@ class FiddlerImpl implements ServerProxyTrust, ProxyAccessor, Fiddler, Startable
      *
      * @see org.apache.river.fiddler.FiddlerImpl#removeLocatorsDo
      * @see org.apache.river.fiddler.FiddlerImpl#removeLocators
-     * @see org.apache.river.fiddler.FiddlerRegistration#removeLocators
+     * @see org.apache.river.fiddler.dl.FiddlerRegistration#removeLocators
      * @see net.jini.discovery.LookupDiscoveryRegistration#removeLocators
      */
     private void removeLocatorsDo(Uuid registrationID,
