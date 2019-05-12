@@ -126,19 +126,20 @@ public abstract class ActivationGroup
 					    final String location)
 	throws ActivationException
     {
-	try {
-	    Class cl = (Class) Security.doPrivileged(
-		new PrivilegedExceptionAction() {
-		    public Object run() throws Exception {
-			return ClassLoading.loadClass(location, className, null, false, null);
-		    }
-	    });
-	    return ActivationGroup.class.isAssignableFrom(cl);
-
-	} catch (PrivilegedActionException e) {
-	    throw new ActivationException("unable to load group class",
-					  e.getException());
-	}
+        return false;
+//	try {
+//	    Class cl = (Class) Security.doPrivileged(
+//		new PrivilegedExceptionAction() {
+//		    public Object run() throws Exception {
+//			return ClassLoading.loadClass(location, className, null, false, null);
+//		    }
+//	    });
+//	    return ActivationGroup.class.isAssignableFrom(cl);
+//
+//	} catch (PrivilegedActionException e) {
+//	    throw new ActivationException("unable to load group class",
+//					  e.getException());
+//	}
     }
 	
     /**
