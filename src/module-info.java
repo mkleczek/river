@@ -14,6 +14,8 @@ module net.codespaces.river.jeri
     requires java.logging;
     requires transitive java.rmi;
     requires transitive net.codespaces.river.base;
+    requires net.codespaces.core;
+    requires net.codespaces.access;
 
     provides TrustVerifier with BasicJeriTrustVerifier;
 
