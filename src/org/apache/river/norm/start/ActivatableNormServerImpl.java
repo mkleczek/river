@@ -103,7 +103,7 @@ public final class ActivatableNormServerImpl extends NormServerBaseImpl
      * @throws Exception
      *                   if there is a problem creating the server
      */
-    ActivatableNormServerImpl(ActivationID activationID,
+    public ActivatableNormServerImpl(ActivationID activationID,
                               MarshalledObject data)
             throws Exception
     {

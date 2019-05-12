@@ -40,7 +40,7 @@ public final class TransientNormServerImpl extends NormServerBaseImpl
      * @throws Exception
      *                   if there is a problem creating the server
      */
-    TransientNormServerImpl(String[] configOptions,
+    public TransientNormServerImpl(String[] configOptions,
                             LifeCycle lifeCycle)
             throws Exception
     {

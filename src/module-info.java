@@ -2,7 +2,6 @@ module net.codespaces.river.norm
 {
     
     exports org.apache.river.norm.start;
-    opens org.apache.river.norm.start;
 
     requires java.logging;
 

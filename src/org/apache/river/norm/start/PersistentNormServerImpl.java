@@ -41,7 +41,7 @@ public final class PersistentNormServerImpl extends NormServerBaseImpl
      * @throws Exception
      *                   if there is a problem creating the server
      */
-    PersistentNormServerImpl(String[] configOptions,
+    public PersistentNormServerImpl(String[] configOptions,
                              LifeCycle lifeCycle)
             throws Exception
     {
