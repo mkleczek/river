@@ -18,10 +18,6 @@
 
 package org.apache.river.discovery.internal;
 
-import org.apache.river.discovery.UnicastDiscoveryClient;
-import org.apache.river.discovery.UnicastResponse;
-import org.apache.river.jeri.internal.connection.ConnManager;
-import org.apache.river.jeri.internal.connection.ConnManagerFactory;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -32,7 +28,16 @@ import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.NoSuchElementException;
+
 import javax.net.SocketFactory;
+
+import org.apache.river.discovery.Plaintext;
+import org.apache.river.discovery.UnicastDiscoveryClient;
+import org.apache.river.discovery.UnicastResponse;
+import org.apache.river.jeri.internal.connection.ConnManager;
+import org.apache.river.jeri.internal.connection.ConnManagerFactory;
+
+import net.codespaces.core.ClassResolver;
 import net.jini.core.constraint.InvocationConstraints;
 import net.jini.io.UnsupportedConstraintException;
 import net.jini.jeri.Endpoint;
@@ -73,16 +78,13 @@ public abstract class EndpointBasedClient
 	checkIntegrity(endpointInternals.getUnfulfilledConstraints(ci.handle));
     }
 
-    // documentation inherited from UnicastDiscoveryClient
-    public UnicastResponse doUnicastDiscovery(
-					Socket socket,
-					InvocationConstraints constraints,
-					ClassLoader defaultLoader,
-					ClassLoader verifierLoader,
-					Collection context,
-					ByteBuffer sent,
-					ByteBuffer received)
-	throws IOException, ClassNotFoundException
+    public UnicastResponse doUnicastDiscovery(Socket socket,
+                                              InvocationConstraints constraints,
+                                              ClassResolver classResolver,
+                                              Collection context,
+                                              ByteBuffer sent,
+                                              ByteBuffer received)
+            throws IOException, ClassNotFoundException
     {
 	if (socket == null || sent == null || received == null) {
 	    throw new NullPointerException();
@@ -107,7 +109,7 @@ public abstract class EndpointBasedClient
 		throw e;
 	    }
 	    return Plaintext.readUnicastResponse(
-		in, defaultLoader, integrity, verifierLoader, context);
+		in, classResolver, context);
 	} finally {
 	    conn.close();
 	}

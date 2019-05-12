@@ -18,10 +18,6 @@
 
 package net.jini.jeri;
 
-import org.apache.river.action.GetBooleanAction;
-import org.apache.river.jeri.internal.runtime.Util;
-import org.apache.river.jeri.internal.runtime.WeakKey;
-import org.apache.river.logging.Levels;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,7 +40,6 @@ import java.security.AccessControlException;
 import java.security.AccessController;
 import java.security.CodeSource;
 import java.security.Permission;
-import java.security.PermissionCollection;
 import java.security.Policy;
 import java.security.Principal;
 import java.security.PrivilegedAction;
@@ -62,7 +57,16 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+
 import javax.security.auth.Subject;
+
+import org.apache.river.action.GetBooleanAction;
+import org.apache.river.jeri.internal.runtime.Util;
+import org.apache.river.jeri.internal.runtime.WeakKey;
+import org.apache.river.logging.Levels;
+
+import net.codespaces.CodeSpaces;
+import net.codespaces.core.ClassResolver;
 import net.jini.core.constraint.Integrity;
 import net.jini.core.constraint.InvocationConstraint;
 import net.jini.core.constraint.InvocationConstraints;
@@ -74,7 +78,6 @@ import net.jini.io.UnsupportedConstraintException;
 import net.jini.io.context.ClientSubject;
 import net.jini.security.AccessPermission;
 import net.jini.security.proxytrust.ProxyTrust;
-import net.jini.security.proxytrust.ProxyTrustVerifier;
 import net.jini.security.proxytrust.ServerProxyTrust;
 
 /**
@@ -167,7 +170,7 @@ public class BasicInvocationDispatcher implements InvocationDispatcher {
     static final byte THROW = 0x02;
 
     /** The class loader used by createMarshalInputStream */
-    private final ClassLoader loader;
+    private final ClassResolver classResolver;
     
     /** The server constraints. */
     private final MethodConstraints serverConstraints;
@@ -269,14 +272,14 @@ public class BasicInvocationDispatcher implements InvocationDispatcher {
 				     ServerCapabilities serverCapabilities,
 				     MethodConstraints serverConstraints,
 				     Class permissionClass,
-				     ClassLoader loader)
+				     Module module)
 	throws ExportException
     {
 	if (serverCapabilities == null) {
 	    throw new NullPointerException();
 	}
 	this.methods = new HashMap();
-	this.loader = loader;
+	this.classResolver = module != null ? CodeSpaces.getClassResolver(module) : null;
 	for (Iterator iter = methods.iterator(); iter.hasNext(); ) {
 	    Object m = iter.next();
 	    if (m == null) {
@@ -341,8 +344,8 @@ public class BasicInvocationDispatcher implements InvocationDispatcher {
      *
      * @return the class loader
      */
-    protected final ClassLoader getClassLoader() {
-	return loader;
+    protected final ClassResolver getClassResolver() {
+	return classResolver;
     }
     
     /**
@@ -567,7 +570,7 @@ public class BasicInvocationDispatcher implements InvocationDispatcher {
 	    /*
 	     * Unmarshal method and check security constraints.
 	     */
-	    in = createMarshalInputStream(impl, request, integrity, context);
+	    in = createMarshalInputStream(impl, request, context);
 	    method = unmarshalMethod(impl, in, context);
 	    InvocationConstraints sc =
 		(serverConstraints == null ?
@@ -713,8 +716,6 @@ public class BasicInvocationDispatcher implements InvocationDispatcher {
      *
      * @param	impl the remote object
      * @param	request the inbound request
-     * @param	integrity <code>true</code> if object integrity is being
-     * 		enforced for the remote call, and <code>false</code> otherwise
      * @param	context the server context
      * @return	a new marshal input stream for unmarshalling a call request
      * @throws	IOException if an I/O exception occurs
@@ -723,26 +724,24 @@ public class BasicInvocationDispatcher implements InvocationDispatcher {
     protected ObjectInputStream
         createMarshalInputStream(Object impl,
 				 InboundRequest request,
-				 boolean integrity,
 				 Collection context)
 	throws IOException
     {
-	ClassLoader streamLoader;
-	if (loader != null) {
-	    streamLoader = getClassLoader();
+	ClassResolver streamResolver;
+	if (classResolver != null) {
+	    streamResolver = getClassResolver();
 	} else {
 	    SecurityManager security = System.getSecurityManager();
 	    if (security != null) {
 		security.checkPermission(getClassLoaderPermission);
 	    }
-	    streamLoader = impl.getClass().getClassLoader();
+	    streamResolver = CodeSpaces.getClassResolver(impl.getClass().getModule());
 	}
 	
 	Collection unmodContext = Collections.unmodifiableCollection(context);
 	MarshalInputStream in =
 	    new MarshalInputStream(request.getRequestInputStream(),
-				   streamLoader, integrity,
-				   streamLoader, unmodContext);
+				   streamResolver, unmodContext);
 	in.useCodebaseAnnotations();
 	return in;
     }

@@ -20,6 +20,7 @@ package net.jini.jeri;
 
 import org.apache.river.jeri.internal.runtime.Util;
 import org.apache.river.logging.Levels;
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,6 +50,9 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+
+import net.codespaces.CodeSpaces;
+import net.codespaces.core.ClassResolver;
 import net.jini.core.constraint.Integrity;
 import net.jini.core.constraint.InvocationConstraint;
 import net.jini.core.constraint.InvocationConstraints;
@@ -1063,11 +1067,11 @@ public class BasicInvocationHandler
 	if (Proxy.getInvocationHandler(proxy) != this) {
 	    throw new IllegalArgumentException("not proxy for this");
 	}
-	ClassLoader proxyLoader = getProxyLoader(proxy.getClass());
+	ClassResolver proxyResolver = getProxyResolver(proxy.getClass());
 	Collection unmodContext = Collections.unmodifiableCollection(context);
 	MarshalInputStream in =
 	    new MarshalInputStream(request.getResponseInputStream(),
-				   proxyLoader, integrity, proxyLoader,
+				   proxyResolver,
 				   unmodContext);
 	in.useCodebaseAnnotations();
 	return in;
@@ -1077,10 +1081,22 @@ public class BasicInvocationHandler
      * Returns the class loader for the specified proxy class.
      */
     private static ClassLoader getProxyLoader(final Class proxyClass) {
-	return (ClassLoader)
-	    AccessController.doPrivileged(new PrivilegedAction() {
-		public Object run() {
-		    return proxyClass.getClassLoader();
+    return (ClassLoader)
+        AccessController.doPrivileged(new PrivilegedAction() {
+        public Object run() {
+            return proxyClass.getClassLoader();
+        }
+        });
+    }
+
+    /**
+     * Returns the class resolver for the specified proxy class.
+     */
+    private static ClassResolver getProxyResolver(final Class<?> proxyClass) {
+	return
+	    AccessController.doPrivileged(new PrivilegedAction<ClassResolver>() {
+		public ClassResolver run() {
+		    return CodeSpaces.getClassResolver(proxyClass.getModule());
 		}
 	    });
     }

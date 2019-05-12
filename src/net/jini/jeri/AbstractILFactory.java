@@ -33,6 +33,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import net.codespaces.CodeSpaces;
+import net.codespaces.core.NonExportableModuleException;
 import net.jini.core.constraint.RemoteMethodControl;
 import net.jini.export.ExportPermission;
 import net.jini.security.Security;
@@ -58,7 +61,7 @@ public abstract class AbstractILFactory implements InvocationLayerFactory {
 	new RuntimePermission("getClassLoader");
 
     /** The class loader to define proxy classes in */
-    private final ClassLoader loader;
+    private final Module module;
     
     /**
      * Constructs an <code>AbstractILFactory</code> instance with a
@@ -76,8 +79,8 @@ public abstract class AbstractILFactory implements InvocationLayerFactory {
      *
      * @param	loader the class loader, or <code>null</code> 
      **/
-    protected AbstractILFactory(ClassLoader loader) {
-	this.loader = loader;
+    protected AbstractILFactory(Module module) {
+	this.module = module;
     }
 
     /**
@@ -122,8 +125,8 @@ public abstract class AbstractILFactory implements InvocationLayerFactory {
      * Returns the class loader specified during construction.
      * @return the class loader
      */
-    protected final ClassLoader getClassLoader() {
-	return loader;
+    protected final Module getModule() {
+	return module;
     }
     
     /**
@@ -451,28 +454,34 @@ public abstract class AbstractILFactory implements InvocationLayerFactory {
 	InvocationHandler handler =
 	    createInvocationHandler(interfaces, impl, oe);
 	
-	ClassLoader proxyLoader;
-	if (loader != null) {
-	    proxyLoader = loader;
-	} else {
-	    SecurityManager security = System.getSecurityManager();
-	    if (security != null) {
-		security.checkPermission(getClassLoaderPermission);
-	    }
-	    proxyLoader = impl.getClass().getClassLoader();
-	}
-
+//	ClassLoader proxyLoader;
+//	if (loader != null) {
+//	    proxyLoader = loader;
+//	} else {
+//	    SecurityManager security = System.getSecurityManager();
+//	    if (security != null) {
+//		security.checkPermission(getClassLoaderPermission);
+//	    }
+//	    proxyLoader = impl.getClass().getClassLoader();
+//	}
+	
+	Module proxyModule = module != null ? module : impl.getClass().getModule();
+//
 	for (int i = 0; i < interfaces.length; i++) {
 	    Util.checkPackageAccess(interfaces[i].getClass());
 	}
 	
 	Remote proxy;
 	try {
-	    proxy = (Remote) Proxy.newProxyInstance(proxyLoader,
-						    interfaces,
-						    handler);
+	    proxy = (Remote) CodeSpaces.newProxyInstance(interfaces, proxyModule, handler);
+//	    proxy = (Remote) Proxy.newProxyInstance(proxyLoader,
+//						    interfaces,
+//						    handler);
 	} catch (IllegalArgumentException e) {
 	    throw new ExportException("unable to create proxy", e);
+	}
+	catch (NonExportableModuleException e) {
+	    throw new ExportException("Failed to create proxy", e);
 	}
 	InvocationDispatcher dispatcher =
 	    createInvocationDispatcher(getInvocationDispatcherMethods(impl),
@@ -504,7 +513,7 @@ public abstract class AbstractILFactory implements InvocationLayerFactory {
 	return (obj == this ||
 		(obj != null &&
 		 obj.getClass() == getClass() &&
-		 ((AbstractILFactory) obj).loader == loader));
+		 ((AbstractILFactory) obj).module == module));
     }
 
     /**

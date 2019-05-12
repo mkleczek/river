@@ -101,9 +101,9 @@ public class BasicILFactory extends AbstractILFactory {
      **/
     public BasicILFactory(MethodConstraints serverConstraints,
 			  Class permissionClass,
-			  ClassLoader loader)
+			  Module module)
     {
-	super(loader);
+	super(module);
 	BasicInvocationDispatcher.checkPermissionClass(permissionClass);
 	this.serverConstraints = serverConstraints;
 	this.permissionClass = permissionClass;
@@ -181,7 +181,7 @@ public class BasicILFactory extends AbstractILFactory {
 	return new BasicInvocationDispatcher(methods, caps,
 					     serverConstraints,
 					     permissionClass,
-					     getClassLoader());
+					     getModule());
     }
     
     /**

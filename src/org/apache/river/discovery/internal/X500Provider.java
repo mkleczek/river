@@ -19,6 +19,7 @@
 package org.apache.river.discovery.internal;
 
 import org.apache.river.discovery.DatagramBufferFactory;
+import org.apache.river.discovery.Plaintext;
 import org.apache.river.logging.Levels;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -66,6 +67,7 @@ import javax.security.auth.AuthPermission;
 import javax.security.auth.Subject;
 import javax.security.auth.x500.X500Principal;
 import javax.security.auth.x500.X500PrivateCredential;
+
 import net.jini.io.UnsupportedConstraintException;
 import net.jini.security.AuthenticationPermission;
 

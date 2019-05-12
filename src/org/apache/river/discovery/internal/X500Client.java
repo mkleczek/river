@@ -24,6 +24,8 @@ import org.apache.river.discovery.DiscoveryProtocolException;
 import org.apache.river.discovery.MulticastAnnouncement;
 import org.apache.river.discovery.MulticastRequest;
 import org.apache.river.discovery.MulticastRequestEncoder;
+import org.apache.river.discovery.Plaintext;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.logging.Level;

@@ -81,10 +81,10 @@ public class ProxyTrustILFactory extends BasicILFactory {
      **/
     public ProxyTrustILFactory(MethodConstraints serverConstraints,
 			       Class permissionClass,
-			       ClassLoader loader)
+			       Module module)
 
     {
-	super(serverConstraints, permissionClass, loader);
+	super(serverConstraints, permissionClass, module);
     }
 
     /**

@@ -102,19 +102,18 @@ public class DgcRequestDispatcher implements RequestDispatcher {
             dgcDispatcher =
                 new BasicInvocationDispatcher(
                     dgcDispatcherMethods, dgcServerCapabilities,
-                    null, null, this.getClass().getClassLoader())
+                    null, null, this.getClass().getModule())
                 {
+                    @Override
                     protected ObjectInputStream createMarshalInputStream(
                         Object impl,
                         InboundRequest request,
-                        boolean integrity,
                         Collection context)
                         throws IOException
                     {
-                        ClassLoader loader = getClassLoader();
                         return new MarshalInputStream(
                             request.getRequestInputStream(),
-                            loader, integrity, loader,
+                            getClassResolver(),
                             Collections.unmodifiableCollection(context));
                         // useStreamCodebases() not invoked
                     }

@@ -18,11 +18,6 @@
 
 package org.apache.river.discovery.internal;
 
-import org.apache.river.discovery.ClientSubjectChecker;
-import org.apache.river.discovery.DiscoveryProtocolException;
-import org.apache.river.discovery.UnicastDiscoveryServer;
-import org.apache.river.discovery.UnicastResponse;
-import org.apache.river.jeri.internal.connection.ServerConnManager;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
@@ -38,8 +33,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+
 import javax.net.ServerSocketFactory;
 import javax.security.auth.Subject;
+
+import org.apache.river.discovery.ClientSubjectChecker;
+import org.apache.river.discovery.DiscoveryProtocolException;
+import org.apache.river.discovery.Plaintext;
+import org.apache.river.discovery.UnicastDiscoveryServer;
+import org.apache.river.discovery.UnicastResponse;
+import org.apache.river.jeri.internal.connection.ServerConnManager;
+
 import net.jini.core.constraint.InvocationConstraints;
 import net.jini.io.UnsupportedConstraintException;
 import net.jini.io.context.ClientSubject;
