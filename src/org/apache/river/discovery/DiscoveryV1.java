@@ -18,7 +18,6 @@
 
 package org.apache.river.discovery;
 
-import org.apache.river.discovery.internal.Plaintext;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
@@ -35,6 +34,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import net.codespaces.core.ClassResolver;
 import net.jini.core.constraint.InvocationConstraints;
 import net.jini.core.lookup.ServiceID;
 import net.jini.core.lookup.ServiceRegistrar;
@@ -45,421 +46,438 @@ import net.jini.io.UnsupportedConstraintException;
 /**
  * Class providing methods for implementing discovery protocol version 1.
  */
-class DiscoveryV1 extends Discovery {
+class DiscoveryV1 extends Discovery
+{
 
     private static final int SERVICE_ID_LEN = 16;
 
     private static final DiscoveryV1 instance = new DiscoveryV1();
-    private static final Logger logger =
-	Logger.getLogger(DiscoveryV1.class.getName());
+    private static final Logger logger = Logger.getLogger(DiscoveryV1.class.getName());
 
-    static DiscoveryV1 getInstance() {
-	return instance;
+    static DiscoveryV1 getInstance()
+    {
+        return instance;
     }
 
-    public EncodeIterator encodeMulticastRequest(
-				final MulticastRequest request,
-				final int maxPacketSize,
-				final InvocationConstraints constraints)
+    public EncodeIterator encodeMulticastRequest(final MulticastRequest request,
+                                                 final int maxPacketSize,
+                                                 final InvocationConstraints constraints)
     {
-	if (maxPacketSize < MIN_MAX_PACKET_SIZE) {
-	    throw new IllegalArgumentException("maxPacketSize too small");
-	}
-	return new EncodeIterator() {
+        if (maxPacketSize < MIN_MAX_PACKET_SIZE)
+        {
+            throw new IllegalArgumentException("maxPacketSize too small");
+        }
+        return new EncodeIterator()
+        {
 
-	    private boolean used;
+            private boolean used;
 
-	    public DatagramPacket[] next() throws IOException {
-		used = true;
-		return encode(request, maxPacketSize, constraints);
-	    }
+            public DatagramPacket[] next() throws IOException
+            {
+                used = true;
+                return encode(request, maxPacketSize, constraints);
+            }
 
-	    public boolean hasNext() {
-		return !used;
-	    }
-	};
+            public boolean hasNext()
+            {
+                return !used;
+            }
+        };
     }
 
     private static DatagramPacket[] encode(MulticastRequest request,
-					   int maxPacketSize,
-					   InvocationConstraints constraints)
-	throws IOException
+                                           int maxPacketSize,
+                                           InvocationConstraints constraints)
+            throws IOException
     {
-	final int MIN_DATA_LEN = 16;
-	final int NUM_GROUPS_LEN = 4;
-	final int NUM_SERVICE_IDS_LEN = 4;
+        final int MIN_DATA_LEN = 16;
+        final int NUM_GROUPS_LEN = 4;
+        final int NUM_SERVICE_IDS_LEN = 4;
 
-	checkConstraints(constraints);
+        checkConstraints(constraints);
 
-	// precompute length of UTF-encoded group names
-	LinkedList groups = new LinkedList();
-	String[] g = request.getGroups();
-	for (int i = 0; i < g.length; i++) {
-	    byte[] b = Plaintext.toUtf(g[i]);
-	    if (b.length + MIN_DATA_LEN > maxPacketSize) {
-		throw new DiscoveryProtocolException(
-			      "group too long: " + g[i]);
-	    }
-	    groups.add(b);
-	}
+        // precompute length of UTF-encoded group names
+        LinkedList groups = new LinkedList();
+        String[] g = request.getGroups();
+        for (int i = 0; i < g.length; i++)
+        {
+            byte[] b = Plaintext.toUtf(g[i]);
+            if (b.length + MIN_DATA_LEN > maxPacketSize)
+            {
+                throw new DiscoveryProtocolException("group too long: " + g[i]);
+            }
+            groups.add(b);
+        }
 
-	List<DatagramPacket> packets = new ArrayList<DatagramPacket>();
-	do {
-	    ByteBuffer buf = ByteBuffer.allocate(maxPacketSize);
+        List<DatagramPacket> packets = new ArrayList<DatagramPacket>();
+        do
+        {
+            ByteBuffer buf = ByteBuffer.allocate(maxPacketSize);
 
-	    // write protocol version
-	    buf.putInt(PROTOCOL_VERSION_1);
+            // write protocol version
+            buf.putInt(PROTOCOL_VERSION_1);
 
-	    // write client port
-	    buf.putInt(request.getPort());
+            // write client port
+            buf.putInt(request.getPort());
 
-	    // write known service IDs
-	    ServiceID[] ids = request.getServiceIDs();
-	    int nids = Math.min(
-		ids.length,
-		(buf.remaining() 
-		 - (groups.isEmpty() ? 0 : ((byte[]) groups.getFirst()).length)
-		 - NUM_SERVICE_IDS_LEN - NUM_GROUPS_LEN) / SERVICE_ID_LEN);
-	    buf.putInt(nids);
-	    for (int i = 0; i < nids; i++) {
-		buf.putLong(ids[i].getMostSignificantBits());
-		buf.putLong(ids[i].getLeastSignificantBits());
-	    }
+            // write known service IDs
+            ServiceID[] ids = request.getServiceIDs();
+            int nids = Math.min(ids.length,
+                    (buf.remaining() - (groups.isEmpty() ? 0 : ((byte[]) groups.getFirst()).length)
+                            - NUM_SERVICE_IDS_LEN - NUM_GROUPS_LEN) / SERVICE_ID_LEN);
+            buf.putInt(nids);
+            for (int i = 0; i < nids; i++)
+            {
+                buf.putLong(ids[i].getMostSignificantBits());
+                buf.putLong(ids[i].getLeastSignificantBits());
+            }
 
-	    // write lookup groups
-	    int ngroupsPos = buf.position();
-	    int ngroups = 0;
-	    buf.putInt(ngroups);
-	    while (!groups.isEmpty()) {
-		if (((byte[]) groups.getFirst()).length > buf.remaining()) {
-		    break;
-		}
-		buf.put((byte[]) groups.removeFirst());
-		ngroups++;
-	    }
-	    if (ngroups > 0) {
-		buf.putInt(ngroupsPos, ngroups);
-	    }
+            // write lookup groups
+            int ngroupsPos = buf.position();
+            int ngroups = 0;
+            buf.putInt(ngroups);
+            while (!groups.isEmpty())
+            {
+                if (((byte[]) groups.getFirst()).length > buf.remaining())
+                {
+                    break;
+                }
+                buf.put((byte[]) groups.removeFirst());
+                ngroups++;
+            }
+            if (ngroups > 0)
+            {
+                buf.putInt(ngroupsPos, ngroups);
+            }
 
-	    packets.add(new DatagramPacket(buf.array(),
-					   buf.position(),
-					   Constants.getRequestAddress(),
-					   Constants.discoveryPort));
-	} while (!groups.isEmpty());
+            packets.add(new DatagramPacket(buf.array(), buf.position(), Constants.getRequestAddress(),
+                    Constants.discoveryPort));
+        }
+        while (!groups.isEmpty());
 
-	if (logger.isLoggable(Level.FINEST)) {
-	    logger.log(Level.FINEST, "encoded {0}", new Object[]{ request });
-	}
-	return packets.toArray(new DatagramPacket[packets.size()]);
+        if (logger.isLoggable(Level.FINEST))
+        {
+            logger.log(Level.FINEST, "encoded {0}", new Object[] { request });
+        }
+        return packets.toArray(new DatagramPacket[packets.size()]);
     }
 
-    public MulticastRequest decodeMulticastRequest(
-					DatagramPacket packet,
-					InvocationConstraints constraints,
-					ClientSubjectChecker checker)
-	throws IOException
+    public MulticastRequest decodeMulticastRequest(DatagramPacket packet,
+                                                   InvocationConstraints constraints,
+                                                   ClientSubjectChecker checker)
+            throws IOException
     {
-	checkConstraints(constraints);
-	if (checker != null) {
-	    checker.checkClientSubject(null);
-	}
+        checkConstraints(constraints);
+        if (checker != null)
+        {
+            checker.checkClientSubject(null);
+        }
 
-	try {
-	    ByteBuffer buf = ByteBuffer.wrap(packet.getData(),
-					     packet.getOffset(),
-					     packet.getLength());
+        try
+        {
+            ByteBuffer buf = ByteBuffer.wrap(packet.getData(), packet.getOffset(), packet.getLength());
 
-	    // read protocol version
-	    int version = buf.getInt();
-	    if (version != PROTOCOL_VERSION_1) {
-		throw new DiscoveryProtocolException(
-			      "wrong protocol version: " + version);
-	    }
+            // read protocol version
+            int version = buf.getInt();
+            if (version != PROTOCOL_VERSION_1)
+            {
+                throw new DiscoveryProtocolException("wrong protocol version: " + version);
+            }
 
-	    // derive client host
-	    String host = packet.getAddress().getHostAddress();
+            // derive client host
+            String host = packet.getAddress().getHostAddress();
 
-	    // read client port
-	    int port = buf.getInt();
+            // read client port
+            int port = buf.getInt();
 
-	    // read known service IDs
-	    int nids = buf.getInt();
-	    if (nids < 0 || nids > buf.remaining() / SERVICE_ID_LEN) {
-		throw new DiscoveryProtocolException(
-			      "invalid service ID count: " + nids);
-	    }
-	    ServiceID[] ids = new ServiceID[nids];
-	    for (int i = 0; i < ids.length; i++) {
-		long hi = buf.getLong();
-		long lo = buf.getLong();
-		ids[i] = new ServiceID(hi, lo);
-	    }
+            // read known service IDs
+            int nids = buf.getInt();
+            if (nids < 0 || nids > buf.remaining() / SERVICE_ID_LEN)
+            {
+                throw new DiscoveryProtocolException("invalid service ID count: " + nids);
+            }
+            ServiceID[] ids = new ServiceID[nids];
+            for (int i = 0; i < ids.length; i++)
+            {
+                long hi = buf.getLong();
+                long lo = buf.getLong();
+                ids[i] = new ServiceID(hi, lo);
+            }
 
-	    // read lookup groups
-	    int ngroups = buf.getInt();
-	    if (ngroups < 0 || ngroups > buf.remaining() / 2) {
-		throw new DiscoveryProtocolException(
-			      "invalid group count: " + ngroups);
-	    }
-	    String[] groups = new String[ngroups];
-	    for (int i = 0; i < groups.length; i++) {
-		groups[i] = Plaintext.getUtf(buf);
-	    }
+            // read lookup groups
+            int ngroups = buf.getInt();
+            if (ngroups < 0 || ngroups > buf.remaining() / 2)
+            {
+                throw new DiscoveryProtocolException("invalid group count: " + ngroups);
+            }
+            String[] groups = new String[ngroups];
+            for (int i = 0; i < groups.length; i++)
+            {
+                groups[i] = Plaintext.getUtf(buf);
+            }
 
-	    MulticastRequest req = 
-		new MulticastRequest(host, port, groups, ids);
-	    if (logger.isLoggable(Level.FINEST)) {
-		logger.log(Level.FINEST, "decoded {0}", new Object[]{ req });
-	    }
-	    return req;
+            MulticastRequest req = new MulticastRequest(host, port, groups, ids);
+            if (logger.isLoggable(Level.FINEST))
+            {
+                logger.log(Level.FINEST, "decoded {0}", new Object[] { req });
+            }
+            return req;
 
-	} catch (RuntimeException e) {
-	    throw new DiscoveryProtocolException(null, e);
-	}
+        }
+        catch (RuntimeException e)
+        {
+            throw new DiscoveryProtocolException(null, e);
+        }
     }
 
-    public EncodeIterator encodeMulticastAnnouncement(
-				final MulticastAnnouncement announcement,
-				final int maxPacketSize,
-				final InvocationConstraints constraints)
+    public EncodeIterator encodeMulticastAnnouncement(final MulticastAnnouncement announcement,
+                                                      final int maxPacketSize,
+                                                      final InvocationConstraints constraints)
     {
-	if (maxPacketSize < MIN_MAX_PACKET_SIZE) {
-	    throw new IllegalArgumentException("maxPacketSize too small");
-	}
-	return new EncodeIterator() {
+        if (maxPacketSize < MIN_MAX_PACKET_SIZE)
+        {
+            throw new IllegalArgumentException("maxPacketSize too small");
+        }
+        return new EncodeIterator()
+        {
 
-	    private boolean used;
+            private boolean used;
 
-	    public DatagramPacket[] next() throws IOException {
-		used = true;
-		return encode(announcement, maxPacketSize, constraints);
-	    }
+            public DatagramPacket[] next() throws IOException
+            {
+                used = true;
+                return encode(announcement, maxPacketSize, constraints);
+            }
 
-	    public boolean hasNext() {
-		return !used;
-	    }
-	};
+            public boolean hasNext()
+            {
+                return !used;
+            }
+        };
     }
 
     private static DatagramPacket[] encode(MulticastAnnouncement announcement,
-					   int maxPacketSize,
-					   InvocationConstraints constraints)
-	throws IOException
+                                           int maxPacketSize,
+                                           InvocationConstraints constraints)
+            throws IOException
     {
-	final int MIN_DATA_LEN = 28;
+        final int MIN_DATA_LEN = 28;
 
-	checkConstraints(constraints);
+        checkConstraints(constraints);
 
-	// precompute length of UTF-encoded group names
-	LinkedList<byte[]> groups = new LinkedList<byte[]>();
-	byte[] host = Plaintext.toUtf(announcement.getHost());
-	String[] g = announcement.getGroups();
-	for (int i = 0; i < g.length; i++) {
-	    byte[] b = Plaintext.toUtf(g[i]);
-	    if (b.length + host.length + MIN_DATA_LEN > maxPacketSize) {
-		throw new DiscoveryProtocolException(
-			      "group too long: " + g[i]);
-	    }
-	    groups.add(b);
-	}
+        // precompute length of UTF-encoded group names
+        LinkedList<byte[]> groups = new LinkedList<byte[]>();
+        byte[] host = Plaintext.toUtf(announcement.getHost());
+        String[] g = announcement.getGroups();
+        for (int i = 0; i < g.length; i++)
+        {
+            byte[] b = Plaintext.toUtf(g[i]);
+            if (b.length + host.length + MIN_DATA_LEN > maxPacketSize)
+            {
+                throw new DiscoveryProtocolException("group too long: " + g[i]);
+            }
+            groups.add(b);
+        }
 
-	List<DatagramPacket> packets = new ArrayList<DatagramPacket>();
-	do {
-	    ByteBuffer buf = ByteBuffer.allocate(maxPacketSize);
+        List<DatagramPacket> packets = new ArrayList<DatagramPacket>();
+        do
+        {
+            ByteBuffer buf = ByteBuffer.allocate(maxPacketSize);
 
-	    // write protocol version
-	    buf.putInt(PROTOCOL_VERSION_1);
+            // write protocol version
+            buf.putInt(PROTOCOL_VERSION_1);
 
-	    // write LUS host
-	    buf.put(host);
+            // write LUS host
+            buf.put(host);
 
-	    // write LUS port
-	    buf.putInt(announcement.getPort());
+            // write LUS port
+            buf.putInt(announcement.getPort());
 
-	    // write LUS service ID
-	    ServiceID id = announcement.getServiceID();
-	    buf.putLong(id.getMostSignificantBits());
-	    buf.putLong(id.getLeastSignificantBits());
+            // write LUS service ID
+            ServiceID id = announcement.getServiceID();
+            buf.putLong(id.getMostSignificantBits());
+            buf.putLong(id.getLeastSignificantBits());
 
-	    // write LUS member groups
-	    int ngroupsPos = buf.position();
-	    int ngroups = 0;
-	    buf.putInt(ngroups);
-	    while (!groups.isEmpty()) {
-		if (((byte[]) groups.getFirst()).length > buf.remaining()) {
-		    break;
-		}
-		buf.put((byte[]) groups.removeFirst());
-		ngroups++;
-	    }
-	    if (ngroups > 0) {
-		buf.putInt(ngroupsPos, ngroups);
-	    }
+            // write LUS member groups
+            int ngroupsPos = buf.position();
+            int ngroups = 0;
+            buf.putInt(ngroups);
+            while (!groups.isEmpty())
+            {
+                if (((byte[]) groups.getFirst()).length > buf.remaining())
+                {
+                    break;
+                }
+                buf.put((byte[]) groups.removeFirst());
+                ngroups++;
+            }
+            if (ngroups > 0)
+            {
+                buf.putInt(ngroupsPos, ngroups);
+            }
 
-	    packets.add(new DatagramPacket(buf.array(),
-					   buf.position(),
-					   Constants.getAnnouncementAddress(),
-					   Constants.discoveryPort));
-	} while (!groups.isEmpty());
+            packets.add(new DatagramPacket(buf.array(), buf.position(), Constants.getAnnouncementAddress(),
+                    Constants.discoveryPort));
+        }
+        while (!groups.isEmpty());
 
-	if (logger.isLoggable(Level.FINEST)) {
-	    logger.log(Level.FINEST, "encoded {0}",
-		       new Object[]{ announcement });
-	}
-	return (DatagramPacket[]) 
-	    packets.toArray(new DatagramPacket[packets.size()]);
+        if (logger.isLoggable(Level.FINEST))
+        {
+            logger.log(Level.FINEST, "encoded {0}", new Object[] { announcement });
+        }
+        return (DatagramPacket[]) packets.toArray(new DatagramPacket[packets.size()]);
     }
 
-    public MulticastAnnouncement decodeMulticastAnnouncement(
-					DatagramPacket packet,
-					InvocationConstraints constraints)
-	throws IOException
+    public MulticastAnnouncement decodeMulticastAnnouncement(DatagramPacket packet,
+                                                             InvocationConstraints constraints)
+            throws IOException
     {
-	checkConstraints(constraints);
+        checkConstraints(constraints);
 
-	try {
-	    ByteBuffer buf = ByteBuffer.wrap(packet.getData(),
-					     packet.getOffset(),
-					     packet.getLength());
+        try
+        {
+            ByteBuffer buf = ByteBuffer.wrap(packet.getData(), packet.getOffset(), packet.getLength());
 
-	    // read protocol version
-	    int version = buf.getInt();
-	    if (version != PROTOCOL_VERSION_1) {
-		throw new DiscoveryProtocolException(
-			      "wrong protocol version: " + version);
-	    }
+            // read protocol version
+            int version = buf.getInt();
+            if (version != PROTOCOL_VERSION_1)
+            {
+                throw new DiscoveryProtocolException("wrong protocol version: " + version);
+            }
 
-	    // read LUS host
-	    String host = Plaintext.getUtf(buf);
+            // read LUS host
+            String host = Plaintext.getUtf(buf);
 
-	    // read LUS port
-	    int port = buf.getInt();
+            // read LUS port
+            int port = buf.getInt();
 
-	    // read LUS service ID
-	    long hi = buf.getLong();
-	    long lo = buf.getLong();
-	    ServiceID id = new ServiceID(hi, lo);
+            // read LUS service ID
+            long hi = buf.getLong();
+            long lo = buf.getLong();
+            ServiceID id = new ServiceID(hi, lo);
 
-	    // read LUS member groups
-	    int ngroups = buf.getInt();
-	    if (ngroups < 0 || ngroups > buf.remaining() / 2) {
-		throw new DiscoveryProtocolException(
-			      "invalid group count: " + ngroups);
-	    }
-	    String[] groups = new String[ngroups];
-	    for (int i = 0; i < groups.length; i++) {
-		groups[i] = Plaintext.getUtf(buf);
-	    }
+            // read LUS member groups
+            int ngroups = buf.getInt();
+            if (ngroups < 0 || ngroups > buf.remaining() / 2)
+            {
+                throw new DiscoveryProtocolException("invalid group count: " + ngroups);
+            }
+            String[] groups = new String[ngroups];
+            for (int i = 0; i < groups.length; i++)
+            {
+                groups[i] = Plaintext.getUtf(buf);
+            }
 
-	    MulticastAnnouncement ann = 
-		new MulticastAnnouncement(-1, host, port, groups, id);
-	    if (logger.isLoggable(Level.FINEST)) {
-		logger.log(Level.FINEST, "decoded {0}", new Object[]{ ann });
-	    }
-	    return ann;
+            MulticastAnnouncement ann = new MulticastAnnouncement(-1, host, port, groups, id);
+            if (logger.isLoggable(Level.FINEST))
+            {
+                logger.log(Level.FINEST, "decoded {0}", new Object[] { ann });
+            }
+            return ann;
 
-	} catch (RuntimeException e) {
-	    throw new DiscoveryProtocolException(null, e);
-	}
+        }
+        catch (RuntimeException e)
+        {
+            throw new DiscoveryProtocolException(null, e);
+        }
     }
 
-    public UnicastResponse doUnicastDiscovery(
-					Socket socket,
-					InvocationConstraints constraints,
-					ClassLoader defaultLoader,
-					ClassLoader verifierLoader,
-					Collection context)
-	throws IOException, ClassNotFoundException
+    public UnicastResponse doUnicastDiscovery(Socket socket,
+                                              InvocationConstraints constraints,
+                                              ClassResolver classResolver,
+                                              Collection context)
+            throws IOException, ClassNotFoundException
     {
-	checkConstraints(constraints);
+        checkConstraints(constraints);
 
-	try {
-	    DataOutputStream dout = new DataOutputStream(
-		new BufferedOutputStream(socket.getOutputStream(), 4));
+        try
+        {
+            DataOutputStream dout = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream(), 4));
 
-	    // write unicast request
-	    dout.writeInt(PROTOCOL_VERSION_1);
-	    dout.flush();
+            // write unicast request
+            dout.writeInt(PROTOCOL_VERSION_1);
+            dout.flush();
 
-	    // derive LUS host, port
-	    String host = socket.getInetAddress().getHostAddress();
-	    int port = socket.getPort();
+            // derive LUS host, port
+            String host = socket.getInetAddress().getHostAddress();
+            int port = socket.getPort();
 
-	    // read LUS proxy
-	    ObjectInputStream oin = new ObjectInputStream(
-		new BufferedInputStream(socket.getInputStream()));
-	    MarshalledInstance mi = 
-		new MarshalledInstance((MarshalledObject) oin.readObject());
-	    ServiceRegistrar reg = 
-		(ServiceRegistrar) mi.get(defaultLoader, false, null, context);
+            // read LUS proxy
+            ObjectInputStream oin = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+            MarshalledInstance mi = new MarshalledInstance((MarshalledObject) oin.readObject());
+            ServiceRegistrar reg = (ServiceRegistrar) mi.get(classResolver, context);
 
-	    // read LUS member groups
-	    int ngroups = oin.readInt();
-	    if (ngroups < 0) {
-		throw new DiscoveryProtocolException(
-			      "invalid group count: " + ngroups);
-	    }
-	    String[] groups = new String[ngroups];
-	    for (int i = 0; i < groups.length; i++) {
-		groups[i] = oin.readUTF();
-	    }
+            // read LUS member groups
+            int ngroups = oin.readInt();
+            if (ngroups < 0)
+            {
+                throw new DiscoveryProtocolException("invalid group count: " + ngroups);
+            }
+            String[] groups = new String[ngroups];
+            for (int i = 0; i < groups.length; i++)
+            {
+                groups[i] = oin.readUTF();
+            }
 
-	    UnicastResponse resp =
-		new UnicastResponse(host, port, groups, reg);
-	    if (logger.isLoggable(Level.FINEST)) {
-		logger.log(Level.FINEST, "received {0}", new Object[]{ resp });
-	    }
-	    return resp;
+            UnicastResponse resp = new UnicastResponse(host, port, groups, reg);
+            if (logger.isLoggable(Level.FINEST))
+            {
+                logger.log(Level.FINEST, "received {0}", new Object[] { resp });
+            }
+            return resp;
 
-	} catch (RuntimeException e) {
-	    throw new DiscoveryProtocolException(null, e);
-	}
+        }
+        catch (RuntimeException e)
+        {
+            throw new DiscoveryProtocolException(null, e);
+        }
     }
 
     public void handleUnicastDiscovery(UnicastResponse response,
-				       Socket socket,
-				       InvocationConstraints constraints,
-				       ClientSubjectChecker checker,
-				       Collection context)
-	throws IOException
+                                       Socket socket,
+                                       InvocationConstraints constraints,
+                                       ClientSubjectChecker checker,
+                                       Collection context)
+            throws IOException
     {
-	checkConstraints(constraints);
-	if (checker != null) {
-	    checker.checkClientSubject(null);
-	}
+        checkConstraints(constraints);
+        if (checker != null)
+        {
+            checker.checkClientSubject(null);
+        }
 
-	// note: unicast request (the protocol version) already consumed
+        // note: unicast request (the protocol version) already consumed
 
-	// write LUS proxy
-	ObjectOutputStream oout = new ObjectOutputStream(
-	    new BufferedOutputStream(socket.getOutputStream()));
-	oout.writeObject(
-	    new MarshalledInstance(
-		response.getRegistrar(), context).convertToMarshalledObject());
+        // write LUS proxy
+        ObjectOutputStream oout = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+        oout.writeObject(new MarshalledInstance(response.getRegistrar(), context).convertToMarshalledObject());
 
-	// write LUS member groups
-	String[] groups = response.getGroups();
-	oout.writeInt(groups.length);
-	for (int i = 0; i < groups.length; i++) {
-	    oout.writeUTF(groups[i]);
-	}
+        // write LUS member groups
+        String[] groups = response.getGroups();
+        oout.writeInt(groups.length);
+        for (int i = 0; i < groups.length; i++)
+        {
+            oout.writeUTF(groups[i]);
+        }
 
-	oout.flush();
-	if (logger.isLoggable(Level.FINEST)) {
-	    logger.log(Level.FINEST, "sent {0}", new Object[]{ response });
-	}
+        oout.flush();
+        if (logger.isLoggable(Level.FINEST))
+        {
+            logger.log(Level.FINEST, "sent {0}", new Object[] { response });
+        }
     }
 
-    public String toString() {
-	return "DiscoveryV1";
+    public String toString()
+    {
+        return "DiscoveryV1";
     }
 
-    private static void checkConstraints(InvocationConstraints constraints)
-	throws UnsupportedConstraintException
+    private static void checkConstraints(InvocationConstraints constraints) throws UnsupportedConstraintException
     {
-	if (constraints != null) {
-	    constraints = constraints.makeAbsolute();
-	}
-	Plaintext.checkConstraints(constraints);
+        if (constraints != null)
+        {
+            constraints = constraints.makeAbsolute();
+        }
+        Plaintext.checkConstraints(constraints);
     }
 }

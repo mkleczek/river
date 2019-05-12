@@ -18,17 +18,14 @@
 
 package net.jini.discovery;
 
-import org.apache.river.discovery.Discovery;
-import org.apache.river.discovery.DiscoveryConstraints;
-import org.apache.river.discovery.UnicastResponse;
-import org.apache.river.discovery.UnicastSocketTimeout;
-import org.apache.river.discovery.internal.MultiIPDiscovery;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collection;
+
+import org.apache.river.discovery.UnicastSocketTimeout;
+
 import net.jini.core.constraint.InvocationConstraints;
 import net.jini.core.constraint.MethodConstraints;
 import net.jini.core.constraint.RemoteMethodControl;

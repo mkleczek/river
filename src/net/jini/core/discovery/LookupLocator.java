@@ -30,16 +30,18 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import net.jini.core.constraint.InvocationConstraints;
-import net.jini.core.lookup.ServiceRegistrar;
-import net.jini.discovery.ConstrainableLookupLocator;
+
 import org.apache.river.api.net.Uri;
 import org.apache.river.discovery.Discovery;
 import org.apache.river.discovery.DiscoveryConstraints;
 import org.apache.river.discovery.DiscoveryProtocolVersion;
+import org.apache.river.discovery.MultiIPDiscovery;
 import org.apache.river.discovery.UnicastResponse;
 import org.apache.river.discovery.UnicastSocketTimeout;
-import org.apache.river.discovery.internal.MultiIPDiscovery;
+
+import net.jini.core.constraint.InvocationConstraints;
+import net.jini.core.lookup.ServiceRegistrar;
+import net.jini.discovery.ConstrainableLookupLocator;
 
 /**
  * LookupLocator supports unicast discovery, using either Discovery V1 or V2.
@@ -345,7 +347,7 @@ public class LookupLocator implements Serializable {
                     Socket s)
                     throws IOException, ClassNotFoundException {
                 return disco.doUnicastDiscovery(
-                        s, dc.getUnfulfilledConstraints(), null, null, null);
+                        s, dc.getUnfulfilledConstraints(), null, null);
             }
         }.getResponse(getHost(), getPort(), constraints);
         return resp.getRegistrar();

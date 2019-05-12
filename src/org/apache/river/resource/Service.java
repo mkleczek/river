@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -346,11 +347,12 @@ public final class Service
      * @see #providers(java.lang.Class)
      * @see #installedProviders(java.lang.Class)
      */
-    public static Iterator providers(Class service,
+    public static <T> Iterator<T> providers(Class<T> service,
                                      ClassLoader loader)
             throws ServiceConfigurationError
     {
-        return new LazyIterator(service, loader);
+        return ServiceLoader.load(service, loader).iterator();
+        //return new LazyIterator(service, loader);
     }
 
     /**
@@ -372,10 +374,11 @@ public final class Service
      *                                   provider class that cannot be found and instantiated
      * @see #providers(java.lang.Class, java.lang.ClassLoader)
      */
-    public static Iterator providers(Class service) throws ServiceConfigurationError
+    public static <T> Iterator<T> providers(Class<T> service) throws ServiceConfigurationError
     {
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        return Service.providers(service, cl);
+        return ServiceLoader.load(service).iterator();
+//        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+//        return Service.providers(service, cl);
     }
 
     /**
@@ -400,12 +403,13 @@ public final class Service
      *                                   provider class that cannot be found and instantiated
      * @see #providers(java.lang.Class, java.lang.ClassLoader)
      */
-    public static Iterator installedProviders(Class service) throws ServiceConfigurationError
+    public static <T> Iterator<T> installedProviders(Class<T> service) throws ServiceConfigurationError
     {
-        ClassLoader cl = ClassLoader.getSystemClassLoader();
-        if (cl != null)
-            cl = cl.getParent();
-        return Service.providers(service, cl);
+        return ServiceLoader.loadInstalled(service).iterator();
+//        ClassLoader cl = ClassLoader.getSystemClassLoader();
+//        if (cl != null)
+//            cl = cl.getParent();
+//        return Service.providers(service, cl);
     }
 
 }

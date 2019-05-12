@@ -238,7 +238,7 @@ public class Handler extends URLStreamHandler {
      * *** Start test: Mon Jan 23 08:11:26 EST 2012
      * [jtreg] Test 9: TestEqual: httpmd://foo:88/bar/baz;p1=v1;md5=abcd?q#r, httpmd://alpha:88/bar/baz;p1=v1;md5=abcd?q#r
      * [jtreg] FAIL: Should be: false
-     * [jtreg]       Result: true
+     * [jtreg]       ModuleResolutionResult: true
      * 
      * URL.implies(URL url) is better suited to perform this function, why
      * it was originally implemented in equals is unknown.

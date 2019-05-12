@@ -1,4 +1,6 @@
+import org.apache.river.config.LocalHostLookupSpi;
 import org.apache.river.discovery.DiscoveryConstraintTrustVerifier;
+import org.apache.river.discovery.DiscoveryFormatProvider;
 
 import net.jini.discovery.ConstrainableLookupLocatorTrustVerifier;
 import net.jini.security.IntegrityVerifier;
@@ -12,10 +14,7 @@ module net.codespaces.river.base
 
     exports net.jini.core.lookup;
     exports net.jini.core.discovery;
-    exports net.jini.core.event;
-    exports net.jini.core.lease;
 
-    exports net.jini.entry;
     exports net.jini.admin;
     exports net.jini.id;
     exports net.jini.config;
@@ -34,6 +33,7 @@ module net.codespaces.river.base
     exports org.apache.river.constants;
     exports org.apache.river.discovery;
     exports org.apache.river.start;
+    exports org.apache.river.concurrent;
 
     exports org.apache.river.lookup.entry;
 
@@ -41,12 +41,16 @@ module net.codespaces.river.base
     requires java.rmi;
     requires java.security.jgss;
 
+    requires transitive net.codespaces.core;
     requires transitive net.codespaces.river.io;
+    requires transitive net.codespaces.river.services.api;
     requires java.desktop;
 
     provides TrustVerifier with ConstrainableLookupLocatorTrustVerifier, DiscoveryConstraintTrustVerifier;
     provides IntegrityVerifier with FileIntegrityVerifier, HttpmdIntegrityVerifier, HttpsIntegrityVerifier;
 
     uses net.jini.lookup.ExporterFactory;
+    uses LocalHostLookupSpi;
+    uses DiscoveryFormatProvider;
 
 }

@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.util.Collection;
+
+import net.codespaces.core.ClassResolver;
 import net.jini.core.constraint.InvocationConstraints;
 import net.jini.io.UnsupportedConstraintException;
 
@@ -32,7 +34,8 @@ import net.jini.io.UnsupportedConstraintException;
  * @author Sun Microsystems, Inc.
  * @since 2.0
  */
-public interface UnicastDiscoveryClient extends DiscoveryFormatProvider {
+public interface UnicastDiscoveryClient extends DiscoveryFormatProvider
+{
 
     /**
      * Checks and returns normally if this client is capable of fulfilling the
@@ -45,8 +48,7 @@ public interface UnicastDiscoveryClient extends DiscoveryFormatProvider {
      * @throws SecurityException if the given constraints cannot be satisfied
      * due to insufficient caller permissions
      */
-    void checkUnicastDiscoveryConstraints(InvocationConstraints constraints)
-	throws UnsupportedConstraintException;
+    void checkUnicastDiscoveryConstraints(InvocationConstraints constraints) throws UnsupportedConstraintException;
 
     /**
      * Performs the client side of unicast discovery, obtaining the returned
@@ -88,11 +90,10 @@ public interface UnicastDiscoveryClient extends DiscoveryFormatProvider {
      * or <code>received</code> is <code>null</code>
      */
     UnicastResponse doUnicastDiscovery(Socket socket,
-				       InvocationConstraints constraints,
-				       ClassLoader defaultLoader,
-				       ClassLoader verifierLoader,
-				       Collection context,
-				       ByteBuffer sent,
-				       ByteBuffer received)
-	throws IOException, ClassNotFoundException;
+                                       InvocationConstraints constraints,
+                                       ClassResolver classResolver,
+                                       Collection context,
+                                       ByteBuffer sent,
+                                       ByteBuffer received)
+            throws IOException, ClassNotFoundException;
 }

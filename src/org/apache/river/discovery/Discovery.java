@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.Socket;
 import java.util.Collection;
+
+import net.codespaces.core.ClassResolver;
 import net.jini.core.constraint.InvocationConstraints;
 import net.jini.io.UnsupportedConstraintException;
 
@@ -82,7 +84,8 @@ import net.jini.io.UnsupportedConstraintException;
  * @author Sun Microsystems, Inc.
  * @since 2.0
  */
-public abstract class Discovery {
+public abstract class Discovery
+{
 
     /** The version number for discovery protocol version 1. */
     public static final int PROTOCOL_VERSION_1 = 1;
@@ -97,8 +100,9 @@ public abstract class Discovery {
      *
      * @return an instance implementing protocol version 1
      */
-    public static Discovery getProtocol1() {
-	return DiscoveryV1.getInstance();
+    public static Discovery getProtocol1()
+    {
+        return DiscoveryV1.getInstance();
     }
 
     /**
@@ -114,8 +118,9 @@ public abstract class Discovery {
      * <code>null</code> to indicate the current context class loader
      * @return an instance implementing protocol version 2
      */
-    public static Discovery getProtocol2(ClassLoader loader) {
-	return DiscoveryV2.getInstance(loader);
+    public static Discovery getProtocol2(ClassLoader loader)
+    {
+        return DiscoveryV2.getInstance(loader);
     }
 
     /**
@@ -132,13 +137,13 @@ public abstract class Discovery {
      * @return an instance implementing protocol version 2
      */
     public static Discovery getProtocol2(MulticastRequestEncoder[] mre,
-					 MulticastRequestDecoder[] mrd,
-					 MulticastAnnouncementEncoder[] mae,
-					 MulticastAnnouncementDecoder[] mad,
-					 UnicastDiscoveryClient[] udc,
-					 UnicastDiscoveryServer[] uds)
+                                         MulticastRequestDecoder[] mrd,
+                                         MulticastAnnouncementEncoder[] mae,
+                                         MulticastAnnouncementDecoder[] mad,
+                                         UnicastDiscoveryClient[] udc,
+                                         UnicastDiscoveryServer[] uds)
     {
-	return DiscoveryV2.getInstance(mre, mrd, mae, mad, udc, uds);
+        return DiscoveryV2.getInstance(mre, mrd, mae, mad, udc, uds);
     }
 
     /**
@@ -161,10 +166,9 @@ public abstract class Discovery {
      * @throws NullPointerException if <code>request</code> is
      * <code>null</code>
      */
-    public abstract EncodeIterator encodeMulticastRequest(
-					MulticastRequest request,
-					int maxPacketSize,
-					InvocationConstraints constraints);
+    public abstract EncodeIterator encodeMulticastRequest(MulticastRequest request,
+                                                          int maxPacketSize,
+                                                          InvocationConstraints constraints);
 
     /**
      * Decodes the multicast request data contained in the given datagram in a
@@ -188,11 +192,10 @@ public abstract class Discovery {
      * fails
      * @throws NullPointerException if <code>packet</code> is <code>null</code>
      */
-    public abstract MulticastRequest decodeMulticastRequest(
-					DatagramPacket packet,
-					InvocationConstraints constraints,
-					ClientSubjectChecker checker)
-	throws IOException;
+    public abstract MulticastRequest decodeMulticastRequest(DatagramPacket packet,
+                                                            InvocationConstraints constraints,
+                                                            ClientSubjectChecker checker)
+            throws IOException;
 
     /**
      * Decodes the multicast request data contained in the given datagram in a
@@ -240,16 +243,15 @@ public abstract class Discovery {
      * @throws NullPointerException if <code>packet</code> is <code>null</code>
      * @since 2.1
      */
-    public MulticastRequest decodeMulticastRequest(
-					DatagramPacket packet,
-					InvocationConstraints constraints,
-					ClientSubjectChecker checker,
-                                        boolean delayConstraintCheck)
-	throws IOException 
+    public MulticastRequest decodeMulticastRequest(DatagramPacket packet,
+                                                   InvocationConstraints constraints,
+                                                   ClientSubjectChecker checker,
+                                                   boolean delayConstraintCheck)
+            throws IOException
     {
-	return decodeMulticastRequest(packet, constraints, checker);
+        return decodeMulticastRequest(packet, constraints, checker);
     }
-    
+
     /**
      * Returns an iterator which can be used to encode the given multicast
      * announcement data into sets of {@link DatagramPacket}s, each bounded in
@@ -270,10 +272,9 @@ public abstract class Discovery {
      * @throws NullPointerException if <code>announcement</code> is
      * <code>null</code>
      */
-    public abstract EncodeIterator encodeMulticastAnnouncement(
-					MulticastAnnouncement announcement,
-					int maxPacketSize,
-					InvocationConstraints constraints);
+    public abstract EncodeIterator encodeMulticastAnnouncement(MulticastAnnouncement announcement,
+                                                               int maxPacketSize,
+                                                               InvocationConstraints constraints);
 
     /**
      * Decodes the multicast announcement data contained in the given datagram
@@ -294,11 +295,10 @@ public abstract class Discovery {
      * due to insufficient caller permissions
      * @throws NullPointerException if <code>packet</code> is <code>null</code>
      */
-    public abstract MulticastAnnouncement decodeMulticastAnnouncement(
-					DatagramPacket packet,
-					InvocationConstraints constraints)
-	throws IOException;
-    
+    public abstract MulticastAnnouncement decodeMulticastAnnouncement(DatagramPacket packet,
+                                                                      InvocationConstraints constraints)
+            throws IOException;
+
     /**
      * Decodes the multicast announcement data contained in the given datagram
      * in a manner that satisfies the specified constraints, returning a {@link
@@ -343,15 +343,14 @@ public abstract class Discovery {
      * @throws NullPointerException if <code>packet</code> is <code>null</code>
      * @since 2.1
      */
-    public MulticastAnnouncement decodeMulticastAnnouncement(
-					DatagramPacket packet,
-					InvocationConstraints constraints,
-                                        boolean delayConstraintCheck)
-	throws IOException
+    public MulticastAnnouncement decodeMulticastAnnouncement(DatagramPacket packet,
+                                                             InvocationConstraints constraints,
+                                                             boolean delayConstraintCheck)
+            throws IOException
     {
-	return decodeMulticastAnnouncement(packet, constraints);
+        return decodeMulticastAnnouncement(packet, constraints);
     }
-    
+
     /**
      * Performs the client side of unicast discovery, obtaining the returned
      * response data over the provided socket using the given default and
@@ -385,13 +384,11 @@ public abstract class Discovery {
      * cannot be resolved
      * @throws NullPointerException if <code>socket</code> is <code>null</code>
      */
-    public abstract UnicastResponse doUnicastDiscovery(
-					Socket socket,
-					InvocationConstraints constraints,
-					ClassLoader defaultLoader,
-					ClassLoader verifierLoader,
-					Collection context)
-	throws IOException, ClassNotFoundException;
+    public abstract UnicastResponse doUnicastDiscovery(Socket socket,
+                                                       InvocationConstraints constraints,
+                                                       ClassResolver classResolver,
+                                                       Collection context)
+            throws IOException, ClassNotFoundException;
 
     /**
      * Handles the server side of unicast discovery, transmitting the given
@@ -421,11 +418,10 @@ public abstract class Discovery {
      * @throws NullPointerException if <code>response</code>,
      * <code>socket</code>, or <code>context</code> is <code>null</code>
      */
-    public abstract void handleUnicastDiscovery(
-					UnicastResponse response,
-					Socket socket,
-					InvocationConstraints constraints,
-					ClientSubjectChecker checker,
-					Collection context)
-	throws IOException;
+    public abstract void handleUnicastDiscovery(UnicastResponse response,
+                                                Socket socket,
+                                                InvocationConstraints constraints,
+                                                ClientSubjectChecker checker,
+                                                Collection context)
+            throws IOException;
 }

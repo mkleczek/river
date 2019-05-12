@@ -40,17 +40,17 @@ public abstract class ServiceType extends AbstractEntry
     public ServiceType() {
     }
 
-    /**
-     * Get an icon for this service.  This icon may be localized where
-     * appropriate.  The valid parameter values are the same as for
-     * the getIcon method of java.beans.BeanInfo.
-     *
-     * @param iconKind the kind of icon to return
-     * @return the icon for this service
-     */
-    public Image getIcon(int iconKind) {
-	return null;
-    }
+//    /**
+//     * Get an icon for this service.  This icon may be localized where
+//     * appropriate.  The valid parameter values are the same as for
+//     * the getIcon method of java.beans.BeanInfo.
+//     *
+//     * @param iconKind the kind of icon to return
+//     * @return the icon for this service
+//     */
+//    public Image getIcon(int iconKind) {
+//	return null;
+//    }
 
     /**
      * Return the localized display name of this service.

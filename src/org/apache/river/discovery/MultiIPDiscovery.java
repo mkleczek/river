@@ -16,11 +16,8 @@
  * limitations under the License.
  */
 
-package org.apache.river.discovery.internal;
+package org.apache.river.discovery;
 
-import org.apache.river.discovery.Discovery;
-import org.apache.river.discovery.DiscoveryConstraints;
-import org.apache.river.discovery.UnicastResponse;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;

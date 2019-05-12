@@ -18,15 +18,6 @@
 
 package net.jini.discovery;
 
-import org.apache.river.config.Config;
-import org.apache.river.discovery.Discovery;
-import org.apache.river.discovery.DiscoveryConstraints;
-import org.apache.river.discovery.UnicastResponse;
-import org.apache.river.discovery.internal.MultiIPDiscovery;
-import org.apache.river.logging.Levels;
-import org.apache.river.logging.LogUtil;
-import org.apache.river.thread.RetryTask;
-import org.apache.river.thread.WakeupManager;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
@@ -53,6 +44,21 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.river.config.Config;
+import org.apache.river.discovery.Discovery;
+import org.apache.river.discovery.DiscoveryConstraints;
+import org.apache.river.discovery.MultiIPDiscovery;
+import org.apache.river.discovery.UnicastResponse;
+import org.apache.river.logging.Levels;
+import org.apache.river.logging.LogUtil;
+import org.apache.river.thread.ExtensibleExecutorService;
+import org.apache.river.thread.ExtensibleExecutorService.RunnableFutureFactory;
+import org.apache.river.thread.NamedThreadFactory;
+import org.apache.river.thread.RetryTask;
+import org.apache.river.thread.WakeupManager;
+
+import net.codespaces.CodeSpaces;
 import net.jini.config.Configuration;
 import net.jini.config.ConfigurationException;
 import net.jini.config.EmptyConfiguration;
@@ -64,9 +70,6 @@ import net.jini.core.discovery.LookupLocator;
 import net.jini.core.lookup.ServiceRegistrar;
 import net.jini.security.BasicProxyPreparer;
 import net.jini.security.ProxyPreparer;
-import org.apache.river.thread.ExtensibleExecutorService;
-import org.apache.river.thread.ExtensibleExecutorService.RunnableFutureFactory;
-import org.apache.river.thread.NamedThreadFactory;
 
 /**
  * This package private superclass of LookupLocatorDiscovery exists for 
@@ -279,8 +282,7 @@ abstract class AbstractLookupLocatorDiscovery implements DiscoveryManagement,
 		    return disco.doUnicastDiscovery(
 					    s,
 					    dc.getUnfulfilledConstraints(),
-					    null,
-					    null,
+					    CodeSpaces.globalClassResolver(),
 					    null);
 		    
 		}
