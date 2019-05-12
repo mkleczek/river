@@ -17,8 +17,8 @@
  */
 package org.apache.river.outrigger.snaplogstore;
 
-import org.apache.river.outrigger.StorableObject;
-import org.apache.river.outrigger.StorableResource;
+import org.apache.river.outrigger.dl.StorableObject;
+import org.apache.river.outrigger.dl.StorableResource;
 
 /**
  * Wrapper for outrigger event registrations. An event registration

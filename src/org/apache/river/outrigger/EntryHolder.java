@@ -28,6 +28,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.river.outrigger.dl.EntryRep;
+
 import net.jini.core.entry.UnusableEntryException;
 import net.jini.core.transaction.CannotJoinException;
 import net.jini.core.transaction.server.TransactionConstants;

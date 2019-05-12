@@ -20,6 +20,9 @@ package org.apache.river.outrigger;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
+
+import org.apache.river.outrigger.dl.EntryRep;
+
 import net.jini.core.transaction.TransactionException;
 import net.jini.id.Uuid;
 import net.jini.space.InternalSpaceException;

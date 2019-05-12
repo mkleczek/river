@@ -24,6 +24,8 @@ import java.util.Collection;
 import net.jini.core.lease.Lease;
 import net.jini.id.Uuid;
 import org.apache.river.landlord.LeasedResource;
+import org.apache.river.outrigger.dl.EntryRep;
+
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;

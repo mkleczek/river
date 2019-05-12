@@ -17,6 +17,8 @@
  */
 package org.apache.river.outrigger;
 
+import org.apache.river.outrigger.dl.EntryRep;
+
 /**
  * This class is used to create a singly-linked list of written nodes
  * for notification and searches.  When an entry is written, it is

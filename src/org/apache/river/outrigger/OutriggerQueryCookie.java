@@ -17,6 +17,8 @@
  */
 package org.apache.river.outrigger;
 
+import org.apache.river.outrigger.dl.OutriggerServer;
+
 /**
  * Object <code>OutriggerServerImpl</code> uses to pass context between
  * related sub-queries.

@@ -19,6 +19,8 @@ package org.apache.river.outrigger;
 
 import java.util.Queue;
 
+import org.apache.river.outrigger.dl.EntryRep;
+
 /**
  * Base class for handles to Entries and templates.
  *

@@ -27,6 +27,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
+import org.apache.river.outrigger.dl.EntryRep;
+
 /**
  * A type tree for entries.  It maintains, for each class, a list of
  * known subclasses so that we can walk down the relevant subpart of

@@ -48,6 +48,9 @@ import net.jini.id.Uuid;
 
 import org.apache.river.start.LifeCycle;
 import org.apache.river.api.util.Startable;
+import org.apache.river.outrigger.dl.EntryRep;
+import org.apache.river.outrigger.dl.MatchSetData;
+import org.apache.river.outrigger.dl.OutriggerServer;
 
 /**
  * For various reasons there is code that we would like
@@ -60,7 +63,7 @@ import org.apache.river.api.util.Startable;
  * @author Sun Microsystems, Inc.
  * @since 2.0
  */
-class OutriggerServerWrapper 
+public class OutriggerServerWrapper 
     implements OutriggerServer, ServerProxyTrust, ProxyAccessor, Startable
 {
     /** The object being delegated to */     
@@ -102,7 +105,7 @@ class OutriggerServerWrapper
      *         in the configuration is non-null and throws 
      *         an exception when login is attempted.
      */
-    OutriggerServerWrapper(String[] configArgs, LifeCycle lifeCycle, 
+    protected OutriggerServerWrapper(String[] configArgs, LifeCycle lifeCycle, 
 			   boolean persistent) 
 	throws IOException, ConfigurationException, LoginException
     {
@@ -134,7 +137,7 @@ class OutriggerServerWrapper
      * @throws NullPointerException if <code>activationID</code>
      *         is <code>null</code>.
      */
-    OutriggerServerWrapper(ActivationID activationID, String[] configArgs) 
+    protected OutriggerServerWrapper(ActivationID activationID, String[] configArgs) 
 	throws IOException, ConfigurationException, LoginException,
 	       ActivationException
     {
@@ -179,7 +182,7 @@ class OutriggerServerWrapper
     /**
      * Allow incoming calls.
      */
-    synchronized void allowCalls() {
+    protected synchronized void allowCalls() {
 	failCallsWith = null;
 	allowCalls = true;
 	notifyAll();

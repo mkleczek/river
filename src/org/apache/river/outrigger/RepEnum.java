@@ -17,6 +17,8 @@
  */
 package org.apache.river.outrigger;
 
+import org.apache.river.outrigger.dl.EntryRep;
+
 /**
  * An internal interface for enumerating through <code>EntryRep</code>
  * objects inside a JavaSpace server.

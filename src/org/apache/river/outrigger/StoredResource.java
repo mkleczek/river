@@ -19,6 +19,8 @@ package org.apache.river.outrigger;
 
 import java.io.IOException;
 
+import org.apache.river.outrigger.dl.StorableResource;
+
 /**
  * Interface for a stored resource. Objects implementing this interface
  * are passed into calls to <code>Recover</code> objects. This objects

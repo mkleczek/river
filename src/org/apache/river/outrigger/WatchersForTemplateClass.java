@@ -21,6 +21,8 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.apache.river.outrigger.dl.EntryRep;
+
 /**
  * Holds a collection of <code>TemplateHandle</code>s who's templates
  * are all of exactly the same class. Unless otherwise noted all

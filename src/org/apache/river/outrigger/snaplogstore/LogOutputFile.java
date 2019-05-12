@@ -19,8 +19,9 @@ package org.apache.river.outrigger.snaplogstore;
 
 import org.apache.river.outrigger.LogOps;
 import org.apache.river.outrigger.OutriggerServerImpl;
-import org.apache.river.outrigger.StorableObject;
-import org.apache.river.outrigger.StorableResource;
+import org.apache.river.outrigger.dl.StorableObject;
+import org.apache.river.outrigger.dl.StorableResource;
+
 import net.jini.id.Uuid;
 
 import java.io.File;

@@ -24,6 +24,8 @@ import java.util.SortedSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import org.apache.river.outrigger.dl.EntryRep;
+
 /**
  * Given an <code>EntryHandle</code> who's entry is making a
  * visibility transition this class will find all the 

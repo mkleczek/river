@@ -41,6 +41,8 @@ import net.jini.security.ProxyPreparer;
 
 import org.apache.river.config.Config;
 import org.apache.river.logging.Levels;
+import org.apache.river.outrigger.dl.StorableObject;
+
 import net.jini.io.MarshalledInstance;
 
 /**

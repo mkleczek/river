@@ -29,6 +29,8 @@ import net.jini.id.Uuid;
 import net.jini.security.ProxyPreparer;
 import net.jini.space.JavaSpace;
 import org.apache.river.landlord.LeasedResource;
+import org.apache.river.outrigger.dl.EntryRep;
+import org.apache.river.outrigger.dl.OutriggerAvailabilityEvent;
 
 /**
  * Subclass of <code>TransitionWatcher</code> for availability event

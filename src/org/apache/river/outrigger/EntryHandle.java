@@ -19,6 +19,8 @@ package org.apache.river.outrigger;
 
 import net.jini.io.MarshalledInstance;
 import org.apache.river.landlord.LeasedResource;
+import org.apache.river.outrigger.dl.EntryRep;
+
 import java.util.Queue;
 
 /**

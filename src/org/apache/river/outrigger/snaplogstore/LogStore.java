@@ -18,8 +18,8 @@
 package org.apache.river.outrigger.snaplogstore;
 
 import org.apache.river.config.Config;
-import org.apache.river.outrigger.LogOps;
 import org.apache.river.outrigger.Recover;
+import org.apache.river.outrigger.LogOps;
 import org.apache.river.outrigger.OutriggerServerImpl;
 import org.apache.river.outrigger.Store;
 import org.apache.river.system.FileSystem;

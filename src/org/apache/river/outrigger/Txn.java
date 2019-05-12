@@ -19,6 +19,7 @@ package org.apache.river.outrigger;
 
 import org.apache.river.constants.TxnConstants;
 import org.apache.river.logging.Levels;
+import org.apache.river.outrigger.dl.StorableObject;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

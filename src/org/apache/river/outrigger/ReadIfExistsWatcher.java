@@ -18,6 +18,9 @@
 package org.apache.river.outrigger;
 
 import java.util.Set;
+
+import org.apache.river.outrigger.dl.EntryRep;
+
 import net.jini.id.Uuid;
 
 /**

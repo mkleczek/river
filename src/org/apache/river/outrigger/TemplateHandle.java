@@ -29,6 +29,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
+import org.apache.river.outrigger.dl.EntryRep;
+
 /**
  * <code>TemplateHandle</code> associates one or more
  * <code>TransitionWatcher</code>s with a template.

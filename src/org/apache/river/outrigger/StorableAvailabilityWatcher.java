@@ -22,6 +22,9 @@ import java.io.ObjectOutputStream;
 import java.io.IOException;
 import java.io.StreamCorruptedException;
 import java.rmi.MarshalledObject;
+
+import org.apache.river.outrigger.dl.StorableResource;
+
 import net.jini.core.event.RemoteEventListener;
 import net.jini.id.Uuid;
 import net.jini.id.UuidFactory;

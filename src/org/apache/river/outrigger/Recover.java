@@ -17,6 +17,8 @@
  */
 package org.apache.river.outrigger;
 
+import org.apache.river.outrigger.dl.StoredObject;
+
 import net.jini.id.Uuid;
 
 /**
