@@ -20,6 +20,7 @@ package org.apache.river.mercury;
 import net.jini.id.Uuid;
 
 import org.apache.river.logging.Levels;
+import org.apache.river.mercury.dl.RemoteEventData;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -1,4 +1,0 @@
-testClass=GetGroups
-testCategories=lookupdiscovery,lookupdiscovery_spec,speclookupdiscovery
-include0=lookupdiscovery.properties
-include1=org/apache/river/test/share/reggie3_0.properties

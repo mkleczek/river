@@ -31,6 +31,14 @@ import org.apache.river.landlord.LandlordUtil;
 import org.apache.river.logging.Levels;
 import org.apache.river.lookup.entry.BasicServiceType;
 import org.apache.river.lookup.entry.LookupAttributes;
+import org.apache.river.mercury.dl.ListenerProxy;
+import org.apache.river.mercury.dl.MailboxAdminProxy;
+import org.apache.river.mercury.dl.MailboxBackEnd;
+import org.apache.river.mercury.dl.MailboxProxy;
+import org.apache.river.mercury.dl.ProxyVerifier;
+import org.apache.river.mercury.dl.Registration;
+import org.apache.river.mercury.dl.RemoteEventData;
+import org.apache.river.mercury.dl.RemoteEventIteratorData;
 import org.apache.river.proxy.ThrowThis;
 import org.apache.river.reliableLog.ReliableLog;
 import org.apache.river.reliableLog.LogException;
@@ -43,6 +51,7 @@ import org.apache.river.thread.ReadersWriter.ConcurrentLockException;
 import org.apache.river.thread.ReadyState;
 import org.apache.river.thread.RetryTask;
 import org.apache.river.thread.WakeupManager;
+
 import net.jini.config.Configuration;
 import net.jini.config.ConfigurationProvider;
 import net.jini.config.ConfigurationException;
@@ -154,7 +163,7 @@ See takeSnapshot() for exact details of what gets stored.
 See recoverSnapshot() for exact details of what gets retrieved.
 */
 
-class MailboxImpl implements MailboxBackEnd, TimeConstants, 
+public class MailboxImpl implements MailboxBackEnd, TimeConstants, 
     ServerProxyTrust, ProxyAccessor, Startable
  
 {
@@ -476,7 +485,7 @@ class MailboxImpl implements MailboxBackEnd, TimeConstants,
      * @param activationID activation ID passed in by the activation daemon.
      * @param data state data needed to re-activate a Mercury server
      */
-    MailboxImpl(ActivationID activationID, MarshalledObject data) 
+    protected MailboxImpl(ActivationID activationID, MarshalledObject data) 
 	throws Exception
     {
         this((String[]) new MarshalledInstance(data).get(false), activationID,
@@ -494,7 +503,7 @@ class MailboxImpl implements MailboxBackEnd, TimeConstants,
      *  
      */
     // @param loG directory where persistent state is maintained
-    MailboxImpl(String[] configArgs, LifeCycle lc, boolean persistent) 
+    protected MailboxImpl(String[] configArgs, LifeCycle lc, boolean persistent) 
 	throws Exception
     {
         this(configArgs, null, persistent, new Object[] {Arrays.asList(configArgs), lc, Boolean.valueOf(persistent)});

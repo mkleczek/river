@@ -22,6 +22,8 @@ import net.jini.id.Uuid;
 import java.io.IOException;
 import java.util.NoSuchElementException;
 
+import org.apache.river.mercury.dl.RemoteEventData;
+
 import net.jini.core.event.RemoteEvent;
 
 /**

@@ -28,6 +28,9 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
+
+import org.apache.river.mercury.dl.RemoteEventData;
+
 import java.util.LinkedList;
 import java.util.List;
 

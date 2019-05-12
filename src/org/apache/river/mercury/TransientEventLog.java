@@ -23,6 +23,7 @@ import net.jini.core.event.RemoteEvent;
 import java.io.IOException;
 
 import org.apache.river.logging.Levels;
+import org.apache.river.mercury.dl.RemoteEventData;
 
 import java.util.Collections;
 import java.util.LinkedList;
