@@ -26,4 +26,6 @@ module net.codespaces.river.outrigger.dl
     requires net.codespaces.river.landlord;
     
     requires java.logging;
+
+    requires transitive net.codespaces.core;
 }
