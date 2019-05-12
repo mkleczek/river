@@ -41,7 +41,8 @@ module net.codespaces.river.base
     requires java.rmi;
     requires java.security.jgss;
 
-    requires transitive net.codespaces.core;
+    requires net.codespaces.core;
+    requires net.codespaces.access;
     requires transitive net.codespaces.river.io;
     requires transitive net.codespaces.river.services.api;
     requires java.desktop;
